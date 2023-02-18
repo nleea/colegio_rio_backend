@@ -1,0 +1,22 @@
+Para crear la base de datos hay que ir a src/prisma/schema.prisma se crean los modelos y luego se sincroniza con la base de datos
+
+Comandos 
+
+Si hay cambios en el schema tirar este comando para poder reflejar los cambios en la base de datos 
+npx prisma db push --schema=./src/prisma/schema.prisma
+
+Para traer los cambios que estan en la base de datos si el schema no esta actualizado, siempre verificar antes de hacer algun cambio
+npx prisma db pull --schema=./src/prisma/schema.prisma
+
+Para verificar si el modelo o relaciones estan bien creadas 
+npx prisma  validate --schema=./src/prisma/schema.prisma
+
+Para ver una consola grafica de la base de datos y sus tabla 
+npx prisma studio --schema=./src/prisma/schema.prisma
+
+Para cualquier cambio echo en el schema tirar estos cambios para poder ser reflejados en la variable de cliente 
+npx prisma generate --schema=./src/prisma/schema.prisma
+
+Para crear una base de datos dev que sirve para migraciones (No funciona todavia)
+npx prisma migrate dev --schema=./src/prisma/schema.prisma
+
