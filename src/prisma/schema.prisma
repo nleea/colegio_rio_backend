@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,8 +7,538 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model codiasnohabiles {
+  id         Int    @id @default(autoincrement())
+  tipodia_id Int
+  dia_nh     DateTime  @db.Date
+  comentario String?   @db.Text
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  created_by Int
+  updated_at DateTime? @db.Timestamp(0)
+  updated_by Int?
+  deleted_at DateTime? @db.Timestamp(0)
+  deleted_by Int?
+
+  @@index([tipodia_id], map: "codiasnohabiles_tipodia_id_foreign")
+}
+
+model coeventos {
+  id            Int    @id @default(autoincrement())
+  tipoevento_id Int
+  fechainicial  DateTime? @db.Date
+  fechafin      DateTime? @db.Date
+  foto          String?   @db.Text
+  descripcion   String?   @db.Text
+  nombre        String?   @db.Text
+  created_at    DateTime? @default(now()) @db.Timestamp(0)
+  created_by    Int?   @default(1)
+  updated_at    DateTime? @db.Timestamp(0)
+  updated_by    Int?
+  deleted_at    DateTime? @db.Timestamp(0)
+  deleted_by    Int?
+  maestras      maestras  @relation(fields: [tipoevento_id], references: [id], onDelete: NoAction)
+
+  @@index([tipoevento_id], map: "eventos_tipoevento_id_foreign")
+}
+
+model cofuncionarios {
+  id                                                Int     @id @default(autoincrement())
+  fechaingreso                                      DateTime   @db.Date
+  tarjetaprofesional                                String     @db.VarChar(150)
+  persona_id                                        Int     @unique(map: "cofuncionarios_persona_id_unique")
+  cargo_id                                          Int?
+  especialidad_id                                   Int?
+  dependencia_id                                    Int?
+  tipofuncionario_id                                Int?
+  estado_id                                         Int
+  created_at                                        DateTime   @default(now()) @db.Timestamp(0)
+  created_by                                        Int
+  updated_at                                        DateTime?  @db.Timestamp(0)
+  updated_by                                        Int?
+  deleted_at                                        DateTime?  @db.Timestamp(0)
+  deleted_by                                        Int?
+  maestras_cofuncionarios_cargo_idTomaestras        maestras?  @relation("cofuncionarios_cargo_idTomaestras", fields: [cargo_id], references: [id], onDelete: Cascade)
+  maestras_cofuncionarios_dependencia_idTomaestras  maestras?  @relation("cofuncionarios_dependencia_idTomaestras", fields: [dependencia_id], references: [id], onDelete: Cascade)
+  maestras_cofuncionarios_especialidad_idTomaestras maestras?  @relation("cofuncionarios_especialidad_idTomaestras", fields: [especialidad_id], references: [id], onDelete: Cascade)
+  cogrados                                          cogrados[]
+  penotas                                           penotas[]
+
+  @@index([cargo_id], map: "cofuncionarios_cargo_id_foreign")
+  @@index([dependencia_id], map: "cofuncionarios_dependencia_id_foreign")
+  @@index([especialidad_id], map: "cofuncionarios_especialidad_id_foreign")
+  @@index([estado_id], map: "cofuncionarios_estado_id_foreign")
+  @@index([tipofuncionario_id], map: "cofuncionarios_tipofuncionario_id_foreign")
+}
+
+model cogrados {
+  id                  Int                @id @default(autoincrement())
+  nombre              String                @db.VarChar(255)
+  sede_id             Int
+  director_id         Int?
+  created_at          DateTime              @default(now()) @db.Timestamp(0)
+  created_by          Int
+  updated_at          DateTime?             @db.Timestamp(0)
+  updated_by          Int?
+  deleted_at          DateTime?             @db.Timestamp(0)
+  deleted_by          Int?
+  cofuncionarios      cofuncionarios?       @relation(fields: [director_id], references: [id], onDelete: Cascade)
+  cosedes             cosedes               @relation(fields: [sede_id], references: [id], onDelete: Cascade)
+  cogradosestudiantes cogradosestudiantes[]
+  cogradosmaterias    cogradosmaterias[]
+  penotas             penotas[]
+
+  @@index([director_id], map: "cogrados_director_id_foreign")
+  @@index([sede_id], map: "cogrados_sede_id_foreign")
+}
+
+model cogradosestudiantes {
+  id            Int      @id @default(autoincrement())
+  estudiante_id Int
+  curso_id      Int
+  sede_id       Int
+  a_o           String      @map("año") @db.VarChar(50)
+  created_at    DateTime    @default(now()) @db.Timestamp(0)
+  created_by    Int
+  updated_at    DateTime?   @db.Timestamp(0)
+  updated_by    Int?
+  deleted_at    DateTime?   @db.Timestamp(0)
+  deleted_by    Int?
+  estudiantes   estudiantes @relation(fields: [estudiante_id], references: [id], onDelete: Cascade)
+  cogrados      cogrados    @relation(fields: [curso_id], references: [id], onDelete: Cascade)
+  cosedes       cosedes     @relation(fields: [sede_id], references: [id], onDelete: Cascade)
+
+  @@index([curso_id], map: "cogradosEstudiantes_curso_id_foreign")
+  @@index([estudiante_id], map: "cogradosEstudiantes_estudiante_id_foreign")
+  @@index([sede_id], map: "cogrados_Estudiantes_sede_id_foreign")
+}
+
+model cogradosmaterias {
+  id         Int     @id @default(autoincrement())
+  materia_id Int
+  curso_id   Int
+  sede_id    Int
+  a_o        String     @map("año") @db.VarChar(50)
+  created_at DateTime   @default(now()) @db.Timestamp(0)
+  created_by Int
+  updated_at DateTime?  @db.Timestamp(0)
+  updated_by Int?
+  deleted_at DateTime?  @db.Timestamp(0)
+  deleted_by Int?
+  estado_id  Int?
+  cogrados   cogrados   @relation(fields: [curso_id], references: [id], onDelete: Cascade, map: "cogradosMaterias_grado_id_foreign")
+  comaterias comaterias @relation(fields: [materia_id], references: [id], onDelete: Cascade)
+  cosedes    cosedes    @relation(fields: [sede_id], references: [id], onDelete: Cascade)
+
+  @@index([curso_id], map: "cogradosEstudiantes")
+  @@index([sede_id], map: "cogradosEstudiantes_sede_id_foreign")
+  @@index([curso_id], map: "cogradosMaterias_curso_id_foreign")
+  @@index([materia_id], map: "cogradosMaterias_materia_id_foreign")
+  @@index([sede_id], map: "cogradosMaterias_sede_id_foreign")
+}
+
+model colegios {
+  id                  Int    @id @default(autoincrement())
+  nombre              String    @db.VarChar(255)
+  codigoprestador     String?   @db.VarChar(50)
+  tipoi_id            Int?
+  identificacion      String?   @db.VarChar(80)
+  telefono            String?   @db.VarChar(80)
+  direccion           String    @db.VarChar(80)
+  nom_representante   String?   @db.VarChar(80)
+  email_representante String?   @db.VarChar(80)
+  tel_representante   String?   @db.VarChar(80)
+  logo                String?   @db.Text
+  created_at          DateTime  @default(now()) @db.Timestamp(0)
+  created_by          Int
+  updated_at          DateTime? @db.Timestamp(0)
+  updated_by          Int?
+  deleted_at          DateTime? @db.Timestamp(0)
+  deleted_by          Int?
+  cosedes             cosedes[]
+
+  @@index([tipoi_id], map: "colegios_tipoi_id_foreign")
+}
+
+model comaterias {
+  id               Int             @id @default(autoincrement())
+  nombre           String             @db.VarChar(255)
+  sede_id          Int
+  codigo           String             @db.VarChar(255)
+  created_at       DateTime           @default(now()) @db.Timestamp(0)
+  created_by       Int
+  updated_at       DateTime?          @db.Timestamp(0)
+  updated_by       Int?
+  deleted_at       DateTime?          @db.Timestamp(0)
+  deleted_by       Int?
+  estado_id        Int?
+  cogradosmaterias cogradosmaterias[]
+  cosedes          cosedes            @relation(fields: [sede_id], references: [id], onDelete: Cascade)
+  penotas          penotas[]
+
+  @@index([sede_id], map: "comaterias_sede_id_foreign")
+}
+
+model corolesperfiles {
+  id                                           Int    @id @default(autoincrement())
+  perfil_id                                    Int
+  rol_id                                       Int
+  estado                                       Boolean   @default(true)
+  observacion                                  String?   @db.VarChar(255)
+  created_at                                   DateTime  @default(now()) @db.Timestamp(0)
+  created_by                                   Int    @default(2)
+  updated_at                                   DateTime? @db.Timestamp(0)
+  updated_by                                   Int?
+  deleted_at                                   DateTime? @db.Timestamp(0)
+  deleted_by                                   Int?
+  maestras_corolesperfiles_perfil_idTomaestras maestras  @relation("corolesperfiles_perfil_idTomaestras", fields: [perfil_id], references: [id], onDelete: Cascade)
+  maestras_corolesperfiles_rol_idTomaestras    maestras  @relation("corolesperfiles_rol_idTomaestras", fields: [rol_id], references: [id], onDelete: Cascade)
+
+  @@index([perfil_id], map: "corolesperfiles_perfil_id_foreign")
+  @@index([rol_id], map: "corolesperfiles_rol_id_foreign")
+}
+
+model cosedes {
+  id                  Int                @id @default(autoincrement())
+  nombre              String                @db.VarChar(255)
+  direccion           String?               @db.VarChar(80)
+  email               String?               @db.VarChar(80)
+  telefono            String?               @db.VarChar(80)
+  prestador           String?               @db.VarChar(80)
+  colegios_id         Int
+  created_at          DateTime              @default(now()) @db.Timestamp(0)
+  created_by          Int
+  updated_at          DateTime?             @db.Timestamp(0)
+  updated_by          Int?
+  deleted_at          DateTime?             @db.Timestamp(0)
+  deleted_by          Int?
+  cogrados            cogrados[]
+  cogradosestudiantes cogradosestudiantes[]
+  cogradosmaterias    cogradosmaterias[]
+  comaterias          comaterias[]
+  colegios            colegios              @relation(fields: [colegios_id], references: [id], onDelete: Cascade)
+
+  @@index([colegios_id], map: "cosedes_empresa_id_foreign")
+}
+
+model estudiantes {
+  id                      Int                @id @default(autoincrement())
+  fechaingreso            DateTime?             @db.Date
+  persona_id              Int                @unique(map: "estudiantes_persona_id_unique")
+  grado_id                Int
+  identificacionacudiente String?               @db.VarChar(100)
+  nombreacudiente         String?               @db.VarChar(100)
+  telefonoacudiente       String?               @db.VarChar(100)
+  emailacudiente          String?               @db.VarChar(100)
+  parentezco_id           Int?
+  nombreacudientedos      String?               @db.VarChar(100)
+  telefonoacudientedos    String?               @db.VarChar(100)
+  emailacudientedos       String?               @db.VarChar(100)
+  parentezcodos_id        Int?
+  created_at              DateTime              @default(now()) @db.Timestamp(0)
+  created_by              Int                @default(1)
+  updated_at              DateTime?             @db.Timestamp(0)
+  updated_by              Int?
+  deleted_at              DateTime?             @db.Timestamp(0)
+  deleted_by              Int?
+  cogradosestudiantes     cogradosestudiantes[]
+  maestras                maestras?             @relation(fields: [parentezco_id], references: [id], onDelete: Cascade)
+  personas                personas              @relation(fields: [persona_id], references: [id], onDelete: NoAction, map: "estudiantes_persona_id_foreign")
+  pealumnos               pealumnos[]
+  penotas                 penotas[]
+
+  @@index([parentezco_id], map: "estudiantes_parentezco_id_foreign")
+}
+
+model failed_jobs {
+  id         Int   @id @default(autoincrement())
+  uuid       String   @unique(map: "failed_jobs_uuid_unique")
+  connection String   @db.Text
+  queue      String   @db.Text
+  payload    String   
+  exception  String   
+  failed_at  DateTime @default(now()) @db.Timestamp(0)
+}
+
+model maestras {
+  id                                                      Int            @id @default(autoincrement())
+  codigo                                                  String?           @db.VarChar(255)
+  nombre                                                  String            @db.VarChar(355)
+  padre                                                   Int?
+  jerarquia                                               Int?
+  orden                                                   String?           @db.VarChar(3)
+  visible                                                 Boolean?          @default(true)
+  observacion                                             String?           @db.Text
+  created_at                                              DateTime          @default(now()) @db.Timestamp(0)
+  created_by                                              Int            @default(2)
+  updated_at                                              DateTime?         @db.Timestamp(0)
+  updated_by                                              Int?
+  deleted_at                                              DateTime?         @db.Timestamp(0)
+  deleted_by                                              Int?
+  coeventos                                               coeventos[]
+  cofuncionarios_cofuncionarios_cargo_idTomaestras        cofuncionarios[]  @relation("cofuncionarios_cargo_idTomaestras")
+  cofuncionarios_cofuncionarios_dependencia_idTomaestras  cofuncionarios[]  @relation("cofuncionarios_dependencia_idTomaestras")
+  cofuncionarios_cofuncionarios_especialidad_idTomaestras cofuncionarios[]  @relation("cofuncionarios_especialidad_idTomaestras")
+  corolesperfiles_corolesperfiles_perfil_idTomaestras     corolesperfiles[] @relation("corolesperfiles_perfil_idTomaestras")
+  corolesperfiles_corolesperfiles_rol_idTomaestras        corolesperfiles[] @relation("corolesperfiles_rol_idTomaestras")
+  estudiantes                                             estudiantes[]
+  maestras_maestras_jerarquiaTomaestras                   maestras?         @relation("maestras_jerarquiaTomaestras", fields: [jerarquia], references: [id], onDelete: Cascade)
+  other_maestras_maestras_jerarquiaTomaestras             maestras[]        @relation("maestras_jerarquiaTomaestras")
+  maestras_maestras_padreTomaestras                       maestras?         @relation("maestras_padreTomaestras", fields: [padre], references: [id], onDelete: Cascade)
+  other_maestras_maestras_padreTomaestras                 maestras[]        @relation("maestras_padreTomaestras")
+  penotas_penotas_corte_idTomaestras                      penotas[]         @relation("penotas_corte_idTomaestras")
+  penotas_penotas_grado_idTomaestras                      penotas[]         @relation("penotas_grado_idTomaestras")
+  users_users_estado_idTomaestras                         users[]           @relation("users_estado_idTomaestras")
+  users_users_perfil_idTomaestras                         users[]           @relation("users_perfil_idTomaestras")
+
+  @@index([jerarquia], map: "maestras_jerarquia_foreign")
+  @@index([padre], map: "maestras_padre_foreign")
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement()) @unique()
+  migration String
+  batch     Int
+}
+
+model model_has_permissions {
+  permission_id Int
+  model_type    String
+  model_id      Int
+  permissions   permissions @relation(fields: [permission_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "model_has_permissions_permission_id_foreign")
+
+  @@id([permission_id, model_id, model_type])
+  @@index([model_id, model_type], map: "model_has_permissions_model_id_model_type_index")
+}
+
+model model_has_roles {
+  role_id    Int
+  model_type String
+  model_id   Int
+  roles      roles  @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "model_has_roles_role_id_foreign")
+
+  @@id([role_id, model_id, model_type])
+  @@index([model_id, model_type], map: "model_has_roles_model_id_model_type_index")
+}
+
+model oauth_access_tokens {
+  id         String    @id @db.VarChar(100)
+  user_id    Int?
+  client_id  Int
+  name       String?
+  scopes     String?   @db.Text
+  revoked    Boolean
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  expires_at DateTime? 
+
+  @@index([user_id], map: "oauth_access_tokens_user_id_index")
+}
+
+model oauth_auth_codes {
+  id         String    @id @db.VarChar(100)
+  user_id    Int
+  client_id  Int
+  scopes     String?   @db.Text
+  revoked    Boolean
+  expires_at DateTime?
+
+  @@index([user_id], map: "oauth_auth_codes_user_id_index")
+}
+
+model oauth_clients {
+  id                     Int    @id @default(autoincrement())
+  user_id                Int?
+  name                   String
+  secret                 String?   @db.VarChar(100)
+  provider               String?
+  redirect               String    @db.Text
+  personal_access_client Boolean
+  password_client        Boolean
+  revoked                Boolean
+  created_at             DateTime? @db.Timestamp(0)
+  updated_at             DateTime? @db.Timestamp(0)
+
+  @@index([user_id], map: "oauth_clients_user_id_index")
+}
+
+model oauth_personal_access_clients {
+  id         Int    @id @default(autoincrement())
+  client_id  Int
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model oauth_refresh_tokens {
+  id              String    @id @db.VarChar(100)
+  access_token_id String    @db.VarChar(100)
+  revoked         Boolean
+  expires_at      DateTime?
+
+  @@index([access_token_id], map: "oauth_refresh_tokens_access_token_id_index")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model password_resets {
+  email      String
+  token      String
+  created_at DateTime? @db.Timestamp(0)
+
+  @@index([email], map: "password_resets_email_index")
+  @@ignore
+}
+
+model pealumnos {
+  id          Int      @id @default(autoincrement())
+  alumno_id   Int
+  horario     String?     
+  materias    String?     
+  notas       String?    
+  estudiantes estudiantes @relation(fields: [alumno_id], references: [id], onDelete: Cascade)
+
+  @@index([alumno_id], map: "pealumnos_empresa_id_foreign")
+}
+
+model penotas {
+  id                                  Int         @id @default(autoincrement())
+  estudiante_id                       Int
+  profesor_id                         Int
+  materia_id                          Int
+  grado_id                            Int
+  curso_id                            Int
+  nota                                Float          
+  a_o                                 String         @map("año") @db.VarChar(50)
+  corte_id                            Int
+  created_at                          DateTime       @default(now()) @db.Timestamp(0)
+  created_by                          Int         @default(1)
+  updated_at                          DateTime?      @db.Timestamp(0)
+  updated_by                          Int?
+  deleted_at                          DateTime?      @db.Timestamp(0)
+  deleted_by                          Int?
+  maestras_penotas_corte_idTomaestras maestras       @relation("penotas_corte_idTomaestras", fields: [corte_id], references: [id], onDelete: Cascade)
+  cogrados                            cogrados       @relation(fields: [curso_id], references: [id], onDelete: Cascade)
+  estudiantes                         estudiantes    @relation(fields: [estudiante_id], references: [id], onDelete: Cascade)
+  maestras_penotas_grado_idTomaestras maestras       @relation("penotas_grado_idTomaestras", fields: [grado_id], references: [id], onDelete: Cascade)
+  comaterias                          comaterias     @relation(fields: [materia_id], references: [id], onDelete: Cascade)
+  cofuncionarios                      cofuncionarios @relation(fields: [profesor_id], references: [id], onDelete: Cascade)
+
+  @@index([corte_id], map: "penotas_corte_id_foreign")
+  @@index([curso_id], map: "penotas_curso_id_foreign")
+  @@index([estudiante_id], map: "penotas_estudiante_id_foreign")
+  @@index([grado_id], map: "penotas_grado_id_foreign")
+  @@index([materia_id], map: "penotas_materia_id_foreign")
+  @@index([profesor_id], map: "penotas_profesor_id_foreign")
+}
+
+model permissions {
+  id                    Int                  @id @default(autoincrement())
+  name                  String
+  guard_name            String
+  created_at            DateTime?               @db.Timestamp(0)
+  updated_at            DateTime?               @db.Timestamp(0)
+  model_has_permissions model_has_permissions[]
+  role_has_permissions  role_has_permissions[]
+
+  @@unique([name, guard_name], map: "permissions_name_guard_name_unique")
+}
+
+model personal_access_tokens {
+  id             Int    @id @default(autoincrement())
+  tokenable_type String
+  tokenable_id   Int
+  name           String
+  token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64)
+  abilities      String?   @db.Text
+  last_used_at   DateTime? @db.Timestamp(0)
+  created_at     DateTime? @db.Timestamp(0)
+  updated_at     DateTime? @db.Timestamp(0)
+
+  @@index([tokenable_type, tokenable_id], map: "personal_access_tokens_tokenable_type_tokenable_id_index")
+}
+
+model personas {
+  id                    Int       @id @default(autoincrement())
+  identificacion        String       @unique(map: "personas_identificacion_unique") @db.VarChar(50)
+  lugarexpedicion       String?      @db.VarChar(50)
+  fechaexpedicion       DateTime?    @db.Date
+  direccion             String?      @db.VarChar(150)
+  telefono              String?      @db.VarChar(50)
+  telefonomovil         String       @db.VarChar(10)
+  telefonowhatsapp      String?      @db.VarChar(50)
+  email                 String       @db.VarChar(50)
+  sendemail             Boolean?     @default(false)
+  fechanacimiento       DateTime     @db.Date
+  nombre                String       @db.VarChar(50)
+  segundonombre         String?      @db.VarChar(50)
+  apellido              String       @db.VarChar(50)
+  segundoapellido       String?      @db.VarChar(50)
+  foto                  String?      @db.Text
+  pais_id               Int?
+  departamento_id       Int?
+  ciudad_id             Int?
+  zona_id               Int?
+  barrio                String?      @db.VarChar(100)
+  tipoidentificacion_id Int?
+  sexo_id               Int
+  ocupacion_id          Int?
+  observaciones         String?      @db.Text
+  created_at            DateTime     @default(now()) @db.Timestamp(0)
+  created_by            Int       @default(1)
+  updated_at            DateTime?    @db.Timestamp(0)
+  updated_by            Int?
+  deleted_at            DateTime?    @db.Timestamp(0)
+  deleted_by            Int?
+  estudiantes           estudiantes?
+  users                 users?
+}
+
+model role_has_permissions {
+  permission_id Int
+  role_id       Int
+  permissions   permissions @relation(fields: [permission_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "role_has_permissions_permission_id_foreign")
+  roles         roles       @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([permission_id, role_id])
+  @@index([role_id], map: "role_has_permissions_role_id_foreign")
+}
+
+model roles {
+  id                   Int                 @id @default(autoincrement())
+  name                 String
+  guard_name           String
+  created_at           DateTime?              @db.Timestamp(0)
+  updated_at           DateTime?              @db.Timestamp(0)
+  model_has_roles      model_has_roles[]
+  role_has_permissions role_has_permissions[]
+
+  @@unique([name, guard_name], map: "roles_name_guard_name_unique")
+}
+
+model users {
+  id                                 Int    @id @default(autoincrement())
+  username                           String    @unique(map: "users_username_unique") @db.VarChar(255)
+  password                           String    @db.VarChar(255)
+  two_factor_secret                  String?   @db.Text
+  two_factor_recovery_codes          String?   @db.Text
+  telefonomovil                      String?   @unique(map: "users_telefonomovil_unique") @db.VarChar(50)
+  email                              String?   @db.VarChar(50)
+  email_verified_at                  DateTime? @db.Timestamp(0)
+  codigo_sms                         String?   @db.VarChar(255)
+  apitoken                           String?   @db.VarChar(255)
+  remember_token                     String?   @db.VarChar(100)
+  current_team_id                    Int?
+  estado_id                          Int?
+  perfil_id                          Int?
+  persona_id                         Int    @unique(map: "users_persona_id_unique")
+  created_at                         DateTime  @default(now()) @db.Timestamp(0)
+  created_by                         Int    @default(1)
+  updated_at                         DateTime? @db.Timestamp(0)
+  updated_by                         Int?
+  deleted_at                         DateTime? @db.Timestamp(0)
+  deleted_by                         Int?
+  maestras_users_estado_idTomaestras maestras? @relation("users_estado_idTomaestras", fields: [estado_id], references: [id], onDelete: Cascade)
+  maestras_users_perfil_idTomaestras maestras? @relation("users_perfil_idTomaestras", fields: [perfil_id], references: [id], onDelete: Cascade)
+  personas                           personas  @relation(fields: [persona_id], references: [id], onDelete: Cascade, map: "users_persona_id_foreign")
+
+  @@index([estado_id], map: "users_estado_id_foreign")
+  @@index([perfil_id], map: "users_perfil_id_foreign")
 }

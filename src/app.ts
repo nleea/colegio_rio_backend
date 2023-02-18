@@ -1,5 +1,7 @@
 import express, { Application } from "express";
 import cors from "cors";
+import morgan from "morgan";
+import { route } from "./routes/user/user.route";
 
 export class App {
   app: Application;
@@ -15,9 +17,12 @@ export class App {
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(express.json());
     this.app.use(cors());
+    this.app.use(morgan("dev"));
   }
 
-  routes() {}
+  routes() {
+    this.app.use("/api/", route);
+  }
 
   server() {
     this.app.listen(this.port, () => {
