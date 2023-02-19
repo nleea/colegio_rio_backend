@@ -520,7 +520,7 @@ model users {
   two_factor_secret                  String?
   two_factor_recovery_codes          String?
   telefonomovil                      String?   @unique(map: "users_telefonomovil_unique") @db.VarChar(50)
-  email                              String?   @db.VarChar(50)
+  email                              String?   @unique @db.VarChar(50)
   email_verified_at                  DateTime? @db.Timestamp(0)
   codigo_sms                         String?   @db.VarChar(255)
   apitoken                           String?   @db.VarChar(255)

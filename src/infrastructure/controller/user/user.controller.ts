@@ -17,4 +17,10 @@ export class UserController {
     const resp = await this.userUsesCases.createUser(body);
     return res.json(resp);
   };
+
+  auth = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    const resp = await this.userUsesCases.authUser({ email, password });
+    return res.json(resp);
+  };
 }

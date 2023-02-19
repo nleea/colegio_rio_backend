@@ -15,4 +15,15 @@ export class UserUsesCases {
     const resp = this.userRepository.registerUser(userValue);
     return resp;
   }
+
+  public async authUser({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) {
+    const resp = this.userRepository.login({ email, password });
+    return resp;
+  }
 }

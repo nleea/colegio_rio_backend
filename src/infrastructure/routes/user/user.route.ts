@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 const route = Router();
-
+const routeAuth = Router();
 import { UserController } from "../../controller/user/user.controller";
 import { UserRepositoryClass } from "../../repository/userRepository/UserRepository";
 import { UserUsesCases } from "../../../aplication/user/user.usesCases";
@@ -14,5 +14,6 @@ const userController = new UserController(userUsescases);
 /** Rutas para la aplicaion */
 
 route.get("/", userController.GetAll);
-route.post("/register/", userController.insertUser);
-export { route };
+routeAuth.post("/register/", userController.insertUser);
+routeAuth.post("/login/", userController.auth);
+export { route, routeAuth };
