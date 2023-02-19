@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import { route } from "./routes/user/user.route";
+import { routeRole } from "./routes/role/role.route";
 
 export class App {
   app: Application;
@@ -22,6 +23,7 @@ export class App {
 
   routes() {
     this.app.use("/api/", route);
+    this.app.use("/api/", routeRole);
   }
 
   server() {
