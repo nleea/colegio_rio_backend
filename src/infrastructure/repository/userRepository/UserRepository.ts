@@ -12,6 +12,7 @@ import {
   ResponseInterfaces,
   ErrorsInterfaces,
 } from "../../../types/response.interfaces";
+import { flattenObj } from "../../../helpers/flatterObject";
 
 export class UserRepositoryClass implements UserRepository {
   #db: typeof db;
@@ -22,7 +23,19 @@ export class UserRepositoryClass implements UserRepository {
     ResponseInterfaces<UserEntity[]> | ErrorsInterfaces<unknown>
   > {
     try {
-      const resp = await this.#db.users.findMany();
+      const resp = await this.#db.users.findMany({
+        include: {
+          personas: {
+            select: {
+              apellido: true,
+              nombre: true,
+              telefono: true,
+              fechanacimiento: true,
+            },
+          },
+        },
+      });
+      const resulst = flattenObj(resp);
       return {
         data: resp,
         ok: true,
@@ -106,6 +119,7 @@ export class UserRepositoryClass implements UserRepository {
     password: string;
   }): Promise<ResponseInterfaces<any> | ErrorsInterfaces<string | any>> {
     try {
+      console.log(email);
       const user = await this.#db.users.findUnique({ where: { email: email } });
 
       if (!user) {
@@ -134,7 +148,7 @@ export class UserRepositoryClass implements UserRepository {
       );
 
       return {
-        data: { token, client: user.id, IsAuth: true },
+        data: { token, user: user.id, IsAuth: true },
         ok: true,
         status: 200,
       };
