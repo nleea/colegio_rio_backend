@@ -1,4 +1,4 @@
-import { UserEntity, UserCreateEntity } from "./user.entity";
+import { UserEntity, UserCreateEntity, UserUpdateEntity } from "./user.entity";
 import {
   ErrorsInterfaces,
   ResponseInterfaces,
@@ -18,5 +18,9 @@ export interface UserRepository {
   }): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   userProfile(
     id: number
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  updatedUser(
+    id: number,
+    data: Partial<UserUpdateEntity>
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
 }

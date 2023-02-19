@@ -1,5 +1,9 @@
 import { UserRepository } from "../../../domain/user/user.repository";
-import { UserCreateEntity, UserEntity } from "../../../domain/user/user.entity";
+import {
+  UserCreateEntity,
+  UserEntity,
+  UserUpdateEntity,
+} from "../../../domain/user/user.entity";
 import { db } from "../../models/db";
 import { Prisma } from "@prisma/client";
 import { hashPin, comparePin } from "../../../helpers/bcryp";
@@ -10,11 +14,15 @@ import {
 } from "../../../types/response.interfaces";
 
 export class UserRepositoryClass implements UserRepository {
+  #db: typeof db;
+  constructor() {
+    this.#db = db;
+  }
   async findAllUser(): Promise<
     ResponseInterfaces<UserEntity[]> | ErrorsInterfaces<unknown>
   > {
     try {
-      const resp = await db.users.findMany();
+      const resp = await this.#db.users.findMany();
       return {
         data: resp,
         ok: true,
@@ -46,7 +54,7 @@ export class UserRepositoryClass implements UserRepository {
     } = body;
 
     try {
-      await db.personas.create({
+      await this.#db.personas.create({
         data: {
           apellido,
           email,
@@ -98,7 +106,7 @@ export class UserRepositoryClass implements UserRepository {
     password: string;
   }): Promise<ResponseInterfaces<any> | ErrorsInterfaces<string | any>> {
     try {
-      const user = await db.users.findUnique({ where: { email: email } });
+      const user = await this.#db.users.findUnique({ where: { email: email } });
 
       if (!user) {
         return {
@@ -144,9 +152,46 @@ export class UserRepositoryClass implements UserRepository {
     id: number
   ): Promise<ResponseInterfaces<UserEntity> | ErrorsInterfaces<any>> {
     try {
-      const user = await db.users.findUnique({ where: { id: Number(id) } });
+      const user = await this.#db.users.findUnique({
+        where: { id: Number(id) },
+        include: { personas: true },
+      });
       return {
         data: user,
+        ok: true,
+        status: 200,
+      };
+    } catch (error) {
+      return {
+        data: error,
+        ok: false,
+        status: 400,
+      };
+    }
+  }
+
+  async updatedUser(
+    id: number,
+    data: Omit<Partial<UserUpdateEntity>, "roles">
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
+    try {
+      await this.#db.users.update({
+        where: { id: id },
+        data: {
+          username: data.name,
+          personas: {
+            update: {
+              fechanacimiento: new Date(data.fechanacimiento!),
+              nombre: data.nombre,
+              apellido: data.apellido,
+              tipoidentificacion_id: data.tipoidentificacion_id,
+              sexo_id: data.sexo_id,
+            },
+          },
+        },
+      });
+      return {
+        data: "Ok",
         ok: true,
         status: 200,
       };

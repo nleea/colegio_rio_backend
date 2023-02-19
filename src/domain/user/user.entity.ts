@@ -37,3 +37,17 @@ export interface UserCreateEntity {
   perfil_id: number;
   roles: string;
 }
+
+export interface UserUpdateEntity {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+  identificacion: string;
+  fechanacimiento: string;
+  nombre: string;
+  apellido: string;
+  tipoidentificacion_id: number;
+  sexo_id: number;
+  roles: string;
+}

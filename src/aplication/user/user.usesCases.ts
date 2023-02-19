@@ -1,6 +1,10 @@
-import { UserCreateEntity } from "../../domain/user/user.entity";
+import {
+  UserCreateEntity,
+  UserEntity,
+  UserUpdateEntity,
+} from "../../domain/user/user.entity";
 import { UserRepository } from "../../domain/user/user.repository";
-import { UserCreateValue } from "../../domain/user/user.value";
+import { UserCreateValue, UserValue } from "../../domain/user/user.value";
 
 export class UserUsesCases {
   constructor(private readonly userRepository: UserRepository) {}
@@ -28,7 +32,13 @@ export class UserUsesCases {
   }
 
   public async userProfile(id: number) {
-    const resp = this.userRepository.userProfile(id);
+    const resp = await this.userRepository.userProfile(id);
+    const resulst = new UserValue(resp.data);
+    return { ...resp, data: resulst };
+  }
+
+  public async UserUpdate(id: number, data: UserUpdateEntity) {
+    const resp = this.userRepository.updatedUser(id, data);
     return resp;
   }
 }

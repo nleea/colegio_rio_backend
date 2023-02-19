@@ -29,4 +29,14 @@ export class UserController {
     const { data, ok, status } = await this.userUsesCases.userProfile(id);
     return res.status(status).json({ ok, data });
   };
+
+  updateUser = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const body = req.body;
+    const { data, ok, status } = await this.userUsesCases.UserUpdate(
+      Number(id),
+      body
+    );
+    return res.status(status).json({ ok, data });
+  };
 }

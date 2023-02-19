@@ -15,6 +15,7 @@ const userController = new UserController(userUsescases);
 
 route.get("/", userController.GetAll);
 route.get("/profile/", userController.userProfile);
+route.put("/edit/:id", userController.updateUser);
 /** Auth Routes */
 routeAuth.post("/register/", userController.insertUser);
 routeAuth.post("/login/", userController.auth);
