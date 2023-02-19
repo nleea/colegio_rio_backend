@@ -8,10 +8,10 @@ datasource db {
 }
 
 model codiasnohabiles {
-  id         Int    @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   tipodia_id Int
   dia_nh     DateTime  @db.Date
-  comentario String?   @db.Text
+  comentario String?
   created_at DateTime? @default(now()) @db.Timestamp(0)
   created_by Int
   updated_at DateTime? @db.Timestamp(0)
@@ -23,15 +23,15 @@ model codiasnohabiles {
 }
 
 model coeventos {
-  id            Int    @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   tipoevento_id Int
   fechainicial  DateTime? @db.Date
   fechafin      DateTime? @db.Date
-  foto          String?   @db.Text
-  descripcion   String?   @db.Text
-  nombre        String?   @db.Text
+  foto          String?
+  descripcion   String?
+  nombre        String?
   created_at    DateTime? @default(now()) @db.Timestamp(0)
-  created_by    Int?   @default(1)
+  created_by    Int?      @default(1)
   updated_at    DateTime? @db.Timestamp(0)
   updated_by    Int?
   deleted_at    DateTime? @db.Timestamp(0)
@@ -42,10 +42,10 @@ model coeventos {
 }
 
 model cofuncionarios {
-  id                                                Int     @id @default(autoincrement())
+  id                                                Int        @id @default(autoincrement())
   fechaingreso                                      DateTime   @db.Date
   tarjetaprofesional                                String     @db.VarChar(150)
-  persona_id                                        Int     @unique(map: "cofuncionarios_persona_id_unique")
+  persona_id                                        Int        @unique(map: "cofuncionarios_persona_id_unique")
   cargo_id                                          Int?
   especialidad_id                                   Int?
   dependencia_id                                    Int?
@@ -71,7 +71,7 @@ model cofuncionarios {
 }
 
 model cogrados {
-  id                  Int                @id @default(autoincrement())
+  id                  Int                   @id @default(autoincrement())
   nombre              String                @db.VarChar(255)
   sede_id             Int
   director_id         Int?
@@ -92,7 +92,7 @@ model cogrados {
 }
 
 model cogradosestudiantes {
-  id            Int      @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   estudiante_id Int
   curso_id      Int
   sede_id       Int
@@ -103,8 +103,8 @@ model cogradosestudiantes {
   updated_by    Int?
   deleted_at    DateTime?   @db.Timestamp(0)
   deleted_by    Int?
-  estudiantes   estudiantes @relation(fields: [estudiante_id], references: [id], onDelete: Cascade)
   cogrados      cogrados    @relation(fields: [curso_id], references: [id], onDelete: Cascade)
+  estudiantes   estudiantes @relation(fields: [estudiante_id], references: [id], onDelete: Cascade)
   cosedes       cosedes     @relation(fields: [sede_id], references: [id], onDelete: Cascade)
 
   @@index([curso_id], map: "cogradosEstudiantes_curso_id_foreign")
@@ -113,7 +113,7 @@ model cogradosestudiantes {
 }
 
 model cogradosmaterias {
-  id         Int     @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   materia_id Int
   curso_id   Int
   sede_id    Int
@@ -137,7 +137,7 @@ model cogradosmaterias {
 }
 
 model colegios {
-  id                  Int    @id @default(autoincrement())
+  id                  Int       @id @default(autoincrement())
   nombre              String    @db.VarChar(255)
   codigoprestador     String?   @db.VarChar(50)
   tipoi_id            Int?
@@ -147,7 +147,7 @@ model colegios {
   nom_representante   String?   @db.VarChar(80)
   email_representante String?   @db.VarChar(80)
   tel_representante   String?   @db.VarChar(80)
-  logo                String?   @db.Text
+  logo                String?
   created_at          DateTime  @default(now()) @db.Timestamp(0)
   created_by          Int
   updated_at          DateTime? @db.Timestamp(0)
@@ -160,7 +160,7 @@ model colegios {
 }
 
 model comaterias {
-  id               Int             @id @default(autoincrement())
+  id               Int                @id @default(autoincrement())
   nombre           String             @db.VarChar(255)
   sede_id          Int
   codigo           String             @db.VarChar(255)
@@ -179,13 +179,13 @@ model comaterias {
 }
 
 model corolesperfiles {
-  id                                           Int    @id @default(autoincrement())
+  id                                           Int       @id @default(autoincrement())
   perfil_id                                    Int
   rol_id                                       Int
   estado                                       Boolean   @default(true)
   observacion                                  String?   @db.VarChar(255)
   created_at                                   DateTime  @default(now()) @db.Timestamp(0)
-  created_by                                   Int    @default(2)
+  created_by                                   Int       @default(2)
   updated_at                                   DateTime? @db.Timestamp(0)
   updated_by                                   Int?
   deleted_at                                   DateTime? @db.Timestamp(0)
@@ -198,7 +198,7 @@ model corolesperfiles {
 }
 
 model cosedes {
-  id                  Int                @id @default(autoincrement())
+  id                  Int                   @id @default(autoincrement())
   nombre              String                @db.VarChar(255)
   direccion           String?               @db.VarChar(80)
   email               String?               @db.VarChar(80)
@@ -221,9 +221,9 @@ model cosedes {
 }
 
 model estudiantes {
-  id                      Int                @id @default(autoincrement())
+  id                      Int                   @id @default(autoincrement())
   fechaingreso            DateTime?             @db.Date
-  persona_id              Int                @unique(map: "estudiantes_persona_id_unique")
+  persona_id              Int                   @unique(map: "estudiantes_persona_id_unique")
   grado_id                Int
   identificacionacudiente String?               @db.VarChar(100)
   nombreacudiente         String?               @db.VarChar(100)
@@ -235,7 +235,7 @@ model estudiantes {
   emailacudientedos       String?               @db.VarChar(100)
   parentezcodos_id        Int?
   created_at              DateTime              @default(now()) @db.Timestamp(0)
-  created_by              Int                @default(1)
+  created_by              Int                   @default(1)
   updated_at              DateTime?             @db.Timestamp(0)
   updated_by              Int?
   deleted_at              DateTime?             @db.Timestamp(0)
@@ -250,26 +250,26 @@ model estudiantes {
 }
 
 model failed_jobs {
-  id         Int   @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   uuid       String   @unique(map: "failed_jobs_uuid_unique")
-  connection String   @db.Text
-  queue      String   @db.Text
-  payload    String   
-  exception  String   
+  connection String
+  queue      String
+  payload    String
+  exception  String
   failed_at  DateTime @default(now()) @db.Timestamp(0)
 }
 
 model maestras {
-  id                                                      Int            @id @default(autoincrement())
+  id                                                      Int               @id @default(autoincrement())
   codigo                                                  String?           @db.VarChar(255)
   nombre                                                  String            @db.VarChar(355)
   padre                                                   Int?
   jerarquia                                               Int?
   orden                                                   String?           @db.VarChar(3)
   visible                                                 Boolean?          @default(true)
-  observacion                                             String?           @db.Text
+  observacion                                             String?
   created_at                                              DateTime          @default(now()) @db.Timestamp(0)
-  created_by                                              Int            @default(2)
+  created_by                                              Int               @default(2)
   updated_at                                              DateTime?         @db.Timestamp(0)
   updated_by                                              Int?
   deleted_at                                              DateTime?         @db.Timestamp(0)
@@ -295,7 +295,7 @@ model maestras {
 }
 
 model migrations {
-  id        Int    @id @default(autoincrement()) @unique()
+  id        Int    @id @unique @default(autoincrement())
   migration String
   batch     Int
 }
@@ -325,11 +325,11 @@ model oauth_access_tokens {
   user_id    Int?
   client_id  Int
   name       String?
-  scopes     String?   @db.Text
+  scopes     String?
   revoked    Boolean
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
-  expires_at DateTime? 
+  expires_at DateTime?
 
   @@index([user_id], map: "oauth_access_tokens_user_id_index")
 }
@@ -338,7 +338,7 @@ model oauth_auth_codes {
   id         String    @id @db.VarChar(100)
   user_id    Int
   client_id  Int
-  scopes     String?   @db.Text
+  scopes     String?
   revoked    Boolean
   expires_at DateTime?
 
@@ -346,12 +346,12 @@ model oauth_auth_codes {
 }
 
 model oauth_clients {
-  id                     Int    @id @default(autoincrement())
+  id                     Int       @id @default(autoincrement())
   user_id                Int?
   name                   String
   secret                 String?   @db.VarChar(100)
   provider               String?
-  redirect               String    @db.Text
+  redirect               String
   personal_access_client Boolean
   password_client        Boolean
   revoked                Boolean
@@ -362,7 +362,7 @@ model oauth_clients {
 }
 
 model oauth_personal_access_clients {
-  id         Int    @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   client_id  Int
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
@@ -388,28 +388,28 @@ model password_resets {
 }
 
 model pealumnos {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   alumno_id   Int
-  horario     String?     
-  materias    String?     
-  notas       String?    
+  horario     String?
+  materias    String?
+  notas       String?
   estudiantes estudiantes @relation(fields: [alumno_id], references: [id], onDelete: Cascade)
 
   @@index([alumno_id], map: "pealumnos_empresa_id_foreign")
 }
 
 model penotas {
-  id                                  Int         @id @default(autoincrement())
+  id                                  Int            @id @default(autoincrement())
   estudiante_id                       Int
   profesor_id                         Int
   materia_id                          Int
   grado_id                            Int
   curso_id                            Int
-  nota                                Float          
+  nota                                Float
   a_o                                 String         @map("año") @db.VarChar(50)
   corte_id                            Int
   created_at                          DateTime       @default(now()) @db.Timestamp(0)
-  created_by                          Int         @default(1)
+  created_by                          Int            @default(1)
   updated_at                          DateTime?      @db.Timestamp(0)
   updated_by                          Int?
   deleted_at                          DateTime?      @db.Timestamp(0)
@@ -430,7 +430,7 @@ model penotas {
 }
 
 model permissions {
-  id                    Int                  @id @default(autoincrement())
+  id                    Int                     @id @default(autoincrement())
   name                  String
   guard_name            String
   created_at            DateTime?               @db.Timestamp(0)
@@ -442,12 +442,12 @@ model permissions {
 }
 
 model personal_access_tokens {
-  id             Int    @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   tokenable_type String
   tokenable_id   Int
   name           String
   token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64)
-  abilities      String?   @db.Text
+  abilities      String?
   last_used_at   DateTime? @db.Timestamp(0)
   created_at     DateTime? @db.Timestamp(0)
   updated_at     DateTime? @db.Timestamp(0)
@@ -456,7 +456,7 @@ model personal_access_tokens {
 }
 
 model personas {
-  id                    Int       @id @default(autoincrement())
+  id                    Int          @id @default(autoincrement())
   identificacion        String       @unique(map: "personas_identificacion_unique") @db.VarChar(50)
   lugarexpedicion       String?      @db.VarChar(50)
   fechaexpedicion       DateTime?    @db.Date
@@ -471,7 +471,7 @@ model personas {
   segundonombre         String?      @db.VarChar(50)
   apellido              String       @db.VarChar(50)
   segundoapellido       String?      @db.VarChar(50)
-  foto                  String?      @db.Text
+  foto                  String?
   pais_id               Int?
   departamento_id       Int?
   ciudad_id             Int?
@@ -480,9 +480,9 @@ model personas {
   tipoidentificacion_id Int?
   sexo_id               Int
   ocupacion_id          Int?
-  observaciones         String?      @db.Text
+  observaciones         String?
   created_at            DateTime     @default(now()) @db.Timestamp(0)
-  created_by            Int       @default(1)
+  created_by            Int          @default(1)
   updated_at            DateTime?    @db.Timestamp(0)
   updated_by            Int?
   deleted_at            DateTime?    @db.Timestamp(0)
@@ -502,7 +502,7 @@ model role_has_permissions {
 }
 
 model roles {
-  id                   Int                 @id @default(autoincrement())
+  id                   Int                    @id @default(autoincrement())
   name                 String
   guard_name           String
   created_at           DateTime?              @db.Timestamp(0)
@@ -514,11 +514,11 @@ model roles {
 }
 
 model users {
-  id                                 Int    @id @default(autoincrement())
+  id                                 Int       @id @default(autoincrement())
   username                           String    @unique(map: "users_username_unique") @db.VarChar(255)
   password                           String    @db.VarChar(255)
-  two_factor_secret                  String?   @db.Text
-  two_factor_recovery_codes          String?   @db.Text
+  two_factor_secret                  String?
+  two_factor_recovery_codes          String?
   telefonomovil                      String?   @unique(map: "users_telefonomovil_unique") @db.VarChar(50)
   email                              String?   @db.VarChar(50)
   email_verified_at                  DateTime? @db.Timestamp(0)
@@ -528,9 +528,9 @@ model users {
   current_team_id                    Int?
   estado_id                          Int?
   perfil_id                          Int?
-  persona_id                         Int    @unique(map: "users_persona_id_unique")
+  persona_id                         Int       @unique(map: "users_persona_id_unique")
   created_at                         DateTime  @default(now()) @db.Timestamp(0)
-  created_by                         Int    @default(1)
+  created_by                         Int       @default(1)
   updated_at                         DateTime? @db.Timestamp(0)
   updated_by                         Int?
   deleted_at                         DateTime? @db.Timestamp(0)
@@ -541,4 +541,12 @@ model users {
 
   @@index([estado_id], map: "users_estado_id_foreign")
   @@index([perfil_id], map: "users_perfil_id_foreign")
+}
+
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
 }
