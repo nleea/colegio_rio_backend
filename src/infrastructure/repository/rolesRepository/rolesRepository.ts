@@ -1,5 +1,5 @@
 import { RolesRepository } from "../../../domain/roles/roles.repository";
-import { RolesEntity } from "../../../domain/roles/roles.entity";
+import { RoleEntity } from "../../../domain/roles/roles.entity";
 import { exclude } from "../../../helpers/omit.fields";
 import { db } from "../../models/db";
 
@@ -36,5 +36,11 @@ export class RolesRepositoryClass implements RolesRepository {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  // roles: RolesEntity
+
+  async storeRoles(roles: RoleEntity): Promise<any>{
+
   }
 }

@@ -19,4 +19,6 @@ export class RolesController {
     const resp = await this.permissionsUsesCases.listPermissions()
     return res.json(resp);
   }
+
+  
 }
