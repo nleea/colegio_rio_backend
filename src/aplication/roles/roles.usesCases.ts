@@ -7,4 +7,9 @@ export class RolesUsesCases {
     const resp = await this.rolesRepository.findAllRoles();
     return resp;
   }
+
+  public async createRoles(){
+    const resp = await this.rolesRepository.createRolesP()
+
+  }
 }

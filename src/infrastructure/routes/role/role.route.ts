@@ -14,5 +14,6 @@ const rolesController = new RolesController(rolesUsescases);
 /** Rutas para la aplicaion */
 
 route.get("/", rolesController.GetAll);
+route.get("/create", rolesController.GetCreateRole);
 
 export { route };

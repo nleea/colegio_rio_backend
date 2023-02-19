@@ -26,7 +26,19 @@ export class RolesRepositoryClass implements RolesRepository {
     }
   }
 
-  async createRoles(roles: RolesEntity): Promise<any> {
-    throw new Error("Method not implements");
+  async createRolesP(): Promise<any> {
+    // throw new Error("Method not implements");
+
+    try {
+      const resp = await db.permissions.findMany();
+      exclude<typeof resp, keyof typeof resp>(resp, [
+        "created_at",
+        "updated_at",
+      ] as any);
+
+      return resp;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

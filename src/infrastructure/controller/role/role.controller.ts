@@ -8,4 +8,11 @@ export class RolesController {
     const resp = await this.rolesUsesCases.listRoles();
     return res.json(resp);
   };
+
+  GetCreateRole = async (req: Request, res: Response) => {
+    // createRoles
+
+    const resp = await this.rolesUsesCases.createRoles()
+    return res.json(resp);
+  }
 }
