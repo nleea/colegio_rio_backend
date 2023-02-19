@@ -31,11 +31,7 @@ export class RolesRepositoryClass implements RolesRepository {
 
     try {
       const resp = await db.permissions.findMany();
-      exclude<typeof resp, keyof typeof resp>(resp, [
-        "created_at",
-        "updated_at",
-      ] as any);
-
+      
       return resp;
     } catch (error) {
       console.log(error);

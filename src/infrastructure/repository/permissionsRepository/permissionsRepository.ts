@@ -6,19 +6,7 @@ import { db } from "../../models/db";
 export class PermissionsRepositoryClass implements PermissionsRepository {
   async findAllPermissions(): Promise<any> {
     try {
-      const resp = await db.permissions.findMany({
-        include: {
-          role_has_permissions: {
-            select: {
-              permissions: { select: { name: true, guard_name: true } },
-            },
-          },
-        },
-      });
-      exclude<typeof resp, keyof typeof resp>(resp, [
-        "created_at",
-        "updated_at",
-      ] as any);
+      const resp = await db.permissions.findMany();
 
       return resp;
     } catch (error) {
