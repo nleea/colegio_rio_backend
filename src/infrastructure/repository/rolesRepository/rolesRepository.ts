@@ -25,4 +25,8 @@ export class RolesRepositoryClass implements RolesRepository {
       console.log(error);
     }
   }
+
+  async createRoles(roles: RolesEntity): Promise<any> {
+    throw new Error("Method not implements");
+  }
 }

@@ -1,4 +1,4 @@
-import { UserEntity } from "./user.entity";
+import { UserEntity, UserCreateEntity } from "./user.entity";
 
 export class UserValue implements UserEntity {
   username: string;
@@ -64,5 +64,48 @@ export class UserValue implements UserEntity {
     this.two_factor_secret = two_factor_secret;
     this.updated_at = updated_at;
     this.updated_by = updated_by;
+  }
+}
+
+export class UserCreateValue implements UserCreateEntity {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+  identificacion: string;
+  fechanacimiento: string;
+  nombre: string;
+  apellido: string;
+  tipoidentificacion_id: number;
+  sexo_id: number;
+  perfil_id: number;
+  roles: string;
+
+  constructor({
+    apellido,
+    email,
+    fechanacimiento,
+    identificacion,
+    name,
+    nombre,
+    password,
+    perfil_id,
+    password_confirmation,
+    roles,
+    sexo_id,
+    tipoidentificacion_id,
+  }: UserCreateEntity) {
+    this.apellido = apellido;
+    this.email = email;
+    this.fechanacimiento = fechanacimiento;
+    this.identificacion = identificacion;
+    this.name = name;
+    this.nombre = nombre;
+    this.password = password;
+    this.perfil_id = perfil_id;
+    this.roles = roles;
+    this.sexo_id = sexo_id;
+    this.tipoidentificacion_id = tipoidentificacion_id;
+    this.password_confirmation = password_confirmation;
   }
 }

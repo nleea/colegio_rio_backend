@@ -14,5 +14,5 @@ const userController = new UserController(userUsescases);
 /** Rutas para la aplicaion */
 
 route.get("/", userController.GetAll);
-
+route.post("/register/", userController.insertUser);
 export { route };
