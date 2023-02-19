@@ -26,4 +26,9 @@ export class UserUsesCases {
     const resp = this.userRepository.login({ email, password });
     return resp;
   }
+
+  public async userProfile(id: number) {
+    const resp = this.userRepository.userProfile(id);
+    return resp;
+  }
 }

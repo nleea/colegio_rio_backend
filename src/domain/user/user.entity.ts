@@ -1,17 +1,19 @@
-export interface UserEntity {
+import { users } from "@prisma/client";
+
+export interface UserEntity extends users {
   username: string;
   password: string;
-  two_factor_secret: string | undefined;
-  two_factor_recovery_codes: string | undefined;
-  telefonomovil: string | undefined;
-  email: string | undefined;
+  two_factor_secret: string | null;
+  two_factor_recovery_codes: string | null;
+  telefonomovil: string | null;
+  email: string | null;
   email_verified_at: Date;
-  codigo_sms: string | undefined;
-  apitoken: string | undefined;
-  remember_token: string | undefined;
-  current_team_id: number | undefined;
-  estado_id: number | undefined;
-  perfil_id: number | undefined;
+  codigo_sms: string | null;
+  apitoken: string | null;
+  remember_token: string | null;
+  current_team_id: number | null;
+  estado_id: number | null;
+  perfil_id: number | null;
   persona_id: number;
   created_at: Date;
   created_by: number;

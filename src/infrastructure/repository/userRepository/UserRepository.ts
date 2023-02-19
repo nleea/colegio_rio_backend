@@ -1,20 +1,37 @@
 import { UserRepository } from "../../../domain/user/user.repository";
-import { UserCreateEntity } from "../../../domain/user/user.entity";
+import { UserCreateEntity, UserEntity } from "../../../domain/user/user.entity";
 import { db } from "../../models/db";
 import { Prisma } from "@prisma/client";
 import { hashPin, comparePin } from "../../../helpers/bcryp";
 import { sign } from "jsonwebtoken";
+import {
+  ResponseInterfaces,
+  ErrorsInterfaces,
+} from "../../../types/response.interfaces";
 
 export class UserRepositoryClass implements UserRepository {
-  async findAllUser(): Promise<any[] | null | any> {
+  async findAllUser(): Promise<
+    ResponseInterfaces<UserEntity[]> | ErrorsInterfaces<unknown>
+  > {
     try {
-      return await db.users.findMany();
+      const resp = await db.users.findMany();
+      return {
+        data: resp,
+        ok: true,
+        status: 200,
+      };
     } catch (error) {
-      console.log(error);
+      return {
+        data: error,
+        ok: false,
+        status: 400,
+      };
     }
   }
 
-  async registerUser(body: UserCreateEntity): Promise<any> {
+  async registerUser(
+    body: UserCreateEntity
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     const {
       apellido,
       email,
@@ -52,19 +69,22 @@ export class UserRepositoryClass implements UserRepository {
 
       return {
         status: 200,
-        message: "Ok",
+        data: "Ok",
+        ok: true,
       };
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         console.log(e);
         return {
           status: 400,
-          message: e.message,
+          data: e.message,
+          ok: false,
         };
       } else {
         return {
           status: 400,
-          message: "Unknow Error",
+          data: "Unknow Error",
+          ok: false,
         };
       }
     }
@@ -76,21 +96,23 @@ export class UserRepositoryClass implements UserRepository {
   }: {
     email: string;
     password: string;
-  }): Promise<any> {
+  }): Promise<ResponseInterfaces<any> | ErrorsInterfaces<string | any>> {
     try {
       const user = await db.users.findUnique({ where: { email: email } });
 
       if (!user) {
         return {
           ok: false,
-          message: "Invalid User",
+          data: "Invalid User",
+          status: 400,
         };
       }
 
       if (!comparePin(String(password), user.password)) {
         return {
           ok: false,
-          message: "Password Do not match",
+          data: "Password Do not match",
+          status: 400,
         };
       }
 
@@ -106,12 +128,33 @@ export class UserRepositoryClass implements UserRepository {
       return {
         data: { token, client: user.id, IsAuth: true },
         ok: true,
+        status: 200,
       };
     } catch (error) {
       console.log(error);
       return {
         ok: false,
-        message: "sss",
+        data: "sss",
+        status: 400,
+      };
+    }
+  }
+
+  async userProfile(
+    id: number
+  ): Promise<ResponseInterfaces<UserEntity> | ErrorsInterfaces<any>> {
+    try {
+      const user = await db.users.findUnique({ where: { id: Number(id) } });
+      return {
+        data: user,
+        ok: true,
+        status: 200,
+      };
+    } catch (error) {
+      return {
+        data: error,
+        ok: false,
+        status: 400,
       };
     }
   }

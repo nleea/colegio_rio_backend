@@ -1,7 +1,22 @@
 import { UserEntity, UserCreateEntity } from "./user.entity";
+import {
+  ErrorsInterfaces,
+  ResponseInterfaces,
+} from "../../types/response.interfaces";
 
 export interface UserRepository {
-  findAllUser(): Promise<any[] | null | any>;
-  registerUser(body: UserCreateEntity): Promise<any>;
-  login({ email, password }: { email: string; password: string }): Promise<any>;
+  findAllUser(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  registerUser(
+    body: UserCreateEntity
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  login({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  userProfile(
+    id: number
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
 }

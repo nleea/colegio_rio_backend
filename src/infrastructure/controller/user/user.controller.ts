@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UserCreateEntity } from "../../../domain/user/user.entity";
+import { UserCreateEntity, UserEntity } from "../../../domain/user/user.entity";
 import { UserUsesCases } from "../../../aplication/user/user.usesCases";
 
 export class UserController {
@@ -8,8 +8,8 @@ export class UserController {
   }
 
   GetAll = async (req: Request, res: Response) => {
-    const resp = await this.userUsesCases.listUser();
-    return res.json(resp);
+    const { ok, status, data } = await this.userUsesCases.listUser();
+    return res.status(status).json({ ok, data });
   };
 
   insertUser = async (req: Request, res: Response) => {
@@ -22,5 +22,11 @@ export class UserController {
     const { email, password } = req.body;
     const resp = await this.userUsesCases.authUser({ email, password });
     return res.json(resp);
+  };
+
+  userProfile = async (req: Request, res: Response) => {
+    const { id } = req.user! as UserEntity;
+    const { data, ok, status } = await this.userUsesCases.userProfile(id);
+    return res.status(status).json({ ok, data });
   };
 }
