@@ -170,6 +170,7 @@ export class UserRepositoryClass implements UserRepository {
         where: { id: Number(id) },
         include: { personas: true },
       });
+      
       return {
         data: user,
         ok: true,

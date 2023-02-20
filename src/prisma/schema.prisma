@@ -466,7 +466,7 @@ model personas {
   telefonowhatsapp      String?      @db.VarChar(50)
   email                 String       @db.VarChar(50)
   sendemail             Boolean?     @default(false)
-  fechanacimiento       DateTime     @db.Date
+  fechanacimiento       DateTime?     @db.Date
   nombre                String       @db.VarChar(50)
   segundonombre         String?      @db.VarChar(50)
   apellido              String       @db.VarChar(50)

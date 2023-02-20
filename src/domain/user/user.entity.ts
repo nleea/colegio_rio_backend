@@ -21,6 +21,7 @@ export interface UserEntity extends users {
   updated_by: number;
   deleted_at: Date;
   deleted_by: number;
+  personas?: any;
 }
 
 export interface UserCreateEntity {

@@ -22,6 +22,7 @@ export class UserValue implements UserEntity {
   updated_by: number;
   deleted_at: Date;
   deleted_by: number;
+  personas?: any;
 
   constructor({
     username,
@@ -45,6 +46,7 @@ export class UserValue implements UserEntity {
     updated_at,
     updated_by,
     id,
+    personas,
   }: UserEntity) {
     this.id = id;
     this.username = username;
@@ -67,6 +69,7 @@ export class UserValue implements UserEntity {
     this.two_factor_secret = two_factor_secret;
     this.updated_at = updated_at;
     this.updated_by = updated_by;
+    this.personas = personas;
   }
 }
 
