@@ -4,6 +4,11 @@ import { exclude } from "../../../helpers/omit.fields";
 import { db } from "../../models/db";
 
 export class PermissionsRepositoryClass implements PermissionsRepository {
+  showPermissions(Permissions: Number): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
+
+  
   async findAllPermissions(): Promise<any> {
     try {
       const resp = await db.permissions.findMany();
@@ -17,4 +22,6 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
   async createPermissions(permissions: PermissionsEntity): Promise<any> {
     throw new Error("Method not implements");
   }
+
+  
 }

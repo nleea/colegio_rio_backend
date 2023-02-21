@@ -8,4 +8,8 @@ export class PermissionsUsesCases {
     const resp = await this.permissionsRepository.findAllPermissions();
     return resp;
   }
+
+  public async showPermissions(id: number){
+    
+  }
 }
