@@ -31,7 +31,7 @@ export class RolesRepositoryClass implements RolesRepository {
 
     try {
       const resp = await db.permissions.findMany();
-      
+
       return resp;
     } catch (error) {
       console.log(error);
@@ -40,7 +40,7 @@ export class RolesRepositoryClass implements RolesRepository {
 
   // roles: RolesEntity
 
-  async storeRoles(roles: RoleEntity): Promise<any>{
-
+  async storeRoles(roles: RoleEntity): Promise<any> {
+   
   }
 }
