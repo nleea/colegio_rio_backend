@@ -7,7 +7,7 @@ import { RolesRepositoryClass } from "../../repository/rolesRepository/rolesRepo
 import { PermissionsRepositoryClass } from "../../repository/permissionsRepository/permissionsRepository";
 import { RolesUsesCases } from "../../../aplication/roles/roles.usesCases";
 import { PermissionsUsesCases } from "../../../aplication/permissions/permissions.usesCases";
-import { ValidarPermiso } from "../../../middleware/roles"
+import { VerRoles } from "../../../middleware/roles"
 /** Injeciones de dependencia*/
 const rolesRepository = new RolesRepositoryClass();
 const permissionsRepository = new PermissionsRepositoryClass();
@@ -19,7 +19,7 @@ const rolesController = new RolesController(rolesUsescases,permissionsUsescases 
 
 /** Rutas para la aplicaion */
 
-route.get("/", ValidarPermiso, rolesController.GetAll);
+route.get("/", VerRoles, rolesController.GetAll);
 route.get("/create", rolesController.GetCreateRole);
 route.post("/", rolesController.PostRole);
 

@@ -9,8 +9,8 @@ import { UserUsesCases } from "../aplication/user/user.usesCases";
 
 
 
-export const ValidarPermiso = async (req: Request, res: Response, next: () => void) => {
-  ;
+export const VerRoles = async (req: Request, res: Response, next: () => void) => {
+    const permission = 'ver-rol';
     try {
       const token = req.headers.authorization;
       // console.log(req.headers.authorization)
@@ -24,6 +24,7 @@ export const ValidarPermiso = async (req: Request, res: Response, next: () => vo
     // const { data, ok, status } = await this.userUsesCases.userProfile(id);
     // return res.status(status).json({ ok, data });
   
+      console.log("id.role_id: ")
       console.log(id.role_id )
     //   if (!user) return res.status("404").json({ message: "User not found" });
   
