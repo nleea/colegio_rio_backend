@@ -180,7 +180,7 @@ model comaterias {
 
 model corolesperfiles {
   id                                           Int       @id @default(autoincrement())
-  perfil_id                                    Int
+  role_id                                    Int
   rol_id                                       Int
   estado                                       Boolean   @default(true)
   observacion                                  String?   @db.VarChar(255)
@@ -190,10 +190,10 @@ model corolesperfiles {
   updated_by                                   Int?
   deleted_at                                   DateTime? @db.Timestamp(0)
   deleted_by                                   Int?
-  maestras_corolesperfiles_perfil_idTomaestras maestras  @relation("corolesperfiles_perfil_idTomaestras", fields: [perfil_id], references: [id], onDelete: Cascade)
+  maestras_corolesperfiles_role_idTomaestras maestras  @relation("corolesperfiles_role_idTomaestras", fields: [role_id], references: [id], onDelete: Cascade)
   maestras_corolesperfiles_rol_idTomaestras    maestras  @relation("corolesperfiles_rol_idTomaestras", fields: [rol_id], references: [id], onDelete: Cascade)
 
-  @@index([perfil_id], map: "corolesperfiles_perfil_id_foreign")
+  @@index([role_id], map: "corolesperfiles_role_id_foreign")
   @@index([rol_id], map: "corolesperfiles_rol_id_foreign")
 }
 
@@ -278,7 +278,7 @@ model maestras {
   cofuncionarios_cofuncionarios_cargo_idTomaestras        cofuncionarios[]  @relation("cofuncionarios_cargo_idTomaestras")
   cofuncionarios_cofuncionarios_dependencia_idTomaestras  cofuncionarios[]  @relation("cofuncionarios_dependencia_idTomaestras")
   cofuncionarios_cofuncionarios_especialidad_idTomaestras cofuncionarios[]  @relation("cofuncionarios_especialidad_idTomaestras")
-  corolesperfiles_corolesperfiles_perfil_idTomaestras     corolesperfiles[] @relation("corolesperfiles_perfil_idTomaestras")
+  corolesperfiles_corolesperfiles_role_idTomaestras     corolesperfiles[] @relation("corolesperfiles_role_idTomaestras")
   corolesperfiles_corolesperfiles_rol_idTomaestras        corolesperfiles[] @relation("corolesperfiles_rol_idTomaestras")
   estudiantes                                             estudiantes[]
   maestras_maestras_jerarquiaTomaestras                   maestras?         @relation("maestras_jerarquiaTomaestras", fields: [jerarquia], references: [id], onDelete: Cascade)

@@ -24,7 +24,7 @@ export const ValidarPermiso = async (req: Request, res: Response, next: () => vo
     // const { data, ok, status } = await this.userUsesCases.userProfile(id);
     // return res.status(status).json({ ok, data });
   
-      console.log(id.perfil_id )
+      console.log(id.role_id )
     //   if (!user) return res.status("404").json({ message: "User not found" });
   
       next();

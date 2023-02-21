@@ -14,7 +14,7 @@ export class UserValue implements UserEntity {
   remember_token: string | null;
   current_team_id: number | null;
   estado_id: number | null;
-  perfil_id: number | null;
+  role_id: number | null;
   persona_id: number;
   created_at: Date;
   created_by: number;
@@ -38,7 +38,7 @@ export class UserValue implements UserEntity {
     email,
     email_verified_at,
     estado_id,
-    perfil_id,
+    role_id,
     remember_token,
     telefonomovil,
     two_factor_recovery_codes,
@@ -62,7 +62,7 @@ export class UserValue implements UserEntity {
     this.email_verified_at = email_verified_at;
     this.persona_id = persona_id;
     this.estado_id = estado_id;
-    this.perfil_id = perfil_id;
+    this.role_id = role_id;
     this.remember_token = remember_token;
     this.telefonomovil = telefonomovil;
     this.two_factor_recovery_codes = two_factor_recovery_codes;
@@ -84,7 +84,7 @@ export class UserCreateValue implements UserCreateEntity {
   apellido: string;
   tipoidentificacion_id: number;
   sexo_id: number;
-  perfil_id: number;
+  role_id: number;
   roles: string;
 
   constructor({
@@ -95,7 +95,7 @@ export class UserCreateValue implements UserCreateEntity {
     name,
     nombre,
     password,
-    perfil_id,
+    role_id,
     password_confirmation,
     roles,
     sexo_id,
@@ -108,7 +108,7 @@ export class UserCreateValue implements UserCreateEntity {
     this.name = name;
     this.nombre = nombre;
     this.password = password;
-    this.perfil_id = perfil_id;
+    this.role_id = role_id;
     this.roles = roles;
     this.sexo_id = sexo_id;
     this.tipoidentificacion_id = tipoidentificacion_id;
