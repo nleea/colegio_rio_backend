@@ -1,9 +1,14 @@
 import { RolesRepository } from "../../../domain/roles/roles.repository";
-import { RoleEntity } from "../../../domain/roles/roles.entity";
+import { RoleCreateEntity, RoleEntity } from "../../../domain/roles/roles.entity";
+import { Prisma } from "@prisma/client";
 import { exclude } from "../../../helpers/omit.fields";
 import { db } from "../../models/db";
 
 export class RolesRepositoryClass implements RolesRepository {
+  #db: typeof db;
+  constructor() {
+    this.#db = db;
+  }
   async findAllRoles(): Promise<any> {
     try {
       const resp = await db.roles.findMany({
@@ -42,5 +47,43 @@ export class RolesRepositoryClass implements RolesRepository {
 
   async storeRoles(roles: RoleEntity): Promise<any> {
    
+  async storeRoles(body: RoleCreateEntity): Promise<any>{
+ 
+    const {
+      name,
+      role_has_permissions
+    } = body;
+
+    try {
+      await this.#db.roles.create({
+        data: {
+          name,
+          guard_name:'',
+          role_has_permissions:{connect:[]}
+        },
+      });
+
+      return {
+        status: 200,
+        data: "Ok",
+        ok: true,
+      };
+    } catch (e) {
+      console.log(e);
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        console.log(e);
+        return {
+          status: 400,
+          data: e.message,
+          ok: false,
+        };
+      } else {
+        return {
+          status: 400,
+          data: "Unknow Error",
+          ok: false,
+        };
+      }
+    }
   }
 }

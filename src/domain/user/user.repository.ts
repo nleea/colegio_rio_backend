@@ -3,7 +3,7 @@ import {
   ErrorsInterfaces,
   ResponseInterfaces,
 } from "../../types/response.interfaces";
-
+ 
 export interface UserRepository {
   findAllUser(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   registerUser(
