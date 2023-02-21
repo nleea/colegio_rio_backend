@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { RolesUsesCases } from "../../../aplication/roles/roles.usesCases";
 import { PermissionsUsesCases } from "../../../aplication/permissions/permissions.usesCases";
 import { RoleCreateEntity } from "../../../domain/roles/roles.entity";
+import { RoleCreateValue } from "../../../domain/roles/roles.value";
 
 export class RolesController {
   constructor(
@@ -22,10 +23,9 @@ export class RolesController {
   }
 
   PostRole = async (req: Request, res: Response) => {
-
-
     const body = req.body as RoleCreateEntity;
-    const resp = await this.rolesUsesCases.storeRoles(body); 
+    const rolecrea = new RoleCreateValue(body);
+    const resp = await this.rolesUsesCases.storeRoles(rolecrea); 
     return res.json(resp);
   }
 }

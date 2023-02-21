@@ -4,7 +4,6 @@ export class RoleValue implements RoleEntity {
   
   name: string;
   
-
   constructor({
     name,
   }: RoleEntity) {
@@ -15,10 +14,12 @@ export class RoleValue implements RoleEntity {
 export class RoleCreateValue implements RoleCreateEntity {
   
   name: string;
+  role_has_permissions?: any[];
   constructor({
     name,
-
+    role_has_permissions = []
   }: RoleCreateEntity) {
     this.name = name;
+    this.role_has_permissions = role_has_permissions
   }
 }

@@ -1,5 +1,5 @@
 import { RolesRepository } from "../../../domain/roles/roles.repository";
-import { RoleEntity } from "../../../domain/roles/roles.entity";
+import { RoleCreateEntity, RoleEntity } from "../../../domain/roles/roles.entity";
 import { Prisma } from "@prisma/client";
 import { exclude } from "../../../helpers/omit.fields";
 import { db } from "../../models/db";
@@ -45,10 +45,11 @@ export class RolesRepositoryClass implements RolesRepository {
 
   // roles: RolesEntity
 
-  async storeRoles(body: RoleEntity): Promise<any>{
+  async storeRoles(body: RoleCreateEntity): Promise<any>{
  
     const {
       name,
+      role_has_permissions
     } = body;
 
     try {
@@ -56,6 +57,7 @@ export class RolesRepositoryClass implements RolesRepository {
         data: {
           name,
           guard_name:'',
+          role_has_permissions:{connect:[]}
         },
       });
 
@@ -65,6 +67,7 @@ export class RolesRepositoryClass implements RolesRepository {
         ok: true,
       };
     } catch (e) {
+      console.log(e);
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         console.log(e);
         return {
