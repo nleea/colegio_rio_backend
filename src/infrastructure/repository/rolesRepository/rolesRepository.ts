@@ -46,7 +46,7 @@ export class RolesRepositoryClass implements RolesRepository {
   // roles: RolesEntity
 
   async storeRoles(body: RoleEntity): Promise<any>{
-
+ 
     const {
       name,
     } = body;

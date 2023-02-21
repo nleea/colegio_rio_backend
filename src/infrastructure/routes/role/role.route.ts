@@ -21,5 +21,6 @@ const rolesController = new RolesController(rolesUsescases,permissionsUsescases 
 
 route.get("/", rolesController.GetAll);
 route.get("/create", rolesController.GetCreateRole);
+route.post("/", rolesController.PostRole);
 
 export { route };

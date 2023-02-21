@@ -1,7 +1,7 @@
 import { RoleEntity, RoleCreateEntity } from "./roles.entity";
 
 export class RoleValue implements RoleEntity {
-
+  
   name: string;
   
 

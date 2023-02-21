@@ -19,8 +19,8 @@ export class RolesUsesCases {
 
   }
   public async storeRoles(body: RoleCreateEntity){
-    const userValue = new RoleCreateValue({ ...body });
-    const resp = this.rolesRepository.storeRoles(userValue);
+    const roleValue = new RoleCreateValue({ ...body });
+    const resp = this.rolesRepository.storeRoles(roleValue);
     return resp;
 
   }
