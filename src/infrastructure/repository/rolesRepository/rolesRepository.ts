@@ -1,5 +1,8 @@
 import { RolesRepository } from "../../../domain/roles/roles.repository";
-import { RoleCreateEntity, RoleEntity } from "../../../domain/roles/roles.entity";
+import {
+  RoleCreateEntity,
+  RoleEntity,
+} from "../../../domain/roles/roles.entity";
 import { Prisma } from "@prisma/client";
 import { exclude } from "../../../helpers/omit.fields";
 import { db } from "../../models/db";
@@ -45,23 +48,22 @@ export class RolesRepositoryClass implements RolesRepository {
 
   // roles: RolesEntity
 
-  async storeRoles(roles: RoleEntity): Promise<any> {
-   
-  async storeRoles(body: RoleCreateEntity): Promise<any>{
- 
-    const {
-      name,
-      role_has_permissions
-    } = body;
+  async storeRoles(body: RoleCreateEntity): Promise<any> {
+    const { name, role_has_permissions } = body;
 
     try {
       await this.#db.roles.create({
         data: {
-          name,
-          guard_name:'',
-          role_has_permissions:{connect:[]}
+          name: "t",
+          role_has_permissions: {
+            connect: [
+              { permission_id_role_id: { permission_id: 10, role_id: 1 } },
+              { permission_id_role_id: { permission_id: 20, role_id: 1 } }
+            ],
+          },
         },
       });
+  
 
       return {
         status: 200,
