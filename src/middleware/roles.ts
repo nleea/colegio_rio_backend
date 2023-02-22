@@ -1,10 +1,5 @@
 import { Request, Response } from "express";
-import { RolesUsesCases } from "/../riodev/colegio_rio_backend/src/aplication/roles/roles.usesCases";
-import { PermissionsUsesCases } from "/../riodev/colegio_rio_backend/src/aplication/permissions/permissions.usesCases";
-import { RoleCreateEntity } from "/../riodev/colegio_rio_backend/src/domain/roles/roles.entity";
-import { RoleCreateValue } from "/../riodev/colegio_rio_backend/src/domain/roles/roles.value";
 import { UserEntity } from "../domain/user/user.entity";
-import { UserUsesCases } from "../aplication/user/user.usesCases";
 import { db } from "../../src/infrastructure/models/db";
 
 export const VerRoles = async (
@@ -14,18 +9,18 @@ export const VerRoles = async (
 ) => {
   const permissionVer = "ver-rol";
   try {
-    const token = req.headers.authorization;
-    if (!token) return res.status(403).json({ message: "Not token provided" });
+    if (!verifytoken(req))
+      return res.status(403).json({ message: "Not token provided" });
 
-    const id = req.user! as UserEntity;
+    const { id } = req.user! as UserEntity;
 
-    const user_id = id.role_id;
-    const tienePermiso = await consulta(user_id, permissionVer);
-    if (!tienePermiso)return res.status(403).json({ message: "No tienes permisos!!" });
+    const tienePermiso = await consulta(id, permissionVer);
+    if (!tienePermiso)
+      return res.status(403).json({ message: "No tienes permisos!!" });
     next();
   } catch (error) {
     res.status(404).json({ message: "Unauthorized" });
-  } 
+  }
 };
 
 export const CreateRoles = async (
@@ -35,41 +30,50 @@ export const CreateRoles = async (
 ) => {
   const permissionVer = "crear-rol";
   try {
-    const token = req.headers.authorization;
-    if (!token) return res.status(403).json({ message: "Not token provided" });
+    if (!verifytoken(req))
+      return res.status(403).json({ message: "Not token provided" });
 
-    const id = req.user! as UserEntity;
-
-    const user_id = id.role_id;
-    const tienePermiso = await consulta(user_id, permissionVer);
-    if (!tienePermiso)return res.status(403).json({ message: "No tienes permisos!!" });
+    const { id } = req.user! as UserEntity;
+    const tienePermiso = await consulta(id, permissionVer);
+    if (!tienePermiso)
+      return res.status(403).json({ message: "No tienes permisos!!" });
     next();
   } catch (error) {
     res.status(404).json({ message: "Unauthorized" });
   }
 };
 
-export const consulta = async (id:any, permissionVer:String) => {
+/*
+This code finds a unique user based on their ID, then checks to see if they have a given permission.
+If the user is found and has the specified permission, tienePermiso returns true. Otherwise, it returns false.
+*/
 
-  const resp = await db.users.findMany({
+export const consulta = async (id: any, permissionVer: String) => {
+  const resp = await db.users.findUnique({
     where: {
       id: id,
     },
     include: {
       roles_users_role_idToroles: {
-        include: { role_has_permissions: { include: { permissions: true } } },
+        select: { role_has_permissions: { select: { permissions: true } } },
       },
     },
   });
 
-  const permisos = resp[0].roles_users_role_idToroles?.role_has_permissions;
+  if (!resp) return false;
 
-  let tienePermiso = false;
-  permisos?.forEach((role) => {
-    if (role.permissions.name == permissionVer) {
-      tienePermiso = true;
-    } 
-  });
+  const permisos = resp.roles_users_role_idToroles?.role_has_permissions;
 
-  return tienePermiso;
-}
+  let tienePermiso = Boolean(
+    permisos?.some((role) => role.permissions.name === permissionVer)
+  );
+
+  return tienePermiso || false;
+};
+
+const verifytoken = (req: Request) => {
+  const token = req.headers.authorization;
+  if (!token) return false;
+
+  return true;
+};

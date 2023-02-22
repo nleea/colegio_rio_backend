@@ -5,6 +5,7 @@ const routeAuth = Router();
 import { UserController } from "../../controller/user/user.controller";
 import { UserRepositoryClass } from "../../repository/userRepository/UserRepository";
 import { UserUsesCases } from "../../../aplication/user/user.usesCases";
+import { CreateRoles } from "../../../middleware/roles";
 
 /** Injeciones de dependencia*/
 const UserRepository = new UserRepositoryClass();
@@ -12,12 +13,12 @@ const userUsescases = new UserUsesCases(UserRepository);
 const userController = new UserController(userUsescases);
 
 /** Rutas para la aplicaion */
-
 route.get("/", userController.GetAll);
 route.get("/profile/", userController.userProfile);
 route.put("/edit/:id", userController.updateUser);
+
 /** Auth Routes */
-routeAuth.post("/register/", userController.insertUser);
+routeAuth.post("/register/", CreateRoles, userController.insertUser);
 routeAuth.post("/login/", userController.auth);
 
 /** export properties */

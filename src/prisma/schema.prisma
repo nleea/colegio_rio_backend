@@ -179,19 +179,19 @@ model comaterias {
 }
 
 model corolesperfiles {
-  id                                           Int       @id @default(autoincrement())
+  id                                         Int       @id @default(autoincrement())
   role_id                                    Int
-  rol_id                                       Int
-  estado                                       Boolean   @default(true)
-  observacion                                  String?   @db.VarChar(255)
-  created_at                                   DateTime  @default(now()) @db.Timestamp(0)
-  created_by                                   Int       @default(2)
-  updated_at                                   DateTime? @db.Timestamp(0)
-  updated_by                                   Int?
-  deleted_at                                   DateTime? @db.Timestamp(0)
-  deleted_by                                   Int?
+  rol_id                                     Int
+  estado                                     Boolean   @default(true)
+  observacion                                String?   @db.VarChar(255)
+  created_at                                 DateTime  @default(now()) @db.Timestamp(0)
+  created_by                                 Int       @default(2)
+  updated_at                                 DateTime? @db.Timestamp(0)
+  updated_by                                 Int?
+  deleted_at                                 DateTime? @db.Timestamp(0)
+  deleted_by                                 Int?
   maestras_corolesperfiles_role_idTomaestras maestras  @relation("corolesperfiles_role_idTomaestras", fields: [role_id], references: [id], onDelete: Cascade)
-  maestras_corolesperfiles_rol_idTomaestras    maestras  @relation("corolesperfiles_rol_idTomaestras", fields: [rol_id], references: [id], onDelete: Cascade)
+  maestras_corolesperfiles_rol_idTomaestras  maestras  @relation("corolesperfiles_rol_idTomaestras", fields: [rol_id], references: [id], onDelete: Cascade)
 
   @@index([role_id], map: "corolesperfiles_role_id_foreign")
   @@index([rol_id], map: "corolesperfiles_rol_id_foreign")
@@ -278,7 +278,7 @@ model maestras {
   cofuncionarios_cofuncionarios_cargo_idTomaestras        cofuncionarios[]  @relation("cofuncionarios_cargo_idTomaestras")
   cofuncionarios_cofuncionarios_dependencia_idTomaestras  cofuncionarios[]  @relation("cofuncionarios_dependencia_idTomaestras")
   cofuncionarios_cofuncionarios_especialidad_idTomaestras cofuncionarios[]  @relation("cofuncionarios_especialidad_idTomaestras")
-  corolesperfiles_corolesperfiles_role_idTomaestras     corolesperfiles[] @relation("corolesperfiles_role_idTomaestras")
+  corolesperfiles_corolesperfiles_role_idTomaestras       corolesperfiles[] @relation("corolesperfiles_role_idTomaestras")
   corolesperfiles_corolesperfiles_rol_idTomaestras        corolesperfiles[] @relation("corolesperfiles_rol_idTomaestras")
   estudiantes                                             estudiantes[]
   maestras_maestras_jerarquiaTomaestras                   maestras?         @relation("maestras_jerarquiaTomaestras", fields: [jerarquia], references: [id], onDelete: Cascade)
@@ -508,8 +508,7 @@ model roles {
   updated_at           DateTime?              @db.Timestamp(0)
   model_has_roles      model_has_roles[]
   role_has_permissions role_has_permissions[]
-
-  @@unique([name], map: "roles_name_guard_name_unique")
+  users_role_idToroles users[]                @relation("users_role_idToroles")
 }
 
 model users {
@@ -526,7 +525,7 @@ model users {
   remember_token                     String?   @db.VarChar(100)
   current_team_id                    Int?
   estado_id                          Int?
-  role_id                          Int?
+  role_id                            Int?
   persona_id                         Int       @unique(map: "users_persona_id_unique")
   created_at                         DateTime  @default(now()) @db.Timestamp(0)
   created_by                         Int       @default(1)
@@ -535,7 +534,7 @@ model users {
   deleted_at                         DateTime? @db.Timestamp(0)
   deleted_by                         Int?
   maestras_users_estado_idTomaestras maestras? @relation("users_estado_idTomaestras", fields: [estado_id], references: [id], onDelete: Cascade)
-  roles_users_role_idToroles roles? @relation("users_role_idToroles", fields: [role_id], references: [id], onDelete: Cascade)
+  roles_users_role_idToroles         roles?    @relation("users_role_idToroles", fields: [role_id], references: [id], onDelete: Cascade)
   personas                           personas  @relation(fields: [persona_id], references: [id], onDelete: Cascade, map: "users_persona_id_foreign")
 
   @@index([estado_id], map: "users_estado_id_foreign")

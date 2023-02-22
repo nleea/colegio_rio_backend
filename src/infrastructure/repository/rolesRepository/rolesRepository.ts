@@ -52,18 +52,12 @@ export class RolesRepositoryClass implements RolesRepository {
     const { name, role_has_permissions } = body;
 
     try {
-      await this.#db.roles.create({
+      await this.#db.role_has_permissions.create({
         data: {
-          name: "t",
-          role_has_permissions: {
-            connect: [
-              { permission_id_role_id: { permission_id: 10, role_id: 1 } },
-              { permission_id_role_id: { permission_id: 20, role_id: 1 } }
-            ],
-          },
+          roles: { create: { name } },
+          permissions: { connect: { id: 1 } },
         },
       });
-  
 
       return {
         status: 200,
@@ -89,13 +83,11 @@ export class RolesRepositoryClass implements RolesRepository {
     }
   }
 
-  async showRolesPermissions (id: number ): Promise<any>{
-    
+  async showRolesPermissions(id: number): Promise<any> {
     const resp = await db.users.findMany({
       where: {
-        id: id
-      }
-    })
+        id: id,
+      },
+    });
   }
-
 }
