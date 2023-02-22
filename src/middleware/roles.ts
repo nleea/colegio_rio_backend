@@ -25,9 +25,29 @@ export const VerRoles = async (
     next();
   } catch (error) {
     res.status(404).json({ message: "Unauthorized" });
-  }
+  } 
 };
 
+export const CreateRoles = async (
+  req: Request,
+  res: Response,
+  next: () => void
+) => {
+  const permissionVer = "crear-rol";
+  try {
+    const token = req.headers.authorization;
+    if (!token) return res.status(403).json({ message: "Not token provided" });
+
+    const id = req.user! as UserEntity;
+
+    const user_id = id.role_id;
+    const tienePermiso = await consulta(user_id, permissionVer);
+    if (!tienePermiso)return res.status(403).json({ message: "No tienes permisos!!" });
+    next();
+  } catch (error) {
+    res.status(404).json({ message: "Unauthorized" });
+  }
+};
 
 export const consulta = async (id:any, permissionVer:String) => {
 
