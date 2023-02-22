@@ -13,7 +13,7 @@ export interface UserEntity extends users {
   remember_token: string | null;
   current_team_id: number | null;
   estado_id: number | null;
-  perfil_id: number | null;
+  role_id: number | null;
   persona_id: number;
   created_at: Date;
   created_by: number;
@@ -35,7 +35,7 @@ export interface UserCreateEntity {
   apellido: string;
   tipoidentificacion_id: number;
   sexo_id: number;
-  perfil_id: number;
+  role_id: number;
   roles: string;
 }
 

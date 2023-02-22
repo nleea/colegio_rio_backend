@@ -61,7 +61,7 @@ export class UserRepositoryClass implements UserRepository {
       name,
       nombre,
       password,
-      perfil_id,
+      role_id,
       sexo_id,
       tipoidentificacion_id,
     } = body;
@@ -81,7 +81,7 @@ export class UserRepositoryClass implements UserRepository {
             create: {
               password: hashPin(password).encrypted,
               username: name,
-              perfil_id,
+              role_id,
               email,
             },
           },

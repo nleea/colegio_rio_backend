@@ -28,4 +28,9 @@ export class RolesController {
     const resp = await this.rolesUsesCases.storeRoles(rolecrea); 
     return res.json(resp);
   }
+
+  showPermission = async (req: Request, res: Response, id: number ) => {
+
+    return res.json(id)
+  }
 }

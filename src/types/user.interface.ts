@@ -9,6 +9,6 @@ export interface UserInterface {
   apellido: string;
   tipoidentificacion_id: number;
   sexo_id: number;
-  perfil_id: number;
+  role_id: number;
   roles: string;
 }
