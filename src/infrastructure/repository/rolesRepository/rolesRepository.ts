@@ -84,4 +84,14 @@ export class RolesRepositoryClass implements RolesRepository {
       }
     }
   }
+
+  async showRolesPermissions (id: number ): Promise<any>{
+    
+    const resp = await db.users.findMany({
+      where: {
+        id: id
+      }
+    })
+  }
+
 }
