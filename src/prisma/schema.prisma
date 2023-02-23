@@ -422,6 +422,8 @@ model personas {
   deleted_at            DateTime?    @db.Timestamp(0)
   deleted_by            Int?
   estudiantes           estudiantes?
+  users                 users?
+
 }
 
 model role_has_permissions {
@@ -484,6 +486,8 @@ model users {
   deleted_at                DateTime? @db.Timestamp(0)
   deleted_by                Int?
 
+  personas                  personas @relation(fields: [persona_id], references: [id], onDelete: Cascade, map:"user_persona_id_foreign")
   @@index([estado_id], map: "users_estado_id_foreign")
   @@index([role_id], map: "users_role_id_foreign")
+  
 }
