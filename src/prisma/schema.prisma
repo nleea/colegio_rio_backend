@@ -75,6 +75,74 @@ model cocursos {
   @@index([sede_id], map: "cocursos_sede_id_foreign")
 }
 
+model asistencia {
+  id                Int       @id @default(autoincrement())
+  fechaingreso      DateTime? @db.Date
+  estudiante_id     Int       @unique(map: "asistencia_estudiante_id_unique")
+  entrada_id        Int
+  motivo            String?   @db.VarChar(100)
+  respuesta_llamada String?   @db.VarChar(100)
+  incapacidad       String?   @db.VarChar(150)
+  observacion       String?   @db.VarChar(100)
+  diagnostico       String?   @db.VarChar(100)
+  jornada           String?   @db.VarChar(2)
+  retardo           String?   @db.VarChar(2)
+  estado_id         Int
+  created_at        DateTime  @default(now()) @db.Timestamp(0)
+  created_by        Int       @default(1)
+  updated_at        DateTime? @db.Timestamp(0)
+  updated_by        Int?
+  deleted_at        DateTime? @db.Timestamp(0)
+  deleted_by        Int?
+
+  @@index([entrada_id], map: "asistencia_entrada_id_foreign")
+  @@index([estado_id], map: "asistencia_estado_id_foreign")
+  @@index([estudiante_id], map: "asistencia_estudiante_id_foreign")
+}
+
+model coareas {
+  id         Int          @id @default(autoincrement())
+  nombre     String       @db.VarChar(255)
+  grado_id   Int
+  sede_id    Int
+  codigo     String       @db.VarChar(255)
+  created_at DateTime     @default(now()) @db.Timestamp(0)
+  created_by Int
+  updated_at DateTime?    @db.Timestamp(0)
+  updated_by Int?
+  deleted_at DateTime?    @db.Timestamp(0)
+  deleted_by Int?
+  estado_id  Int?
+  cogrados   cogrados     @relation(fields: [grado_id], references: [id], onDelete: Cascade, map: "coareas_grado_id_foreign_key")
+  cosedes    cosedes      @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "coareas_sede_id_foreign_key")
+  comaterias comaterias[]
+
+  @@index([grado_id], map: "coareas_grado_id_foreign")
+  @@index([sede_id], map: "coareas_sede_id_foreign")
+}
+
+model cocursos {
+  id             Int             @id @default(autoincrement())
+  codigo         String          @db.VarChar(50)
+  nombre         String          @db.VarChar(50)
+  grado_id       Int
+  sede_id        Int
+  director_id    Int?
+  created_at     DateTime        @default(now()) @db.Timestamp(0)
+  created_by     Int
+  updated_at     DateTime?       @db.Timestamp(0)
+  updated_by     Int?
+  deleted_at     DateTime?       @db.Timestamp(0)
+  deleted_by     Int?
+  cofuncionarios cofuncionarios? @relation(fields: [director_id], references: [id], onDelete: Cascade, map: "cocursos_director_id_foreign_key")
+  cogrados       cogrados        @relation(fields: [grado_id], references: [id], onDelete: Cascade, map: "cocursos_grado_id_foreign_key")
+  cosedes        cosedes         @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "cocursos_sede_id_foreign_key")
+
+  @@index([director_id], map: "cocursos_director_id_foreign")
+  @@index([grado_id], map: "cocursos_grado_id_foreign")
+  @@index([sede_id], map: "cocursos_sede_id_foreign")
+}
+
 model codiasnohabiles {
   id         Int       @id @default(autoincrement())
   tipodia_id Int
@@ -104,7 +172,7 @@ model coeventos {
   updated_by    Int?
   deleted_at    DateTime? @db.Timestamp(0)
   deleted_by    Int?
-  maestras      maestras  @relation(fields: [tipoevento_id], references: [id], onDelete: NoAction, map: "eventos_tipoevento_id_foreign_key")
+  maestras      maestras  @relation(fields: [tipoevento_id], references: [id], onDelete: NoAction, map: "eventos_tipoevento_id_foreign_key", map: "eventos_tipoevento_id_foreign_key")
 
   @@index([tipoevento_id], map: "eventos_tipoevento_id_foreign")
 }
@@ -115,6 +183,7 @@ model cofuncionarios {
   tarjetaprofesional                                String     @db.VarChar(150)
   persona_id                                        Int        @unique(map: "cofuncionarios_persona_id_unique")
   cargo_id                                          Int?
+  sede_id                                           Int?
   sede_id                                           Int?
   especialidad_id                                   Int?
   dependencia_id                                    Int?
@@ -127,9 +196,11 @@ model cofuncionarios {
   deleted_at                                        DateTime?  @db.Timestamp(0)
   deleted_by                                        Int?
   cocursos                                          cocursos[]
-  maestras_cofuncionarios_cargo_idTomaestras        maestras?  @relation("cofuncionarios_cargo_idTomaestras", fields: [cargo_id], references: [id], onDelete: Cascade, map: "cofuncionarios_cargo_id_foreign_key")
-  maestras_cofuncionarios_dependencia_idTomaestras  maestras?  @relation("cofuncionarios_dependencia_idTomaestras", fields: [dependencia_id], references: [id], onDelete: Cascade, map: "cofuncionarios_dependencia_id_foreign_key")
+  cocursos                                          cocursos[]
+  maestras_cofuncionarios_cargo_idTomaestras        maestras?  @relation("cofuncionarios_cargo_idTomaestras", fields: [cargo_id], references: [id], onDelete: Cascade, map: "cofuncionarios_cargo_id_foreign_key", map: "cofuncionarios_cargo_id_foreign_key")
+  maestras_cofuncionarios_dependencia_idTomaestras  maestras?  @relation("cofuncionarios_dependencia_idTomaestras", fields: [dependencia_id], references: [id], onDelete: Cascade, map: "cofuncionarios_dependencia_id_foreign_key", map: "cofuncionarios_dependencia_id_foreign_key")
   maestras_cofuncionarios_especialidad_idTomaestras maestras?  @relation("cofuncionarios_especialidad_idTomaestras", fields: [especialidad_id], references: [id], onDelete: Cascade, map: "cofuncionarios_especialidad_id_foreign_key")
+  cosedes                                           cosedes?   @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "cofuncionarios_sede_id_foreign_key", map: "cofuncionarios_especialidad_id_foreign_key")
   cosedes                                           cosedes?   @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "cofuncionarios_sede_id_foreign_key")
   cogrados                                          cogrados[]
 
@@ -137,6 +208,7 @@ model cofuncionarios {
   @@index([dependencia_id], map: "cofuncionarios_dependencia_id_foreign")
   @@index([especialidad_id], map: "cofuncionarios_especialidad_id_foreign")
   @@index([estado_id], map: "cofuncionarios_estado_id_foreign")
+  @@index([sede_id], map: "cofuncionarios_sede_id_foreign")
   @@index([sede_id], map: "cofuncionarios_sede_id_foreign")
   @@index([tipofuncionario_id], map: "cofuncionarios_tipofuncionario_id_foreign")
 }
@@ -154,8 +226,10 @@ model cogrados {
   deleted_by          Int?
   coareas             coareas[]
   cocursos            cocursos[]
-  cofuncionarios      cofuncionarios?       @relation(fields: [director_id], references: [id], onDelete: Cascade, map: "cogrados_director_id_foreign_key")
-  cosedes             cosedes               @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "cogrados_sede_id_foreign_key")
+  coareas             coareas[]
+  cocursos            cocursos[]
+  cofuncionarios      cofuncionarios?       @relation(fields: [director_id], references: [id], onDelete: Cascade, map: "cogrados_director_id_foreign_key", map: "cogrados_director_id_foreign_key")
+  cosedes             cosedes               @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "cogrados_sede_id_foreign_key", map: "cogrados_sede_id_foreign_key")
   cogradosestudiantes cogradosestudiantes[]
 
   @@index([director_id], map: "cogrados_director_id_foreign")
@@ -174,6 +248,9 @@ model cogradosestudiantes {
   updated_by    Int?
   deleted_at    DateTime?   @db.Timestamp(0)
   deleted_by    Int?
+  estudiantes   estudiantes @relation(fields: [estudiante_id], references: [id], onDelete: Cascade, map: "cogradosEstudiantes_estudiante_id_foreign_key")
+  cogrados      cogrados    @relation(fields: [curso_id], references: [id], onDelete: Cascade, map: "cogradosEstudiantes_grado_id_foreign")
+  cosedes       cosedes     @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "cogradosEstudiantes_sede_id_foreign_key")
   estudiantes   estudiantes @relation(fields: [estudiante_id], references: [id], onDelete: Cascade, map: "cogradosEstudiantes_estudiante_id_foreign_key")
   cogrados      cogrados    @relation(fields: [curso_id], references: [id], onDelete: Cascade, map: "cogradosEstudiantes_grado_id_foreign")
   cosedes       cosedes     @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "cogradosEstudiantes_sede_id_foreign_key")
@@ -220,7 +297,22 @@ model comaterias {
   estado_id  Int?
   coareas    coareas   @relation(fields: [area_id], references: [id], onDelete: Cascade, map: "comaterias_area_id_foreign_key")
   cosedes    cosedes   @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "comaterias_sede_id_foreign_key")
+  id         Int       @id @default(autoincrement())
+  nombre     String    @db.VarChar(255)
+  sede_id    Int
+  area_id    Int
+  codigo     String    @db.VarChar(255)
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+  created_by Int
+  updated_at DateTime? @db.Timestamp(0)
+  updated_by Int?
+  deleted_at DateTime? @db.Timestamp(0)
+  deleted_by Int?
+  estado_id  Int?
+  coareas    coareas   @relation(fields: [area_id], references: [id], onDelete: Cascade, map: "comaterias_area_id_foreign_key")
+  cosedes    cosedes   @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "comaterias_sede_id_foreign_key")
 
+  @@index([area_id], map: "comaterias_area_id_foreign")
   @@index([area_id], map: "comaterias_area_id_foreign")
   @@index([sede_id], map: "comaterias_sede_id_foreign")
 }
@@ -239,7 +331,21 @@ model corolesperfiles {
   deleted_by                                   Int?
   maestras_corolesperfiles_perfil_idTomaestras maestras  @relation("corolesperfiles_perfil_idTomaestras", fields: [perfil_id], references: [id], onDelete: Cascade, map: "corolesperfiles_perfil_id_foreign_key")
   maestras_corolesperfiles_rol_idTomaestras    maestras  @relation("corolesperfiles_rol_idTomaestras", fields: [rol_id], references: [id], onDelete: Cascade, map: "corolesperfiles_rol_id_foreign_key")
+  id                                           Int       @id @default(autoincrement())
+  perfil_id                                    Int
+  rol_id                                       Int
+  estado                                       Boolean   @default(true)
+  observacion                                  String?   @db.VarChar(255)
+  created_at                                   DateTime  @default(now()) @db.Timestamp(0)
+  created_by                                   Int       @default(2)
+  updated_at                                   DateTime? @db.Timestamp(0)
+  updated_by                                   Int?
+  deleted_at                                   DateTime? @db.Timestamp(0)
+  deleted_by                                   Int?
+  maestras_corolesperfiles_perfil_idTomaestras maestras  @relation("corolesperfiles_perfil_idTomaestras", fields: [perfil_id], references: [id], onDelete: Cascade, map: "corolesperfiles_perfil_id_foreign_key")
+  maestras_corolesperfiles_rol_idTomaestras    maestras  @relation("corolesperfiles_rol_idTomaestras", fields: [rol_id], references: [id], onDelete: Cascade, map: "corolesperfiles_rol_id_foreign_key")
 
+  @@index([perfil_id], map: "corolesperfiles_perfil_id_foreign")
   @@index([perfil_id], map: "corolesperfiles_perfil_id_foreign")
   @@index([rol_id], map: "corolesperfiles_rol_id_foreign")
 }
@@ -261,9 +367,13 @@ model cosedes {
   coareas             coareas[]
   cocursos            cocursos[]
   cofuncionarios      cofuncionarios[]
+  coareas             coareas[]
+  cocursos            cocursos[]
+  cofuncionarios      cofuncionarios[]
   cogrados            cogrados[]
   cogradosestudiantes cogradosestudiantes[]
   comaterias          comaterias[]
+  estudiantes         estudiantes[]
   estudiantes         estudiantes[]
 
   @@index([colegios_id], map: "cosedes_empresa_id_foreign")
@@ -284,7 +394,23 @@ model estudiantes {
   cogradosestudiantes cogradosestudiantes[]
   personas            personas              @relation(fields: [persona_id], references: [id], onDelete: NoAction, map: "estudiantes_persona_id_foreign_key")
   cosedes             cosedes?              @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "estudiantes_sede_id_foreign_key")
+  id                  Int                   @id @default(autoincrement())
+  fechaingreso        DateTime?             @db.Date
+  fechasalida         DateTime?             @db.Date
+  persona_id          Int                   @unique(map: "estudiantes_persona_id_unique")
+  sede_id             Int?
+  created_at          DateTime              @default(now()) @db.Timestamp(0)
+  created_by          Int                   @default(1)
+  updated_at          DateTime?             @db.Timestamp(0)
+  updated_by          Int?
+  deleted_at          DateTime?             @db.Timestamp(0)
+  deleted_by          Int?
+  cogradosestudiantes cogradosestudiantes[]
+  personas            personas              @relation(fields: [persona_id], references: [id], onDelete: NoAction, map: "estudiantes_persona_id_foreign_key")
+  cosedes             cosedes?              @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "estudiantes_sede_id_foreign_key")
 
+  @@index([persona_id], map: "estudiantes_persona_id_foreign")
+  @@index([sede_id], map: "estudiantes_sede_id_foreign")
   @@index([persona_id], map: "estudiantes_persona_id_foreign")
   @@index([sede_id], map: "estudiantes_sede_id_foreign")
 }
@@ -309,9 +435,12 @@ model maestras {
   cofuncionarios_cofuncionarios_dependencia_idTomaestras  cofuncionarios[]  @relation("cofuncionarios_dependencia_idTomaestras")
   cofuncionarios_cofuncionarios_especialidad_idTomaestras cofuncionarios[]  @relation("cofuncionarios_especialidad_idTomaestras")
   corolesperfiles_corolesperfiles_perfil_idTomaestras     corolesperfiles[] @relation("corolesperfiles_perfil_idTomaestras")
+  corolesperfiles_corolesperfiles_perfil_idTomaestras     corolesperfiles[] @relation("corolesperfiles_perfil_idTomaestras")
   corolesperfiles_corolesperfiles_rol_idTomaestras        corolesperfiles[] @relation("corolesperfiles_rol_idTomaestras")
   maestras_maestras_jerarquiaTomaestras                   maestras?         @relation("maestras_jerarquiaTomaestras", fields: [jerarquia], references: [id], onDelete: Cascade, map: "maestras_jerarquia_foreign_key")
+  maestras_maestras_jerarquiaTomaestras                   maestras?         @relation("maestras_jerarquiaTomaestras", fields: [jerarquia], references: [id], onDelete: Cascade, map: "maestras_jerarquia_foreign_key")
   other_maestras_maestras_jerarquiaTomaestras             maestras[]        @relation("maestras_jerarquiaTomaestras")
+  maestras_maestras_padreTomaestras                       maestras?         @relation("maestras_padreTomaestras", fields: [padre], references: [id], onDelete: Cascade, map: "maestras_padre_foreign_key")
   maestras_maestras_padreTomaestras                       maestras?         @relation("maestras_padreTomaestras", fields: [padre], references: [id], onDelete: Cascade, map: "maestras_padre_foreign_key")
   other_maestras_maestras_padreTomaestras                 maestras[]        @relation("maestras_padreTomaestras")
 
@@ -333,10 +462,29 @@ model modulos {
   deleted_at       DateTime?          @db.Timestamp(0)
   deleted_by       Int?
   modulos_has_role modulos_has_role[]
+model modulos {
+  id               Int                @id @default(autoincrement())
+  name             String?
+  path             String?
+  icon             String?
+  children         String?
+  order            Int?
+  created_at       DateTime?          @default(now()) @db.Timestamp(0)
+  created_by       Int?
+  updated_at       DateTime?          @db.Timestamp(0)
+  updated_by       Int?
+  deleted_at       DateTime?          @db.Timestamp(0)
+  deleted_by       Int?
+  modulos_has_role modulos_has_role[]
 }
 
 model modulos_has_role {
+model modulos_has_role {
   id         Int       @id @default(autoincrement())
+  modulo_id  Int
+  role_id    Int
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  created_by Int?
   modulo_id  Int
   role_id    Int
   created_at DateTime? @default(now()) @db.Timestamp(0)
@@ -347,12 +495,34 @@ model modulos_has_role {
   deleted_by Int?
   modulos    modulos   @relation(fields: [modulo_id], references: [id], onDelete: Cascade, map: "modulos_has_role_modulo_id_foreign_key")
   roles      roles     @relation(fields: [role_id], references: [id], onDelete: Cascade, map: "modulos_has_role_role_id_foreign_key")
+  updated_by Int?
+  deleted_at DateTime? @db.Timestamp(0)
+  deleted_by Int?
+  modulos    modulos   @relation(fields: [modulo_id], references: [id], onDelete: Cascade, map: "modulos_has_role_modulo_id_foreign_key")
+  roles      roles     @relation(fields: [role_id], references: [id], onDelete: Cascade, map: "modulos_has_role_role_id_foreign_key")
 
+  @@index([modulo_id], map: "modulos_has_role_modulo_id_foreign")
+  @@index([role_id], map: "modulos_has_role_role_id_foreign")
   @@index([modulo_id], map: "modulos_has_role_modulo_id_foreign")
   @@index([role_id], map: "modulos_has_role_role_id_foreign")
 }
 
 model penotas {
+  id            Int       @id @default(autoincrement())
+  estudiante_id Int
+  profesor_id   Int
+  materia_id    Int
+  grado_id      Int
+  curso_id      Int
+  nota          Float
+  a_o           String    @map("año") @db.VarChar(50)
+  corte_id      Int
+  created_at    DateTime  @default(now()) @db.Timestamp(0)
+  created_by    Int       @default(1)
+  updated_at    DateTime? @db.Timestamp(0)
+  updated_by    Int?
+  deleted_at    DateTime? @db.Timestamp(0)
+  deleted_by    Int?
   id            Int       @id @default(autoincrement())
   estudiante_id Int
   profesor_id   Int
@@ -387,6 +557,15 @@ model permissions {
   updated_by Int?
   deleted_at DateTime? @db.Timestamp(0)
   deleted_by Int?
+  id         Int       @id @default(autoincrement())
+  name       String    @unique(map: "permissions_name_unique")
+  categoria  String
+  created_by Int?
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  updated_by Int?
+  deleted_at DateTime? @db.Timestamp(0)
+  deleted_by Int?
 }
 
 model personas {
@@ -400,6 +579,7 @@ model personas {
   telefonowhatsapp      String?      @db.VarChar(50)
   email                 String       @db.VarChar(50)
   sendemail             Boolean?     @default(false)
+  fechanacimiento       DateTime     @db.Date
   fechanacimiento       DateTime     @db.Date
   nombre                String       @db.VarChar(50)
   segundonombre         String?      @db.VarChar(50)
@@ -423,9 +603,11 @@ model personas {
   deleted_by            Int?
   estudiantes           estudiantes?
   users                 users?
+
 }
 
 model role_has_permissions {
+  id            Int       @default(autoincrement())
   id            Int       @default(autoincrement())
   permission_id Int
   role_id       Int
@@ -435,13 +617,30 @@ model role_has_permissions {
   updated_by    Int?
   deleted_at    DateTime? @db.Timestamp(0)
   deleted_by    Int?
+  created_at    DateTime  @default(now()) @db.Timestamp(0)
+  created_by    Int?
+  updated_at    DateTime? @db.Timestamp(0)
+  updated_by    Int?
+  deleted_at    DateTime? @db.Timestamp(0)
+  deleted_by    Int?
 
-  @@id([id, permission_id, role_id])
+  @@id([id, id, permission_id, role_id])
+  @@index([permission_id], map: "role_has_permissions_permission_id_foreign")
   @@index([permission_id], map: "role_has_permissions_permission_id_foreign")
   @@index([role_id], map: "role_has_permissions_role_id_foreign")
 }
 
 model roles {
+  id               Int                @id @default(autoincrement())
+  name             String             @unique(map: "roles_name_unique")
+  categoria        String
+  created_at       DateTime           @default(now()) @db.Timestamp(0)
+  created_by       Int?
+  updated_at       DateTime?          @db.Timestamp(0)
+  updated_by       Int?
+  deleted_at       DateTime?          @db.Timestamp(0)
+  deleted_by       Int?
+  modulos_has_role modulos_has_role[]
   id               Int                @id @default(autoincrement())
   name             String             @unique(map: "roles_name_unique")
   categoria        String
@@ -488,4 +687,33 @@ model users {
 
   @@index([estado_id], map: "users_estado_id_foreign")
   @@index([role_id], map: "users_role_id_foreign")
+}
+
+model users {
+  id                        Int       @id @default(autoincrement())
+  username                  String    @unique(map: "users_username_unique") @db.VarChar(255)
+  password                  String    @db.VarChar(255)
+  two_factor_secret         String?
+  two_factor_recovery_codes String?
+  telefonomovil             String?   @db.VarChar(50)
+  email                     String?   @db.VarChar(50)
+  email_verified_at         DateTime? @db.Timestamp(0)
+  codigo_sms                String?   @db.VarChar(255)
+  apitoken                  String?   @db.VarChar(255)
+  remember_token            String?   @db.VarChar(100)
+  current_team_id           Int?
+  estado_id                 Int?
+  role_id                   Int?
+  persona_id                Int       @unique(map: "users_persona_id_unique")
+  created_at                DateTime  @default(now()) @db.Timestamp(0)
+  created_by                Int       @default(1)
+  updated_at                DateTime? @db.Timestamp(0)
+  updated_by                Int?
+  deleted_at                DateTime? @db.Timestamp(0)
+  deleted_by                Int?
+
+  personas                  personas @relation(fields: [persona_id], references: [id], onDelete: Cascade, map:"user_persona_id_foreign")
+  @@index([estado_id], map: "users_estado_id_foreign")
+  @@index([role_id], map: "users_role_id_foreign")
+  
 }
