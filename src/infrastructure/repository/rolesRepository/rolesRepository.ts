@@ -55,7 +55,7 @@ export class RolesRepositoryClass implements RolesRepository {
       await this.#db.role_has_permissions.create({
         data: {
           roles: { create: { name: name, categoria: "" } },
-          permissions: { connect: [{ id: 1 }, { id: 2 }] },
+          permissions: { connect: { id: 1 } },
         },
       });
 

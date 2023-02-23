@@ -120,6 +120,25 @@ export class UserRepositoryClass implements UserRepository {
     try {
       const user = await this.#db.users.findUnique({
         where: { username: username },
+        include: {
+          roles: {
+            select: {
+              modulos_has_role: {
+                select: {
+                  modulos: {
+                    select: {
+                      id: true,
+                      icon: true,
+                      path: true,
+                      name: true,
+                      children: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
       if (!user) {
@@ -148,7 +167,12 @@ export class UserRepositoryClass implements UserRepository {
       );
 
       return {
-        data: { token, user: user.id, IsAuth: true },
+        data: {
+          token,
+          user: user.id,
+          resources: user.roles?.modulos_has_role.map((p) => p.modulos),
+          IsAuth: true,
+        },
         ok: true,
         status: 200,
       };
