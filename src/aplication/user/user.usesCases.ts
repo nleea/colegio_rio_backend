@@ -21,13 +21,13 @@ export class UserUsesCases {
   }
 
   public async authUser({
-    email,
+    username,
     password,
   }: {
-    email: string;
+    username: string;
     password: string;
   }) {
-    const resp = this.userRepository.login({ email, password });
+    const resp = this.userRepository.login({ username, password });
     return resp;
   }
 

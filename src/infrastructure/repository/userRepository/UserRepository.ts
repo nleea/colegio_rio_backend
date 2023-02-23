@@ -79,10 +79,9 @@ export class UserRepositoryClass implements UserRepository {
           telefonomovil: "ss",
           users: {
             create: {
-              password: hashPin(password).encrypted,
               username: name,
-              role_id,
-              email,
+              password: hashPin(password).encrypted,
+              role_id: role_id,
             },
           },
         },
@@ -112,15 +111,16 @@ export class UserRepositoryClass implements UserRepository {
   }
 
   async login({
-    email,
+    username,
     password,
   }: {
-    email: string;
+    username: string;
     password: string;
   }): Promise<ResponseInterfaces<any> | ErrorsInterfaces<string | any>> {
     try {
-      console.log(email);
-      const user = await this.#db.users.findUnique({ where: { email: email } });
+      const user = await this.#db.users.findUnique({
+        where: { username: username },
+      });
 
       if (!user) {
         return {
@@ -133,7 +133,7 @@ export class UserRepositoryClass implements UserRepository {
       if (!comparePin(String(password), user.password)) {
         return {
           ok: false,
-          data: "Password Do not match",
+          data: "Password do not match",
           status: 400,
         };
       }
@@ -153,7 +153,6 @@ export class UserRepositoryClass implements UserRepository {
         status: 200,
       };
     } catch (error) {
-      console.log(error);
       return {
         ok: false,
         data: "sss",
@@ -170,7 +169,7 @@ export class UserRepositoryClass implements UserRepository {
         where: { id: Number(id) },
         include: { personas: true },
       });
-      
+
       return {
         data: user,
         ok: true,
