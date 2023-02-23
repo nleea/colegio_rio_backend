@@ -15,7 +15,7 @@ export const jwtAuthenticate = passport.use(
   new JwtStrategy(opt, async (payload, done) => {
     try {
       const user = await db.users.findUnique({
-        where: { email: payload.email },
+        where: { username: payload.username },
       });
       if (!user) {
         done(null, false);

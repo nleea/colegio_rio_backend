@@ -54,15 +54,19 @@ export const consulta = async (id: any, permissionVer: String) => {
       id: id,
     },
     include: {
-      roles_users_role_idToroles: {
-        select: { role_has_permissions: { select: { permissions: true } } },
+      roles: {
+        select: {
+          role_has_permissions: {
+            select: { permissions: { select: { name: true } } },
+          },
+        },
       },
     },
   });
 
   if (!resp) return false;
 
-  const permisos = resp.roles_users_role_idToroles?.role_has_permissions;
+  const permisos = resp?.roles?.role_has_permissions;
 
   let tienePermiso = Boolean(
     permisos?.some((role) => role.permissions.name === permissionVer)

@@ -18,7 +18,7 @@ export class RolesRepositoryClass implements RolesRepository {
         include: {
           role_has_permissions: {
             select: {
-              permissions: { select: { name: true, guard_name: true } },
+              permissions: { select: { name: true } },
             },
           },
         },
@@ -54,8 +54,8 @@ export class RolesRepositoryClass implements RolesRepository {
     try {
       await this.#db.role_has_permissions.create({
         data: {
-          roles: { create: { name } },
-          permissions: { connect: { id: 1 } },
+          roles: { create: { name: name, categoria: "" } },
+          permissions: { connect: [{ id: 1 }, { id: 2 }] },
         },
       });
 

@@ -19,8 +19,8 @@ export class UserController {
   };
 
   auth = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    const resp = await this.userUsesCases.authUser({ email, password });
+    const { username, password } = req.body;
+    const resp = await this.userUsesCases.authUser({ username, password });
     return res.json(resp);
   };
 
