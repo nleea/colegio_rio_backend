@@ -1,6 +1,5 @@
 import {
   UserCreateEntity,
-  UserEntity,
   UserUpdateEntity,
 } from "../../domain/user/user.entity";
 import { UserRepository } from "../../domain/user/user.repository";

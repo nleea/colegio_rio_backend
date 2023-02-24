@@ -1,4 +1,4 @@
-import { UserEntity, UserCreateEntity, UserUpdateEntity } from "./user.entity";
+import { UserCreateEntity, UserUpdateEntity } from "./user.entity";
 import {
   ErrorsInterfaces,
   ResponseInterfaces,
