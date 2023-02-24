@@ -131,7 +131,7 @@ export class UserRepositoryClass implements UserRepository {
                       icon: true,
                       path: true,
                       name: true,
-                      children: true,
+                      id_padre: true,
                     },
                   },
                 },

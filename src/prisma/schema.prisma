@@ -325,7 +325,7 @@ model modulos {
   name             String?
   path             String?
   icon             String?
-  children         String?
+  id_padre         Int?
   order            Int?
   created_at       DateTime?          @default(now()) @db.Timestamp(0)
   created_by       Int?            
