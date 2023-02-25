@@ -52,10 +52,13 @@ export class RolesRepositoryClass implements RolesRepository {
     const { name, role_has_permissions } = body;
 
     try {
-      await this.#db.role_has_permissions.create({
+      await this.#db.roles.create({
         data: {
-          roles: { create: { name: name, categoria: "" } },
-          permissions: { connect: { id: 1 } },
+          name: name,
+          categoria: "",
+          role_has_permissions: {
+            create: role_has_permissions,
+          },
         },
       });
 

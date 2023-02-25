@@ -69,7 +69,7 @@ export const consulta = async (id: any, permissionVer: String) => {
   const permisos = resp?.roles?.role_has_permissions;
 
   let tienePermiso = Boolean(
-    permisos?.some((role) => role.permissions.name === permissionVer)
+    permisos?.some((role) => role!.permissions!.name === permissionVer)
   );
 
   return tienePermiso || false;
