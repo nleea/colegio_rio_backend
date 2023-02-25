@@ -1,3 +1,4 @@
+import { ModulesEntity } from "../../../domain/modules/modules.entity";
 import { ModulesRepository } from "../../../domain/modules/modules.repository";
 import {
   ErrorsInterfaces,
@@ -24,6 +25,37 @@ export class ModulesRepositoryClass implements ModulesRepository {
         status: 200,
       };
     } catch (error) {
+      return {
+        ok: false,
+        data: "sss",
+        status: 400,
+      };
+    }
+  }
+
+  async createModules(
+    rol: number,
+    body: ModulesEntity[]
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
+    try {
+      await this.db.$transaction(
+        body.map((moduledata) =>
+          this.db.modulos_has_role.create({
+            data: {
+              roles: { connect: { id: rol } },
+              modulos: { create: moduledata },
+            },
+          })
+        )
+      );
+
+      return {
+        data: "Ok",
+        ok: true,
+        status: 200,
+      };
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         data: "sss",

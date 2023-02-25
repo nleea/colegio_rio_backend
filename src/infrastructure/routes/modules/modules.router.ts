@@ -15,5 +15,5 @@ const modulesController = new ModulesController(modulesUsescases);
 /** Rutas para la aplicaion */
 
 route.get("/", modulesController.getAll);
-
+route.post("/crear", modulesController.insertModules);
 export { route };

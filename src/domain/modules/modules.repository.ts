@@ -6,4 +6,8 @@ import {
 
 export interface ModulesRepository {
   findAllModules(): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
+  createModules(
+    rol: number,
+    body: ModulesEntity[]
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
 }
