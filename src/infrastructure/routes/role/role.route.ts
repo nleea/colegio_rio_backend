@@ -22,5 +22,6 @@ const rolesController = new RolesController(rolesUsescases,permissionsUsescases 
 route.get("/", miRoles.VerRoles, rolesController.GetAll);
 route.get("/create", miRoles.CreateRoles ,rolesController.GetCreateRole);
 route.post("/", rolesController.PostRole);
+route.get("/edit/:id", rolesController.showRole);
 
 export { route };

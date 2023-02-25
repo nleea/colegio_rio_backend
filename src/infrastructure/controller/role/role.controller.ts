@@ -33,4 +33,13 @@ export class RolesController {
 
     return res.json(id)
   }
+
+
+  showRole = async (req: Request, res: Response, ) => {
+    const { id } = req.params;
+    // console.log(req)
+    const resp = await this.rolesUsesCases.showRole(Number(id))
+    if (resp.length == 0)return res.json('Rol undefined');
+    return res.json(resp);
+  }
 }
