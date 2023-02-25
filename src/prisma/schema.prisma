@@ -338,15 +338,15 @@ model modulos {
 
 model modulos_has_role {
   id         Int       @id @default(autoincrement())
-  modulo_id  Int
-  role_id    Int
+  modulo_id  Int?
+  role_id    Int?
   created_at DateTime? @default(now()) @db.Timestamp(0)
   created_by Int?
   updated_at DateTime? @db.Timestamp(0)
   updated_by Int?
   deleted_at DateTime? @db.Timestamp(0)
   deleted_by Int?
-  modulos    modulos   @relation(fields: [modulo_id], references: [id], onDelete: Cascade, map: "modulos_has_role_modulo_id_foreign_key")
+  modulos    modulos?  @relation(fields: [modulo_id], references: [id], onDelete: Cascade, map: "modulos_has_role_modulo_id_foreign_key")
   roles      roles?    @relation(fields: [role_id], references: [id], onDelete: Cascade, map: "modulos_has_role_role_id_foreign_key")
 
   @@index([modulo_id], map: "modulos_has_role_modulo_id_foreign")
