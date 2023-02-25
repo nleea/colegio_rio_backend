@@ -18,7 +18,9 @@ export class RolesRepositoryClass implements RolesRepository {
     this.#db = db;
   }
 
-  async findAllRoles(): Promise<any> {
+  async findAllRoles(): Promise<
+    ResponseInterfaces<any> | ErrorsInterfaces<any>
+  > {
     try {
       const resp = await db.roles.findMany({
         include: {
@@ -34,9 +36,9 @@ export class RolesRepositoryClass implements RolesRepository {
         "updated_at",
       ] as any);
 
-      return resp;
+      return { data: "", ok: true, status: 200 };
     } catch (error) {
-      console.log(error);
+      return { data: "", ok: true, status: 200 };
     }
   }
   async showRole(id: number): Promise<any> {
