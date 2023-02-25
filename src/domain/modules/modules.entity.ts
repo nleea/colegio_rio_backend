@@ -1,12 +1,13 @@
 import { modulos } from "@prisma/client";
 
-export interface ModulesEntity extends modulos {
+export interface ModulesEntity {
   id: number;
   name: string | null;
   path: string | null;
   icon: string | null;
   id_padre: number | null;
   order: number | null;
+  child?: Array<any>;
   created_at: Date | null;
   created_by: number | null;
   updated_at: Date | null;

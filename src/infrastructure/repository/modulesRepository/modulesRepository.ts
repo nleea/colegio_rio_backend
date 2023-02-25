@@ -5,7 +5,7 @@ import {
   ResponseInterfaces,
 } from "../../../types/response.interfaces";
 import { PrismaClient } from "@prisma/client";
-
+import { crearMenu } from "../../../helpers/menu_resources";
 export class ModulesRepositoryClass implements ModulesRepository {
   constructor(private db: PrismaClient) {}
   async findAllModules(): Promise<
@@ -38,8 +38,11 @@ export class ModulesRepositoryClass implements ModulesRepository {
     body: ModulesEntity[]
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
     try {
+      const lastId = await this.db.modulos.count();
+      const c = crearMenu(body, lastId + 1, 0);
+
       await this.db.$transaction(
-        body.map((moduledata) =>
+        c.map((moduledata) =>
           this.db.modulos_has_role.create({
             data: {
               roles: { connect: { id: rol } },
