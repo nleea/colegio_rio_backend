@@ -60,4 +60,11 @@ export class RolesController {
     await this.rolesUsesCases.deleteRole(Number(id))
     return res.json({'mensaje':'Rol deleted'});
   }
+
+  removePermission = async (req: Request, res: Response) => {
+    const { role, permission } = req.body;
+    
+    await this.rolesUsesCases.removePermission({ role, permission })
+    return res.json({'mensaje':'Permission deleted'});
+  }
 }

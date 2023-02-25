@@ -37,5 +37,11 @@ export class RolesUsesCases {
     const resp = this.rolesRepository.deleteRole(id)
     return resp;
   }
+
+  public removePermission({role, permission}: {role:number, permission:number}){
+
+    const resp = this.rolesRepository.removePermission({role, permission})
+    return resp;
+  }
   
 }

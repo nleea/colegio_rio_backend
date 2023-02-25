@@ -139,4 +139,20 @@ export class RolesRepositoryClass implements RolesRepository {
       },
     });
   }
+
+  async removePermission({
+    role,
+    permission
+  }:{
+    role:number,
+    permission:number
+  }): Promise<any> {
+    const resp = await db.role_has_permissions.delete({
+      where: {
+        id:1
+      },
+    });
+
+
+  }
 }

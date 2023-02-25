@@ -13,4 +13,11 @@ export interface RolesRepository {
     ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   showRole(id:number): Promise<any[] | null | any>;
   deleteRole(id:number): Promise<any[] | null | any>;
+  removePermission({
+    role,
+    permission
+  }:{
+    role:number,
+    permission:number
+  }): Promise<any[] | null | any>;
 }
