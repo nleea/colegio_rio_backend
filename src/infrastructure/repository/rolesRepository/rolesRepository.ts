@@ -129,19 +129,30 @@ export class RolesRepositoryClass implements RolesRepository {
 
   async updatedRole(body: RoleUpdateEntity, id: number): Promise<any> {
     const { name, role_has_permissions } = body;
-    const resp = await db.roles.update({
-      where: {
-        id: id,
-      },
-      data: {
-        name: name,
-        role_has_permissions: {},
-      },
-    });
+    // const resp = await db.roles.update({
+    //   where: {
+    //     id: id,
+    //   },
+    //   data: {
+    //     name: name,
+    //     role_has_permissions: {},
+    //   },
+    // });
+
+    db.$transaction([
+      db.roles.update({
+        where: { id: 1 },
+        data: { role_has_permissions: { disconnect: role_has_permissions } },
+      }),
+      db.role_has_permissions.deleteMany({
+        where: { id: { in: role_has_permissions?.map((d) => d.id) } },
+      }),
+    ]);
+
+    return "ok";
   }
 
   async removePermission(id: number, role: number): Promise<any> {
-
     // const roleUser = await db.role_has_permissions.findMany({
     //   where: { id: id },
     // });
@@ -162,12 +173,10 @@ export class RolesRepositoryClass implements RolesRepository {
   }
 
   async addPermission(permission_id: number, role: number): Promise<any> {
-
     const roleUser = await db.role_has_permissions.create({
-      data: {role_id: role, permission_id: permission_id}
-    })
+      data: { role_id: role, permission_id: permission_id },
+    });
 
     return "Permission add successfully";
   }
-
 }
