@@ -22,6 +22,20 @@ export class RolesUsesCases {
     const roleValue = new RoleCreateValue({ ...body });
     const resp = this.rolesRepository.storeRoles(roleValue);
     return resp;
-
   }
+
+  public showRole(id:number){
+    const resp = this.rolesRepository.showRole(id)
+    return resp;
+  }
+  public updatedRole(body: RoleUpdateEntity, id:number){
+    const roleValue = new RoleCreateValue({ ...body });
+    const resp = this.rolesRepository.updatedRole(roleValue, id);
+    return resp;
+  }
+  public deleteRole(id:number){
+    const resp = this.rolesRepository.deleteRole(id)
+    return resp;
+  }
+  
 }
