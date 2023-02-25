@@ -30,9 +30,6 @@ export const CreateRoles = async (
 ) => {
   const permissionVer = "crear-rol";
   try {
-    if (!verifytoken(req))
-      return res.status(403).json({ message: "Not token provided" });
-
     const { id } = req.user! as UserEntity;
     const tienePermiso = await consulta(id, permissionVer);
     if (!tienePermiso)
