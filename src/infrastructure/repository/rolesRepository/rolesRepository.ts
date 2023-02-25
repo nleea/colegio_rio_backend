@@ -2,16 +2,19 @@ import { RolesRepository } from "../../../domain/roles/roles.repository";
 import {
   RoleCreateEntity,
   RoleEntity,
+  RoleUpdateEntity,
 } from "../../../domain/roles/roles.entity";
 import { Prisma } from "@prisma/client";
 import { exclude } from "../../../helpers/omit.fields";
 import { db } from "../../models/db";
+import { ResponseInterfaces, ErrorsInterfaces } from "../../../types/response.interfaces";
 
 export class RolesRepositoryClass implements RolesRepository {
   #db: typeof db;
   constructor() {
     this.#db = db;
   }
+  
   
   async findAllRoles(): Promise<any> {
     try {
@@ -70,7 +73,6 @@ export class RolesRepositoryClass implements RolesRepository {
     }
   }
 
-  // roles: RolesEntity
 
   async storeRoles(body: RoleCreateEntity): Promise<any> {
     const { name, role_has_permissions } = body;
@@ -121,5 +123,17 @@ export class RolesRepositoryClass implements RolesRepository {
         id:id,
       },
     });
+  }
+
+  async updatedRole(body: RoleUpdateEntity, id: number): Promise<any> {
+    const { name, role_has_permissions } = body;
+    const resp = await db.roles.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: name,
+      },
+    })
   }
 }

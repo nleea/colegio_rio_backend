@@ -23,6 +23,7 @@ route.get("/", miRoles.VerRoles, rolesController.GetAll);
 route.get("/create", miRoles.CreateRoles ,rolesController.GetCreateRole);
 route.post("/", rolesController.PostRole);
 route.get("/edit/:id", rolesController.showRole);
+route.put("/:id", rolesController.updatedRole);
 route.delete("/:id", rolesController.delteRole);
 
 export { route };
