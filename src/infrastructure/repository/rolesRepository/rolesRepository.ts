@@ -139,4 +139,35 @@ export class RolesRepositoryClass implements RolesRepository {
       },
     });
   }
+
+  async removePermission(id: number, role: number): Promise<any> {
+
+    // const roleUser = await db.role_has_permissions.findMany({
+    //   where: { id: id },
+    // });
+    // if (roleUser.length == 0) {
+    //   return "Permission not assigned";
+    // }
+    // if (roleUser[0].role_id != role) {
+    //   return "Unrelated role and permission";
+    // }
+
+    const resp = await db.role_has_permissions.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return "Permission deleted successfully";
+  }
+
+  async addPermission(permission_id: number, role: number): Promise<any> {
+
+    const roleUser = await db.role_has_permissions.create({
+      data: {role_id: role, permission_id: permission_id}
+    })
+
+    return "Permission add successfully";
+  }
+
 }

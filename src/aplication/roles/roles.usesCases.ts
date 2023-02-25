@@ -37,5 +37,16 @@ export class RolesUsesCases {
     const resp = this.rolesRepository.deleteRole(id)
     return resp;
   }
+
+  public removePermission(id:number, role:number){
+
+    const resp = this.rolesRepository.removePermission(id, role)
+    return resp;
+  }
+  public addPermission(permission_id:number, role:number){
+
+    const resp = this.rolesRepository.addPermission(permission_id, role)
+    return resp;
+  }
   
 }

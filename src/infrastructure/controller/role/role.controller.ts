@@ -60,4 +60,21 @@ export class RolesController {
     await this.rolesUsesCases.deleteRole(Number(id))
     return res.json({'mensaje':'Rol deleted'});
   }
+
+  removePermission = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const roleUser = (req.user as any)!.role_id;
+    const PermissionDelte = await this.rolesUsesCases.removePermission(Number(id), Number(roleUser))
+    return res.json({'mensaje':PermissionDelte});
+  }
+
+  addPermission = async (req: Request, res: Response) => {
+    const permission_id = req.body.permission_id;
+    const role_id = req.body.role_id;
+
+    // console.log(permission_id + ' - '+  role_id)
+    const PermissionAdd = await this.rolesUsesCases.addPermission(Number(permission_id), Number(role_id))
+    return res.json({'mensaje':PermissionAdd});
+  }
 }

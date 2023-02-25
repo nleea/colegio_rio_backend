@@ -25,5 +25,7 @@ route.post("/", rolesController.PostRole);
 route.get("/edit/:id", rolesController.showRole);
 route.put("/:id", rolesController.updatedRole);
 route.delete("/:id", rolesController.delteRole);
+route.post("/peremove/:id", rolesController.removePermission);
+route.post("/addpermission", rolesController.addPermission);
 
 export { route };
