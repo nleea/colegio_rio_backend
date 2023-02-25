@@ -9,4 +9,5 @@ export interface RolesRepository {
   storeRoles(body: RoleEntity
     ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   showRole(id:number): Promise<any[] | null | any>;
+  deleteRole(id:number): Promise<any[] | null | any>;
 }

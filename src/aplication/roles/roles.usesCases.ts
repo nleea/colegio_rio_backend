@@ -28,4 +28,8 @@ export class RolesUsesCases {
     const resp = this.rolesRepository.showRole(id)
     return resp;
   }
+  public deleteRole(id:number){
+    const resp = this.rolesRepository.deleteRole(id)
+    return resp;
+  }
 }

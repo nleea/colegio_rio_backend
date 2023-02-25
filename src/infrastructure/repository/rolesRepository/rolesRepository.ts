@@ -12,6 +12,7 @@ export class RolesRepositoryClass implements RolesRepository {
   constructor() {
     this.#db = db;
   }
+  
   async findAllRoles(): Promise<any> {
     try {
       const resp = await db.roles.findMany({
@@ -75,13 +76,6 @@ export class RolesRepositoryClass implements RolesRepository {
     const { name, role_has_permissions } = body;
 
     try {
-      // const rol = await this.#db.roles.create({
-      //   data: {name: name, categoria: ''
-      // , role_has_permissions: {create:}},
-
-      // })
-
-      // console.log(rol)
       await this.#db.role_has_permissions.create({
         data: {
           roles: { create: { name: name, categoria: "" } },
@@ -117,6 +111,14 @@ export class RolesRepositoryClass implements RolesRepository {
     const resp = await db.users.findMany({
       where: {
         id: id,
+      },
+    });
+  }
+
+  async deleteRole(id: number): Promise<any> {
+    const resp = await db.roles.delete({
+      where: {
+        id:id,
       },
     });
   }

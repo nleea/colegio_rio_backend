@@ -40,6 +40,16 @@ export class RolesController {
     // console.log(req)
     const resp = await this.rolesUsesCases.showRole(Number(id))
     if (resp.length == 0)return res.json('Rol undefined');
-    return res.json(resp);
+    const permissions = await this.permissionsUsesCases.listPermissions()
+    return res.json({'rol':resp, 'permissions':permissions});
+  }
+
+  delteRole = async (req: Request, res: Response, ) => {
+    const { id } = req.params;
+    // console.log(req)
+    const resp = await this.rolesUsesCases.showRole(Number(id))
+    if (resp.length == 0)return res.json('Rol undefined');
+    await this.rolesUsesCases.deleteRole(Number(id))
+    return res.json({'mensaje':'Rol deleted'});
   }
 }
