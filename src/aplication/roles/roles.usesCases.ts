@@ -4,7 +4,7 @@ import {
   RoleUpdateEntity,
 } from "../../domain/roles/roles.entity";
 import { RolesRepository } from "../../domain/roles/roles.repository";
-import { RoleCreateValue, RoleValue } from "../../domain/roles/roles.value";
+import { RoleCreateValue, RoleValue,RoleUpdatedValue } from "../../domain/roles/roles.value";
 
 export class RolesUsesCases {
   constructor(private readonly rolesRepository: RolesRepository) {}
@@ -29,7 +29,7 @@ export class RolesUsesCases {
     return resp;
   }
   public updatedRole(body: RoleUpdateEntity, id:number){
-    const roleValue = new RoleCreateValue({ ...body });
+    const roleValue = new RoleUpdatedValue({ ...body });
     const resp = this.rolesRepository.updatedRole(roleValue, id);
     return resp;
   }

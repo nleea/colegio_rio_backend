@@ -6,7 +6,11 @@ export class PermissionsUsesCases {
 
   public async listPermissions() {
     const resp = await this.permissionsRepository.findAllPermissions();
-    return resp;
+    return {
+      status: 200,
+      data: "Ok",
+      ok: true,
+    };
   }
 
   public async showPermissions(id: number){

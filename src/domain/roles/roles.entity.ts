@@ -10,5 +10,6 @@ export interface RoleCreateEntity {
 
 export interface RoleUpdateEntity {
   name: string;
-  role_has_permissions?: any[];
+  role_has_permissions_delete?: any[];
+  role_has_permissions_create?: any[];
 }

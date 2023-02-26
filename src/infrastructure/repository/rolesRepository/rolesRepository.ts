@@ -36,12 +36,14 @@ export class RolesRepositoryClass implements RolesRepository {
         "updated_at",
       ] as any);
 
-      return { data: "", ok: true, status: 200 };
+      return { data: resp, ok: true, status: 200 };
     } catch (error) {
-      return { data: "", ok: true, status: 200 };
+      return { data: error, ok: true, status: 200 };
     }
   }
-  async showRole(id: number): Promise<any> {
+  async showRole(
+    id: number
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
       const resp = await db.roles.findMany({
         where: { id: id },
@@ -58,25 +60,43 @@ export class RolesRepositoryClass implements RolesRepository {
         "updated_at",
       ] as any);
 
-      return resp;
+      return {
+        data: resp,
+        ok: false,
+        status: 200,
+      };
     } catch (error) {
-      console.log(error);
+      return {
+        data: error,
+        ok: false,
+        status: 200,
+      };
     }
   }
 
-  async createRolesP(): Promise<any> {
-    // throw new Error("Method not implements");
-
+  async createRolesP(): Promise<
+    ResponseInterfaces<any> | ErrorsInterfaces<any>
+  > {
     try {
       const resp = await db.permissions.findMany();
 
-      return resp;
+      return {
+        data: resp,
+        ok: false,
+        status: 200,
+      };
     } catch (error) {
-      console.log(error);
+      return {
+        data: error,
+        ok: false,
+        status: 200,
+      };
     }
   }
 
-  async storeRoles(body: RoleCreateEntity): Promise<any> {
+  async storeRoles(
+    body: RoleCreateEntity
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     const { name, role_has_permissions } = body;
 
     try {
@@ -113,72 +133,96 @@ export class RolesRepositoryClass implements RolesRepository {
     }
   }
 
-  async showRolesPermissions(id: number): Promise<any> {
+  async showRolesPermissions(
+    id: number
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     const resp = await db.users.findUnique({
       where: {
         id: id,
       },
     });
+    return {
+      data: resp,
+      ok: false,
+      status: 200,
+    };
   }
 
-  async deleteRole(id: number): Promise<any> {
+  async deleteRole(
+    id: number
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     const resp = await db.roles.delete({
       where: {
         id: id,
       },
     });
+    return {
+      data: resp,
+      ok: false,
+      status: 200,
+    };
   }
 
-  async updatedRole(body: RoleUpdateEntity, id: number): Promise<any> {
-    const { name, role_has_permissions } = body;
-    // const resp = await db.roles.update({
-    //   where: {
-    //     id: id,
-    //   },
-    //   data: {
-    //     name: name,
-    //     role_has_permissions: {},
-    //   },
-    // });
+  async updatedRole(
+    body: RoleUpdateEntity,
+    id: number
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
+    const { name, role_has_permissions_create, role_has_permissions_delete } =
+      body;
 
-    db.$transaction([
+    await db.$transaction([
       db.roles.update({
-        where: { id: 1 },
-        data: { role_has_permissions: { disconnect: role_has_permissions } },
+        where: { id: id },
+        data: {
+          name,
+          role_has_permissions: { create: role_has_permissions_create},
+        },
       }),
       db.role_has_permissions.deleteMany({
-        where: { id: { in: role_has_permissions?.map((d) => d.id) } },
+        where: {
+          permission_id: {
+            in: role_has_permissions_delete,
+          },
+        },
       }),
     ]);
 
-    return "ok";
+    return {
+      data: "OK",
+      ok: true,
+      status: 200,
+    };
   }
 
-  async removePermission(id: number, role: number): Promise<any> {
-    // const roleUser = await db.role_has_permissions.findMany({
-    //   where: { id: id },
-    // });
-    // if (roleUser.length == 0) {
-    //   return "Permission not assigned";
-    // }
-    // if (roleUser[0].role_id != role) {
-    //   return "Unrelated role and permission";
-    // }
-
+  async removePermission(
+    id: number,
+    role: number
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     const resp = await db.role_has_permissions.delete({
       where: {
         id: id,
       },
     });
 
-    return "Permission deleted successfully";
+    return {
+      data: resp,
+      ok: false,
+      status: 200,
+    };
   }
 
-  async addPermission(permission_id: number, role: number): Promise<any> {
+  async addPermission(
+    permission_id: number,
+    role: number
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     const roleUser = await db.role_has_permissions.create({
       data: { role_id: role, permission_id: permission_id },
     });
 
-    return "Permission add successfully";
+    return {
+      data: roleUser,
+      ok: false,
+      status: 200,
+    };
   }
 }

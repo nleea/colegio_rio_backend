@@ -17,22 +17,23 @@ export class RolesController {
   ) {}
 
   GetAll = async (req: Request, res: Response) => {
-    const resp = await this.rolesUsesCases.listRoles();
-    return res.json(resp);
+    const { data, ok, status } = await this.rolesUsesCases.listRoles();
+    return res.status(status).json({ data, ok });
   };
 
   GetCreateRole = async (req: Request, res: Response) => {
     // createRoles
 
-    const resp = await this.permissionsUsesCases.listPermissions();
-    return res.json(resp);
+    const { data, ok, status } =
+      await this.permissionsUsesCases.listPermissions();
+    return res.status(status).json({ data, ok });
   };
 
   PostRole = async (req: Request, res: Response) => {
     const body = req.body as RoleCreateEntity;
     const rolecrea = new RoleCreateValue(body);
-    const resp = await this.rolesUsesCases.storeRoles(rolecrea);
-    return res.json(resp);
+    const { data, ok, status } = await this.rolesUsesCases.storeRoles(rolecrea);
+    return res.status(status).json({ data, ok });
   };
 
   showPermission = async (req: Request, res: Response, id: number) => {
@@ -41,9 +42,9 @@ export class RolesController {
 
   showRole = async (req: Request, res: Response) => {
     const { id } = req.params;
-    // console.log(req)
+
     const resp = await this.rolesUsesCases.showRole(Number(id));
-    if (resp.length == 0) return res.json("Rol undefined");
+    //if (resp.length == 0) return res.json("Rol undefined");
     const permissions = await this.permissionsUsesCases.listPermissions();
     return res.json({ rol: resp, permissions: permissions });
   };
@@ -61,7 +62,7 @@ export class RolesController {
     const { id } = req.params;
     // console.log(req)
     const resp = await this.rolesUsesCases.showRole(Number(id));
-    if (resp.length == 0) return res.json("Rol undefined");
+    //if (resp.length == 0) return res.json("Rol undefined");
     await this.rolesUsesCases.deleteRole(Number(id));
     return res.json({ mensaje: "Rol deleted" });
   };
