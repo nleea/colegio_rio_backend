@@ -13,4 +13,14 @@ export class ModulesUsesCases {
     const resp = this.moduleRepository.createModules(id, body);
     return resp;
   }
+
+  public async deleteModules(rolId: number, body: any[]) {
+    const resp = await this.moduleRepository.deleteModule(rolId, body);
+    return resp;
+  }
+
+  public async createModulosHasRoles(rolId: number, body: any[]) {
+    const resp = await this.moduleRepository.createModuleRol(rolId, body);
+    return resp;
+  }
 }

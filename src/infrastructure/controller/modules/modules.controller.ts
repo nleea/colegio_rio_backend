@@ -23,4 +23,20 @@ export class ModulesController {
     );
     return res.status(status).json({ ok, data });
   };
+
+  deleteModulos = async (req: Request, res: Response) => {
+    const { rolId, modulos } = req.body;
+    const { data, ok, status } = await this.modulesUsesCases.deleteModules(
+      rolId,
+      modulos
+    );
+    return res.status(status).json({ ok, data });
+  };
+
+  createModuleshasRole = async (req: Request, res: Response) => {
+    const { rolId, modulos } = req.body;
+    const { data, ok, status } =
+      await this.modulesUsesCases.createModulosHasRoles(rolId, modulos);
+    return res.status(status).json({ ok, data });
+  };
 }

@@ -6,6 +6,7 @@ import {
 } from "../../../types/response.interfaces";
 import { PrismaClient } from "@prisma/client";
 import { crearMenu } from "../../../helpers/menu_resources";
+
 export class ModulesRepositoryClass implements ModulesRepository {
   constructor(private db: PrismaClient) {}
   async findAllModules(): Promise<
@@ -64,6 +65,58 @@ export class ModulesRepositoryClass implements ModulesRepository {
         data: "sss",
         status: 400,
       };
+    }
+  }
+
+  async deleteModule(
+    rolId: number,
+    modulos: any[]
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
+    try {
+      await this.db.modulos_has_role.deleteMany({
+        where: {
+          AND: {
+            role_id: rolId,
+            modulo_id: { in: modulos },
+          },
+        },
+      });
+      return {
+        data: "Ok",
+        ok: true,
+        status: 200,
+      };
+    } catch (error) {
+      return {
+        data: error,
+        ok: false,
+        status: 400,
+      };
+    }
+  }
+
+  async createModuleRol(
+    rolId: number,
+    modulos: any[]
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
+    try {
+      await this.db.$transaction(
+        modulos.map((e) =>
+          this.db.modulos_has_role.create({
+            data: {
+              roles: { connect: { id: rolId } },
+              modulos: { connect: { id: e } },
+            },
+          })
+        )
+      );
+      return {
+        data: "ok",
+        ok: true,
+        status: 200,
+      };
+    } catch (error) {
+      return { data: error, ok: false, status: 404 };
     }
   }
 }

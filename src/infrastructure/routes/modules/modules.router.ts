@@ -16,4 +16,6 @@ const modulesController = new ModulesController(modulesUsescases);
 
 route.get("/", modulesController.getAll);
 route.post("/crear", modulesController.insertModules);
+route.delete("/delete", modulesController.deleteModulos);
+route.post("/roles", modulesController.createModuleshasRole);
 export { route };
