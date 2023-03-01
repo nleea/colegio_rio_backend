@@ -13,6 +13,7 @@ import {
   ErrorsInterfaces,
 } from "../../../types/response.interfaces";
 import { flattenObj } from "../../../helpers/flatterObject";
+import { verify } from "jsonwebtoken";
 
 export class UserRepositoryClass implements UserRepository {
   #db: typeof db;
@@ -238,6 +239,26 @@ export class UserRepositoryClass implements UserRepository {
         data: error,
         ok: false,
         status: 400,
+      };
+    }
+  }
+
+  async validateToken(
+    token: string
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
+    try {
+      verify(token, process.env.SECRET_OR_KEY!);
+
+      return {
+        data: "Valid Token",
+        ok: true,
+        status: 200,
+      };
+    } catch (error) {
+      return {
+        data: "Invalid Token",
+        ok: false,
+        status: 200,
       };
     }
   }

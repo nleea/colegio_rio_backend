@@ -42,4 +42,10 @@ export class UserController {
     );
     return res.status(status).json({ ok, data });
   };
+
+  validateToken = async (req: Request, res: Response) => {
+    const { token } = req.body;
+    const { data, ok, status } = await this.userUsesCases.verifyToken(token);
+    return res.status(status).json({ data, ok });
+  };
 }

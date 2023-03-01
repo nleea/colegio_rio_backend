@@ -23,4 +23,8 @@ export interface UserRepository {
     id: number,
     data: Partial<UserUpdateEntity>
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+
+  validateToken(
+    token: string
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
 }

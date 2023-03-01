@@ -9,6 +9,7 @@ import { crearMenu } from "../../../helpers/menu_resources";
 
 export class ModulesRepositoryClass implements ModulesRepository {
   constructor(private db: PrismaClient) {}
+
   async findAllModules(): Promise<
     ErrorsInterfaces<any> | ResponseInterfaces<any>
   > {

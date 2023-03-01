@@ -40,4 +40,9 @@ export class UserUsesCases {
     const resp = this.userRepository.updatedUser(id, data);
     return resp;
   }
+
+  public async verifyToken(token: string) {
+    const resp = this.userRepository.validateToken(token);
+    return resp;
+  }
 }

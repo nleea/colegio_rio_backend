@@ -19,6 +19,7 @@ route.put("/edit/:id", userController.updateUser);
 /** Auth Routes */
 routeAuth.post("/register/", userController.insertUser);
 routeAuth.post("/login/", userController.auth);
+routeAuth.post("/token/verify/", userController.validateToken);
 
 /** export properties */
 export { route, routeAuth };
