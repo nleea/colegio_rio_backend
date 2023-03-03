@@ -175,7 +175,7 @@ export class RolesRepositoryClass implements RolesRepository {
         where: { id: id },
         data: {
           name,
-          role_has_permissions: { create: role_has_permissions_create},
+          role_has_permissions: { create: role_has_permissions_create },
         },
       }),
       db.role_has_permissions.deleteMany({

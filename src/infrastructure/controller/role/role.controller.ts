@@ -24,9 +24,9 @@ export class RolesController {
   GetCreateRole = async (req: Request, res: Response) => {
     // createRoles
 
-    const { data, ok, status } =
-      await this.permissionsUsesCases.listPermissions();
-    return res.status(status).json({ data, ok });
+    const resp = await this.permissionsUsesCases.listPermissions();
+
+    return res.json(resp);
   };
 
   PostRole = async (req: Request, res: Response) => {
