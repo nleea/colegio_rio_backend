@@ -8,7 +8,7 @@ export class PermissionsUsesCases {
     const resp = await this.permissionsRepository.findAllPermissions();
     return {
       status: 200,
-      data: "Ok",
+      data: resp,
       ok: true,
     };
   }

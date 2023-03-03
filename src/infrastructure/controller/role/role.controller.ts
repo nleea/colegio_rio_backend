@@ -42,9 +42,7 @@ export class RolesController {
 
   showRole = async (req: Request, res: Response) => {
     const { id } = req.params;
-
-    const resp = await this.rolesUsesCases.showRole(Number(id));
-    //if (resp.length == 0) return res.json("Rol undefined");
+    const resp        = await this.rolesUsesCases.showRole(Number(id));
     const permissions = await this.permissionsUsesCases.listPermissions();
     return res.json({ rol: resp, permissions: permissions });
   };

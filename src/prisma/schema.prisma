@@ -131,6 +131,7 @@ model cofuncionarios {
   maestras_cofuncionarios_dependencia_idTomaestras  maestras?  @relation("cofuncionarios_dependencia_idTomaestras", fields: [dependencia_id], references: [id], onDelete: Cascade, map: "cofuncionarios_dependencia_id_foreign_key")
   maestras_cofuncionarios_especialidad_idTomaestras maestras?  @relation("cofuncionarios_especialidad_idTomaestras", fields: [especialidad_id], references: [id], onDelete: Cascade, map: "cofuncionarios_especialidad_id_foreign_key")
   cosedes                                           cosedes?   @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "cofuncionarios_sede_id_foreign_key")
+  personas                                          personas?   @relation(fields: [persona_id], references: [id], onDelete: Cascade, map: "cofuncionarios_persona_id_foreign_key")
 
 
   @@index([cargo_id], map: "cofuncionarios_cargo_id_foreign")
@@ -138,6 +139,7 @@ model cofuncionarios {
   @@index([especialidad_id], map: "cofuncionarios_especialidad_id_foreign")
   @@index([estado_id], map: "cofuncionarios_estado_id_foreign")
   @@index([sede_id], map: "cofuncionarios_sede_id_foreign")
+  @@index([persona_id], map: "cofuncionarios_persona_id_foreign")
   @@index([tipofuncionario_id], map: "cofuncionarios_tipofuncionario_id_foreign")
 }
 
@@ -422,6 +424,7 @@ model personas {
   deleted_by            Int?
   estudiantes           estudiantes?
   users                 users?
+  cofuncionarios       cofuncionarios?
 }
 
 model role_has_permissions {
