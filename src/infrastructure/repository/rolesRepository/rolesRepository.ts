@@ -50,7 +50,7 @@ export class RolesRepositoryClass implements RolesRepository {
         include: {
           role_has_permissions: {
             select: {
-              permissions: { select: { id: true, name: true } },
+              permissions: { select: { id: true, name: true, categoria:true } },
             },
           },
         },
@@ -79,7 +79,7 @@ export class RolesRepositoryClass implements RolesRepository {
   > {
     try {
       const resp = await db.permissions.findMany();
-
+      console.log(resp);
       return {
         data: resp,
         ok: false,
