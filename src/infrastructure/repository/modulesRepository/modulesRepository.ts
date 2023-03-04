@@ -10,6 +10,45 @@ import { crearMenu } from "../../../helpers/menu_resources";
 export class ModulesRepositoryClass implements ModulesRepository {
   constructor(private db: PrismaClient) {}
 
+  async findAllRolesModules(): Promise<
+    ErrorsInterfaces<any> | ResponseInterfaces<any>
+  > {
+    try {
+      const resp = await this.db.roles.findMany({
+        select: {
+          name: true,
+          categoria: true,
+          modulos_has_role: {
+            select: {
+              modulos: {
+                select: { name: true, id_padre: true, path: true, id: true },
+              },
+            },
+          },
+        },
+      });
+
+      const flatModule = resp.map((c) => {
+        return {
+          ...c,
+          modulos_has_role: c.modulos_has_role.flatMap((c) => c.modulos),
+        };
+      });
+
+      return {
+        data: flatModule,
+        ok: true,
+        status: 200,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        data: "sss",
+        status: 400,
+      };
+    }
+  }
+
   async findAllModules(): Promise<
     ErrorsInterfaces<any> | ResponseInterfaces<any>
   > {
@@ -18,11 +57,32 @@ export class ModulesRepositoryClass implements ModulesRepository {
         select: {
           name: true,
           categoria: true,
-          modulos_has_role: { select: { modulos: { select: { name: true } } } },
+          modulos_has_role: {
+            select: {
+              modulos: {
+                select: { name: true, id_padre: true, path: true, id: true },
+              },
+            },
+          },
         },
       });
+
+      const flatModule = resp.map((c) => {
+        return {
+          ...c,
+          modulos_has_role: c.modulos_has_role.flatMap((d) => {
+            const id_padre = c.modulos_has_role.find((h) => h.modulos)?.modulos
+              ?.name;
+            return {
+              ...d.modulos,
+              dependencia: id_padre === d.modulos?.name ? "Root" : id_padre,
+            };
+          }),
+        };
+      });
+
       return {
-        data: resp,
+        data: flatModule,
         ok: true,
         status: 200,
       };
@@ -41,10 +101,10 @@ export class ModulesRepositoryClass implements ModulesRepository {
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
     try {
       const lastId = await this.db.modulos.count();
-      const c = crearMenu(body, lastId + 1, 0);
+      const menu = crearMenu(body, lastId + 1, 0);
 
       await this.db.$transaction(
-        c.map((moduledata) =>
+        menu.map((moduledata) =>
           this.db.modulos_has_role.create({
             data: {
               roles: { connect: { id: rol } },

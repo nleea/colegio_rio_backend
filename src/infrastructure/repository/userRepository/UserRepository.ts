@@ -12,7 +12,6 @@ import {
   ResponseInterfaces,
   ErrorsInterfaces,
 } from "../../../types/response.interfaces";
-import { flattenObj } from "../../../helpers/flatterObject";
 import { verify } from "jsonwebtoken";
 
 export class UserRepositoryClass implements UserRepository {
@@ -25,7 +24,12 @@ export class UserRepositoryClass implements UserRepository {
   > {
     try {
       const resp = await this.#db.users.findMany({
-        include: {
+        select: {
+          email: true,
+          telefonomovil: true,
+          username: true,
+          estado_id: true,
+          id: true,
           personas: {
             select: {
               apellido: true,
@@ -34,9 +38,12 @@ export class UserRepositoryClass implements UserRepository {
               fechanacimiento: true,
             },
           },
+          roles: {
+            select: { name: true },
+          },
         },
       });
-      const resulst = flattenObj(resp);
+
       return {
         data: resp,
         ok: true,
