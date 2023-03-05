@@ -25,9 +25,10 @@ export class ModulesController {
   };
 
   deleteModulos = async (req: Request, res: Response) => {
-    const { rolId, modulos } = req.body;
+    const { rolId, modulos, rolName } = req.body;
     const { data, ok, status } = await this.modulesUsesCases.deleteModules(
       rolId,
+      rolName,
       modulos
     );
     return res.status(status).json({ ok, data });
@@ -37,6 +38,13 @@ export class ModulesController {
     const { rolId, modulos } = req.body;
     const { data, ok, status } =
       await this.modulesUsesCases.createModulosHasRoles(rolId, modulos);
+    return res.status(status).json({ ok, data });
+  };
+
+  GetModulosHasRole = async (req: Request, res: Response) => {
+    const { rolName } = req.body;
+    const { data, ok, status } =
+      await this.modulesUsesCases.listModulesHasRoles(rolName);
     return res.status(status).json({ ok, data });
   };
 }

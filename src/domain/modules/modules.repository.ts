@@ -6,13 +6,16 @@ import {
 
 export interface ModulesRepository {
   findAllModules(): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
-  findAllRolesModules(): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
+  findAllRolesModules(
+    ModulosName: string
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
   createModules(
     rol: number,
     body: ModulesEntity[]
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
   deleteModule(
     rolId: Number,
+    rolName: string,
     modulos: any[]
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
   createModuleRol(

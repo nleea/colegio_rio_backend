@@ -10,11 +10,12 @@ import { crearMenu } from "../../../helpers/menu_resources";
 export class ModulesRepositoryClass implements ModulesRepository {
   constructor(private db: PrismaClient) {}
 
-  async findAllRolesModules(): Promise<
-    ErrorsInterfaces<any> | ResponseInterfaces<any>
-  > {
+  async findAllRolesModules(
+    ModulosName: string
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
     try {
       const resp = await this.db.roles.findMany({
+        where: { name: ModulosName },
         select: {
           name: true,
           categoria: true,
@@ -68,11 +69,11 @@ export class ModulesRepositoryClass implements ModulesRepository {
       });
 
       const flatModule = resp.map((c) => {
+        const id_padre = c.modulos_has_role.find((h) => h.modulos)?.modulos
+          ?.name;
         return {
           ...c,
           modulos_has_role: c.modulos_has_role.flatMap((d) => {
-            const id_padre = c.modulos_has_role.find((h) => h.modulos)?.modulos
-              ?.name;
             return {
               ...d.modulos,
               dependencia: id_padre === d.modulos?.name ? "Root" : id_padre,
@@ -131,17 +132,19 @@ export class ModulesRepositoryClass implements ModulesRepository {
 
   async deleteModule(
     rolId: number,
+    rolName: string,
     modulos: any[]
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
     try {
       await this.db.modulos_has_role.deleteMany({
         where: {
           AND: {
-            role_id: rolId,
+            OR: [{ role_id: rolId }, { roles: { name: rolName } }],
             modulo_id: { in: modulos },
           },
         },
       });
+
       return {
         data: "Ok",
         ok: true,
