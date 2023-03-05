@@ -1,8 +1,10 @@
 
 import { PermissionsEntity } from "./permissions.entity";
-
+import {
+  ErrorsInterfaces,
+  ResponseInterfaces,
+} from "../../types/response.interfaces";
 export interface PermissionsRepository {
-  findAllPermissions(): Promise<any[] | null | any>;
-  createPermissions(Permissions: PermissionsEntity): Promise<any>;
-  showPermissions(Permissions: Number):  Promise<any[] | null | any>;
-}
+  findAllPermissions(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  createPermissions(Permissions: PermissionsEntity): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  showPermissions(Permissions: Number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;}
