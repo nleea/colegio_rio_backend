@@ -18,12 +18,12 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
       interface interfacePermissions {
         id: number;
         name: string;
-        categoria?: any;
+        // categoria?: any;
       }
 
       interface Permissions {
         categoria: any;
-        permissions: interfacePermissions;
+        permissions: interfacePermissions[];
       }
 
       const results = await db.permissions.groupBy({
@@ -34,31 +34,37 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
       const permissions1: Permissions[] = [];
       const permissions2: Permissions[] = [];
       for (const result of results) {
-        const productos = await db.permissions.findMany({
+        const permission = await db.permissions.findMany({
           where: {
             categoria: result.categoria,
           },
           select: { id: true, name: true, categoria: true },
         });
 
-        arreglo[result.categoria] = []
-        for (const producto of productos) {
+        const categoria = result.categoria;
+        const permissions = permission;
+        const permi: Permissions = { categoria, permissions};
+        permissions1.push(permi);
+
+        // arreglo[result.categoria] = []
+        // for (const producto of productos) {
           
-          arreglo[result.categoria].push(producto)
-          const categoria = result.categoria;
-          const permissions = producto;
-          const permi: Permissions = { categoria, permissions};
-          permissions1.push(permi);
-        }
+        //   arreglo[result.categoria].push(producto)
+        //   const categoria = result.categoria;
+        //   const permissions = producto;
+        //   const permi: Permissions = { categoria, permissions};
+        //   permissions1.push(permi);
+        // }
+
 
         
 
       }
       console.log(permissions1)
-      // console.log(arreglo)
+ 
       return {
-        data: arreglo,
-        ok: false,
+        data: permissions1,
+        ok: true,
         status: 200,
       };
 
