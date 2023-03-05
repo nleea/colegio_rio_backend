@@ -2,26 +2,76 @@ import { PermissionsRepository } from "../../../domain/permissions/permissions.r
 import { PermissionsEntity } from "../../../domain/permissions/permissions.entity";
 import { exclude } from "../../../helpers/omit.fields";
 import { db } from "../../models/db";
-
+import {
+  ResponseInterfaces,
+  ErrorsInterfaces,
+} from "../../../types/response.interfaces";
+import { json } from "stream/consumers";
 export class PermissionsRepositoryClass implements PermissionsRepository {
   showPermissions(Permissions: Number): Promise<any> {
     throw new Error("Method not implemented.");
   }
 
-  
   async findAllPermissions(): Promise<any> {
     try {
-      const resp = await db.permissions.findMany();
 
-      return resp;
+      interface interfacePermissions {
+        id: number;
+        name: string;
+        categoria?: any;
+      }
+
+      interface Permissions {
+        categoria: any;
+        permissions: interfacePermissions;
+      }
+
+      const results = await db.permissions.groupBy({
+        by: ["categoria"],
+      });
+
+      var arreglo: any = []
+      const permissions1: Permissions[] = [];
+      const permissions2: Permissions[] = [];
+      for (const result of results) {
+        const productos = await db.permissions.findMany({
+          where: {
+            categoria: result.categoria,
+          },
+          select: { id: true, name: true, categoria: true },
+        });
+
+        arreglo[result.categoria] = []
+        for (const producto of productos) {
+          
+          arreglo[result.categoria].push(producto)
+          const categoria = result.categoria;
+          const permissions = producto;
+          const permi: Permissions = { categoria, permissions};
+          permissions1.push(permi);
+        }
+
+        
+
+      }
+      console.log(permissions1)
+      // console.log(arreglo)
+      return {
+        data: arreglo,
+        ok: false,
+        status: 200,
+      };
+
     } catch (error) {
-      console.log(error);
+      return {
+        data: error,
+        ok: false,
+        status: 200,
+      };
     }
   }
 
   async createPermissions(permissions: PermissionsEntity): Promise<any> {
     throw new Error("Method not implements");
   }
-
-  
 }
