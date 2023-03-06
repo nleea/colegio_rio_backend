@@ -17,19 +17,18 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
       interface interfacePermissions {
         id: number;
         name: string;
-        // categoria?: any;
+        categoria?: any;
       }
 
       interface Permissions {
         categoria: any;
-        permissions: interfacePermissions[];
+        permissions: interfacePermissions;
       }
 
       const results = await db.permissions.groupBy({
         by: ["categoria"],
       });
 
-      var arreglo: any = [];
       const permissions1: Permissions[] = [];
 
       const allPermissionHasCategory = await db.$transaction(
@@ -46,28 +45,12 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
       for (let i = 0; i < results.length; i++) {
         permissions1.push({
           categoria: results[i].categoria,
-          permissions: allPermissionHasCategory[i],
+          permissions: allPermissionHasCategory[i] as any,
         });
       }
 
-      const roles_infoUser = await db.roles.findMany({
-        select:  { id:true, name:true,
-            users: { 
-              select: { 
-                role_id: true,
-              personas:{select: {nombre:true, apellido:true, foto:true}} }, take: 3 } },
-              
-              
-      });
-      const roles_count = await db.users.groupBy({
-        by: ['role_id'],
-        _count: {
-          role_id: true
-        }
-      });
-
       return {
-        data: {'category_permissions': permissions1, 'roles_count': roles_count, 'roles_infoUser':roles_infoUser },
+        data: permissions1,
         ok: true,
         status: 200,
       };
