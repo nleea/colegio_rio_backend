@@ -14,7 +14,6 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
 
   async findAllPermissions(): Promise<any> {
     try {
-
       interface interfacePermissions {
         id: number;
         name: string;
@@ -30,44 +29,48 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
         by: ["categoria"],
       });
 
-      var arreglo: any = []
+      var arreglo: any = [];
       const permissions1: Permissions[] = [];
-      const permissions2: Permissions[] = [];
-      for (const result of results) {
-        const permission = await db.permissions.findMany({
-          where: {
-            categoria: result.categoria,
-          },
-          select: { id: true, name: true, categoria: true },
+
+      const allPermissionHasCategory = await db.$transaction(
+        results.map((category) =>
+          db.permissions.findMany({
+            where: {
+              categoria: category.categoria,
+            },
+            select: { id: true, name: true, categoria: true },
+          })
+        )
+      );
+
+      for (let i = 0; i < results.length; i++) {
+        permissions1.push({
+          categoria: results[i].categoria,
+          permissions: allPermissionHasCategory[i],
         });
-
-        const categoria = result.categoria;
-        const permissions = permission;
-        const permi: Permissions = { categoria, permissions};
-        permissions1.push(permi);
-
-        // arreglo[result.categoria] = []
-        // for (const producto of productos) {
-          
-        //   arreglo[result.categoria].push(producto)
-        //   const categoria = result.categoria;
-        //   const permissions = producto;
-        //   const permi: Permissions = { categoria, permissions};
-        //   permissions1.push(permi);
-        // }
-
-
-        
-
       }
-      console.log(permissions1)
- 
+
+      const roles_infoUser = await db.roles.findMany({
+        select:  { id:true, name:true,
+            users: { 
+              select: { 
+                role_id: true,
+              personas:{select: {nombre:true, apellido:true, foto:true}} }, take: 3 } },
+              
+              
+      });
+      const roles_count = await db.users.groupBy({
+        by: ['role_id'],
+        _count: {
+          role_id: true
+        }
+      });
+
       return {
-        data: permissions1,
+        data: {'category_permissions': permissions1, 'roles_count': roles_count, 'roles_infoUser':roles_infoUser },
         ok: true,
         status: 200,
       };
-
     } catch (error) {
       return {
         data: error,
