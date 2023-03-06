@@ -14,7 +14,6 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
 
   async findAllPermissions(): Promise<any> {
     try {
-
       interface interfacePermissions {
         id: number;
         name: string;
@@ -30,38 +29,52 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
         by: ["categoria"],
       });
 
-      var arreglo: any = []
+      var arreglo: any = [];
       const permissions1: Permissions[] = [];
-      const permissions2: Permissions[] = [];
-      for (const result of results) {
-        const productos = await db.permissions.findMany({
-          where: {
-            categoria: result.categoria,
-          },
-          select: { id: true, name: true, categoria: true },
+
+      const allPermissionHasCategory = await db.$transaction(
+        results.map((category) =>
+          db.permissions.findMany({
+            where: {
+              categoria: category.categoria,
+            },
+            select: { id: true, name: true, categoria: true },
+          })
+        )
+      );
+
+      for (let i = 0; i < results.length; i++) {
+        permissions1.push({
+          categoria: results[i].categoria,
+          permissions: allPermissionHasCategory[i],
         });
 
-        arreglo[result.categoria] = []
-        for (const producto of productos) {
+        const categoria = result.categoria;
+        const permissions = permission;
+        const permi: Permissions = { categoria, permissions};
+        permissions1.push(permi);
+
+        // arreglo[result.categoria] = []
+        // for (const producto of productos) {
           
-          arreglo[result.categoria].push(producto)
-          const categoria = result.categoria;
-          const permissions = producto;
-          const permi: Permissions = { categoria, permissions};
-          permissions1.push(permi);
-        }
+        //   arreglo[result.categoria].push(producto)
+        //   const categoria = result.categoria;
+        //   const permissions = producto;
+        //   const permi: Permissions = { categoria, permissions};
+        //   permissions1.push(permi);
+        // }
+
 
         
 
       }
       console.log(permissions1)
-      // console.log(arreglo)
+ 
       return {
-        data: arreglo,
-        ok: false,
+        data: permissions1,
+        ok: true,
         status: 200,
       };
-
     } catch (error) {
       return {
         data: error,
