@@ -29,7 +29,6 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
         by: ["categoria"],
       });
 
-      var arreglo: any = [];
       const permissions1: Permissions[] = [];
 
       const allPermissionHasCategory = await db.$transaction(
@@ -46,30 +45,10 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
       for (let i = 0; i < results.length; i++) {
         permissions1.push({
           categoria: results[i].categoria,
-          permissions: allPermissionHasCategory[i],
+          permissions: allPermissionHasCategory[i] as any,
         });
-
-        const categoria = result.categoria;
-        const permissions = permission;
-        const permi: Permissions = { categoria, permissions};
-        permissions1.push(permi);
-
-        // arreglo[result.categoria] = []
-        // for (const producto of productos) {
-          
-        //   arreglo[result.categoria].push(producto)
-        //   const categoria = result.categoria;
-        //   const permissions = producto;
-        //   const permi: Permissions = { categoria, permissions};
-        //   permissions1.push(permi);
-        // }
-
-
-        
-
       }
-      console.log(permissions1)
- 
+
       return {
         data: permissions1,
         ok: true,
