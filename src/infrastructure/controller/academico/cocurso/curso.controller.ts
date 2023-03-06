@@ -20,10 +20,12 @@ export class CursosController {
     return res.status(status).json({ data, ok });
   };
 
-  GetCreateCurso = async (req: Request, res: Response) => {
-    // const { data, ok, status } =
-      
-    return res.json({ 'ss':'jsjss' });
+  createCursosP = async (req: Request, res: Response) => {
+    
+    console.log('aca')
+    const { data, ok, status } = await this.CursosUsesCases.createCursosP();
+    return res.status(status).json({ data, ok });
+    
   };
 
   PostCurso = async (req: Request, res: Response) => {
@@ -40,6 +42,7 @@ export class CursosController {
   showCurso = async (req: Request, res: Response) => {
     const { id } = req.params;
 
+    console.log(id)
     // const resp = await this.CursosUsesCases.showCurso(Number(id));
     const { data, ok, status } = await this.CursosUsesCases.showCurso(Number(id));
     return res.status(status).json({ data, ok });

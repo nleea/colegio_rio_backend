@@ -13,6 +13,10 @@ export class CursosUsesCases {
     const resp = await this.cursosRepository.findAllCursos();
     return resp;
   }
+  public async createCursosP() {
+    const resp = await this.cursosRepository.createCursosP();
+    return resp;
+  }
 
   public async createCursos(){
     const resp = await this.cursosRepository.createCursosP()
@@ -23,6 +27,8 @@ export class CursosUsesCases {
     const resp = this.cursosRepository.storeCursos(CursoValue);
     return resp;
   }
+
+  
 
   public showCurso(id:number){
     const resp = this.cursosRepository.showCurso(id)

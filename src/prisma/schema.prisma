@@ -137,8 +137,8 @@ model cofuncionarios {
   @@index([dependencia_id], map: "cofuncionarios_dependencia_id_foreign")
   @@index([especialidad_id], map: "cofuncionarios_especialidad_id_foreign")
   @@index([estado_id], map: "cofuncionarios_estado_id_foreign")
-  @@index([sede_id], map: "cofuncionarios_sede_id_foreign")
   @@index([persona_id], map: "cofuncionarios_persona_id_foreign")
+  @@index([sede_id], map: "cofuncionarios_sede_id_foreign")
   @@index([tipofuncionario_id], map: "cofuncionarios_tipofuncionario_id_foreign")
 }
 

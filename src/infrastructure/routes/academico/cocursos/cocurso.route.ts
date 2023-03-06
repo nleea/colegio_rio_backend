@@ -22,7 +22,7 @@ const cursosController = new CursosController(
 
 route.get("/", cursosController.GetAll); //Traer todos los cursos
 route.get("/:id", cursosController.showCurso); // Traer un curso
-route.get("/create", cursosController.GetCreateCurso); //Traer todos los crecursos para crear un cruso
+route.get("/create", cursosController.createCursosP); //Traer todos los crecursos para crear un cruso
 route.post("/", cursosController.PostCurso); // Crear un cruso
 route.get("/edit/:id", cursosController.showCurso); //Traer informacion de un curso y los datos que puede editar
 route.put("/:id", cursosController.updatedCurso); // Actualizar un curso
