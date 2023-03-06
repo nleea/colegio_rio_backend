@@ -22,21 +22,18 @@ export class RolesRepositoryClass implements RolesRepository {
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
     try {
-      const resp = await db.roles.findMany({
-        include: {
-          role_has_permissions: {
-            select: {
-              permissions: { select: { id: true, name: true } },
-            },
-          },
+      
+      const distinctScores = await db.roles.findMany({
+        distinct: ["name"],
+        select: {
+          _count: { select: { users: true } },
+          name: true,
+          users: {select:{personas:{select:{nombre: true, apellido: true, foto: true}}}, take:3},
         },
       });
-      exclude<typeof resp, keyof typeof resp>(resp, [
-        "created_at",
-        "updated_at",
-      ] as any);
+      
 
-      return { data: resp, ok: true, status: 200 };
+      return { data: distinctScores , ok: true, status: 200 };
     } catch (error) {
       return { data: error, ok: true, status: 200 };
     }
