@@ -17,6 +17,7 @@ export class CursoRepositoryClass implements CursosRepository {
   constructor() {
     this.#db = db;
   }
+ 
   async findAllCursos(): Promise<
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
@@ -83,15 +84,33 @@ export class CursoRepositoryClass implements CursosRepository {
     }
 
   }
-  showCurso(
+
+  async showCurso(
     id: number
-  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  showCurso(
-    id: number
-  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  showCurso(
-    id: unknown
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
+    try {
+      const resp = await db.cocursos.findMany({
+        where : { id: id},
+        include: {
+          cogrados: { select: { id: true, nombre: true, sede_id: true } },
+          cofuncionarios: {
+            select: {
+              personas: {
+                select: { nombre: true, segundonombre: true, apellido: true, segundoapellido: true},
+              },
+            },
+          },
+          cosedes:{select:{id:true, nombre:true}}
+        },
+      });
+
+      return { data: resp, ok: true, status: 200 };
+    } catch (error) {
+      return { data: error, ok: true, status: 200 };
+    }
+  }
+
+  showCursoEdit(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     throw new Error("Method not implemented.");
   }
   updatedCurso(
