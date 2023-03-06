@@ -20,11 +20,12 @@ const cursosController = new CursosController(
 
 /** Rutas para la aplicaion */
 
-route.get("/", cursosController.GetAll);
-route.get("/create", cursosController.GetCreateCurso);
-route.post("/", cursosController.PostCurso);
-route.get("/edit/:id", cursosController.showCurso);
-route.put("/:id", cursosController.updatedCurso);
-route.delete("/:id", cursosController.delteCurso);
+route.get("/", cursosController.GetAll); //Traer todos los cursos
+route.get("/:id", cursosController.showCurso); // Traer un curso
+route.get("/create", cursosController.GetCreateCurso); //Traer todos los crecursos para crear un cruso
+route.post("/", cursosController.PostCurso); // Crear un cruso
+route.get("/edit/:id", cursosController.showCurso); //Traer informacion de un curso y los datos que puede editar
+route.put("/:id", cursosController.updatedCurso); // Actualizar un curso
+route.delete("/:id", cursosController.delteCurso); // Borrar un curso
 
 export { route };

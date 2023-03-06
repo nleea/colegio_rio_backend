@@ -15,5 +15,6 @@ export interface CursosRepository {
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   showCurso(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  showCursoEdit(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   deleteCurso(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
 }

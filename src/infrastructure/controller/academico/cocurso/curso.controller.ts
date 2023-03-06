@@ -40,7 +40,9 @@ export class CursosController {
   showCurso = async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const resp = await this.CursosUsesCases.showCurso(Number(id));
+    // const resp = await this.CursosUsesCases.showCurso(Number(id));
+    const { data, ok, status } = await this.CursosUsesCases.showCurso(Number(id));
+    return res.status(status).json({ data, ok });
     //if (resp.length == 0) return res.json("Rol undefined");
     // const permissions = await this.permissionsUsesCases.listPermissions();
     // return res.json({ rol: resp, permissions: permissions });
