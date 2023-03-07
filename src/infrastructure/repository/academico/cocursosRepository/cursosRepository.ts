@@ -17,7 +17,7 @@ export class CursoRepositoryClass implements CursosRepository {
   constructor() {
     this.#db = db;
   }
- 
+
   async findAllCursos(): Promise<
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
@@ -28,11 +28,16 @@ export class CursoRepositoryClass implements CursosRepository {
           cofuncionarios: {
             select: {
               personas: {
-                select: { nombre: true, segundonombre: true, apellido: true, segundoapellido: true},
+                select: {
+                  nombre: true,
+                  segundonombre: true,
+                  apellido: true,
+                  segundoapellido: true,
+                },
               },
             },
           },
-          cosedes:{select:{id:true, nombre:true}}
+          cosedes: { select: { id: true, nombre: true } },
         },
       });
 
@@ -41,13 +46,27 @@ export class CursoRepositoryClass implements CursosRepository {
       return { data: error, ok: true, status: 200 };
     }
   }
-  async createCursosP(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    throw new Error("Method not implemented.");
+  async createCursosP(): Promise<
+    ResponseInterfaces<any> | ErrorsInterfaces<any>
+  > {
+    try {
+      
+      
+      const grados = await db.cogrados.findMany({
+        select:{id:true, nombre:true}
+      });
+
+      console.log(grados)
+
+      return { data:{ 'grados': grados}, ok: true, status: 200 };
+    } catch (error) {
+      return { data: error, ok: true, status: 200 };
+    }
   }
   async storeCursos(
     body: CursoEntity
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    const { nombre, codigo,director_id,grado_id,sede_id } = body;
+    const { nombre, codigo, director_id, grado_id, sede_id } = body;
 
     try {
       await this.#db.cocursos.create({
@@ -57,7 +76,7 @@ export class CursoRepositoryClass implements CursosRepository {
           director_id: director_id,
           grado_id: grado_id,
           sede_id: sede_id,
-          created_by: 1
+          created_by: 1,
         },
       });
 
@@ -82,7 +101,6 @@ export class CursoRepositoryClass implements CursosRepository {
         };
       }
     }
-
   }
 
   async showCurso(
@@ -90,17 +108,22 @@ export class CursoRepositoryClass implements CursosRepository {
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
       const resp = await db.cocursos.findMany({
-        where : { id: id},
+        where: { id: id },
         include: {
           cogrados: { select: { id: true, nombre: true, sede_id: true } },
           cofuncionarios: {
             select: {
               personas: {
-                select: { nombre: true, segundonombre: true, apellido: true, segundoapellido: true},
+                select: {
+                  nombre: true,
+                  segundonombre: true,
+                  apellido: true,
+                  segundoapellido: true,
+                },
               },
             },
           },
-          cosedes:{select:{id:true, nombre:true}}
+          cosedes: { select: { id: true, nombre: true } },
         },
       });
 
@@ -110,7 +133,9 @@ export class CursoRepositoryClass implements CursosRepository {
     }
   }
 
-  showCursoEdit(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
+  showCursoEdit(
+    id: number
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     throw new Error("Method not implemented.");
   }
   updatedCurso(
