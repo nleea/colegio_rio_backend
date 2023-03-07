@@ -22,23 +22,28 @@ export class RolesRepositoryClass implements RolesRepository {
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
     try {
-      
-      const distinctScores = await db.roles.findMany({
+      const resp = await db.roles.findMany({
         distinct: ["name"],
         select: {
           _count: { select: { users: true } },
           name: true,
-          users: {select:{personas:{select:{nombre: true, apellido: true, foto: true}}}, take:3},
+          users: {
+            select: {
+              personas: {
+                select: { nombre: true, apellido: true, foto: true },
+              },
+            },
+            take: 3,
+          },
         },
       });
-      
 
-      return { data: distinctScores , ok: true, status: 200 };
+      return { data: resp, ok: true, status: 200 };
     } catch (error) {
       return { data: error, ok: true, status: 200 };
     }
   }
-  
+
   async showRole(
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
