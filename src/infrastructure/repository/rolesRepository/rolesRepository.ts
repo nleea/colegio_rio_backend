@@ -41,6 +41,7 @@ export class RolesRepositoryClass implements RolesRepository {
       return { data: error, ok: true, status: 200 };
     }
   }
+  
   async showRole(
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
@@ -50,7 +51,9 @@ export class RolesRepositoryClass implements RolesRepository {
         include: {
           role_has_permissions: {
             select: {
-              permissions: { select: { id: true, name: true, categoria:true } },
+              permissions: {
+                select: { id: true, name: true, categoria: true },
+              },
             },
           },
         },
