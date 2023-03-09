@@ -34,6 +34,10 @@ export class CursosUsesCases {
     const resp = this.cursosRepository.showCurso(id)
     return resp;
   }
+  public showCursoEdit(id:number){
+    const resp = this.cursosRepository.showCursoEdit(id)
+    return resp;
+  }
   public updatedCurso(body: CursoUpdateEntity, id:number){
     const CursoValue = new CursoUpdatedValue({ ...body });
     const resp = this.cursosRepository.updatedCurso(CursoValue, id);
