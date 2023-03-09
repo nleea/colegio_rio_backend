@@ -24,8 +24,11 @@ export class ModulesUsesCases {
     return resp;
   }
 
-  public async listModulesHasRoles(rolesName: string) {
-    const resp = await this.moduleRepository.findAllRolesModules(rolesName);
+  public async listModulesHasRoles(rolesName: string, inModule: boolean) {
+    const resp = await this.moduleRepository.findAllRolesModules(
+      rolesName,
+      inModule
+    );
     return resp;
   }
 }

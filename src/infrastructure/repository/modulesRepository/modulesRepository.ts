@@ -11,7 +11,8 @@ export class ModulesRepositoryClass implements ModulesRepository {
   constructor(private db: PrismaClient) {}
 
   async findAllRolesModules(
-    ModulosName: string
+    ModulosName: string,
+    inModule: boolean = false
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
     try {
       const resp = await this.db.roles.findMany({

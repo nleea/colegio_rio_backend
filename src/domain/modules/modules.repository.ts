@@ -7,7 +7,8 @@ import {
 export interface ModulesRepository {
   findAllModules(): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
   findAllRolesModules(
-    ModulosName: string
+    ModulosName: string,
+    inModule: boolean
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
   createModules(
     rol: number,

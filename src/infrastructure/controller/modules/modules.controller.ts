@@ -42,9 +42,9 @@ export class ModulesController {
   };
 
   GetModulosHasRole = async (req: Request, res: Response) => {
-    const { rolName } = req.body;
+    const { rolName, inModule } = req.body;
     const { data, ok, status } =
-      await this.modulesUsesCases.listModulesHasRoles(rolName);
+      await this.modulesUsesCases.listModulesHasRoles(rolName, inModule);
     return res.status(status).json({ ok, data });
   };
 }

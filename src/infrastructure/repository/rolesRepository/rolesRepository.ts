@@ -64,6 +64,7 @@ export class RolesRepositoryClass implements RolesRepository {
         "created_at",
         "updated_at",
       ] as any);
+  
 
       return {
         data: resp,
