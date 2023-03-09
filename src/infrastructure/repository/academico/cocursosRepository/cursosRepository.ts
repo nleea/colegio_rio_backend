@@ -50,15 +50,40 @@ export class CursoRepositoryClass implements CursosRepository {
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
     try {
-      
-      
-      const grados = await db.cogrados.findMany({
-        select:{id:true, nombre:true}
-      });
+      const grados = await db.$transaction([
+        db.cogrados.findMany({
+          select: { id: true, nombre: true },
+        }),
+        db.cosedes.findMany({
+          select: { id: true, nombre: true },
+        }),
+        db.maestras.findMany({
+          where: { padre: 595 },
+          select: { id: true, nombre: true },
+        }),
+        db.cofuncionarios.findMany({
+          select: {
+            id: true,
+            maestras_cofuncionarios_cargo_idTomaestras: {
+              select: { nombre: true },
+            },
+            personas: { select: { nombre: true, apellido: true } },
+          },
+        }),
+      ]);
 
-      console.log(grados)
+      // console.log(grados)
 
-      return { data:{ 'grados': grados}, ok: true, status: 200 };
+      return {
+        data: {
+          grados: grados[0],
+          sedes: grados[1],
+          estados: grados[2],
+          funcionarios: grados[3],
+        },
+        ok: true,
+        status: 200,
+      };
     } catch (error) {
       return { data: error, ok: true, status: 200 };
     }
@@ -133,20 +158,141 @@ export class CursoRepositoryClass implements CursosRepository {
     }
   }
 
-  showCursoEdit(
+  async showCursoEdit(
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    throw new Error("Method not implemented.");
+    try {
+      // const resp = await db.cocursos.findMany({
+      //   where: { id: id },
+      //   include: {
+      //     cogrados: { select: { id: true, nombre: true, sede_id: true } },
+      //     cofuncionarios: {
+      //       select: {
+      //         personas: {
+      //           select: {
+      //             nombre: true,
+      //             segundonombre: true,
+      //             apellido: true,
+      //             segundoapellido: true,
+      //           },
+      //         },
+      //       },
+      //     },
+      //     cosedes: { select: { id: true, nombre: true } },
+      //   },
+      // });
+
+      const grados = await db.$transaction([
+        db.cogrados.findMany({
+          select: { id: true, nombre: true },
+        }),
+        db.cosedes.findMany({
+          select: { id: true, nombre: true },
+        }),
+        db.maestras.findMany({
+          where: { padre: 595 },
+          select: { id: true, nombre: true },
+        }),
+        db.cofuncionarios.findMany({
+          select: {
+            id: true,
+            maestras_cofuncionarios_cargo_idTomaestras: {
+              select: { nombre: true },
+            },
+            personas: { select: { nombre: true, apellido: true } },
+          },
+        }),
+        db.cocursos.findMany({
+          where: { id: id },
+          include: {
+            cogrados: { select: { id: true, nombre: true, sede_id: true } },
+            cofuncionarios: {
+              select: {
+                personas: {
+                  select: {
+                    nombre: true,
+                    segundonombre: true,
+                    apellido: true,
+                    segundoapellido: true,
+                  },
+                },
+              },
+            },
+            cosedes: { select: { id: true, nombre: true } },
+          },
+        }),
+      ]);
+
+      // console.log(grados)
+
+      return {
+        data: {
+          curso: grados[4],
+          grados: grados[0],
+          sedes: grados[1],
+          estados: grados[2],
+          funcionarios: grados[3],
+        },
+        ok: true,
+        status: 200,
+      };
+
+      // return { data: resp, ok: true, status: 200 };
+    } catch (error) {
+      return { data: error, ok: true, status: 200 };
+    }
   }
-  updatedCurso(
+  async updatedCurso(
     body: CursoEntity,
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    throw new Error("Method not implemented.");
+    try {
+      const { nombre, codigo, director_id, grado_id, sede_id } = body;
+
+    await db.$transaction([
+      
+      db.cocursos.update({
+        where: { id: id },
+        data: {
+          nombre: nombre,
+          codigo: codigo,
+          director_id: director_id,
+          grado_id: grado_id,
+          sede_id: sede_id,
+          created_by: 1,
+        }
+      }),
+    ]);
+
+    return {
+      data: "OK",
+      ok: true,
+      status: 200,
+    };
+
+      
+    } catch (error) {
+      return { data: error, ok: true, status: 200 };
+    }
   }
-  deleteCurso(
+  async deleteCurso(
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    throw new Error("Method not implemented.");
+    try {
+      await db.cocursos.delete({
+        where: {
+          id: id,
+        },
+      });
+      return {
+        data: "ok",
+        ok: true,
+        status: 200,
+      };
+
+      // return { data: resp, ok: true, status: 200 };
+    } catch (error) {
+      return { data: error, ok: true, status: 200 };
+    }
   }
 }

@@ -41,14 +41,13 @@ export class CursosController {
 
   showCurso = async (req: Request, res: Response) => {
     const { id } = req.params;
-
-    console.log(id)
-    // const resp = await this.CursosUsesCases.showCurso(Number(id));
     const { data, ok, status } = await this.CursosUsesCases.showCurso(Number(id));
     return res.status(status).json({ data, ok });
-    //if (resp.length == 0) return res.json("Rol undefined");
-    // const permissions = await this.permissionsUsesCases.listPermissions();
-    // return res.json({ rol: resp, permissions: permissions });
+  };
+  showCursoEdit = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { data, ok, status } = await this.CursosUsesCases.showCursoEdit(Number(id));
+    return res.status(status).json({ data, ok });
   };
 
   updatedCurso = async (req: Request, res: Response) => {
@@ -62,11 +61,12 @@ export class CursosController {
 
   delteCurso = async (req: Request, res: Response) => {
     const { id } = req.params;
-    // console.log(req)
-    const resp = await this.CursosUsesCases.showCurso(Number(id));
-    //if (resp.length == 0) return res.json("Rol undefined");
-    await this.CursosUsesCases.deleteCurso(Number(id));
-    return res.json({ mensaje: "Rol deleted" });
+    
+    // const resp = await this.CursosUsesCases.showCurso(Number(id));
+    // await this.CursosUsesCases.deleteCurso(Number(id));
+    // return res.json({ mensaje: "Rol deleted" });
+    const { data, ok, status } = await this.CursosUsesCases.deleteCurso(Number(id));
+    return res.status(status).json({ data, ok });
   };
 
 }
