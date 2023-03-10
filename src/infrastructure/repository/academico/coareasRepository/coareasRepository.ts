@@ -23,7 +23,13 @@ export class AreaRepositoryClass implements AreasRepository {
   > {
     try {
       const resp = await db.coareas.findMany({
-        select:{id:true, codigo: true, nombre:true, cosedes:{select:{id:true, nombre:true }}},
+        select: {
+          id: true,
+          codigo: true,
+          nombre: true,
+          cosedes: { select: { id: true, nombre: true } }
+          
+        },
       });
 
       return { data: resp, ok: true, status: 200 };
@@ -65,7 +71,8 @@ export class AreaRepositoryClass implements AreasRepository {
   async storeAreas(
     body: AreaCreateEntity
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    const { nombre, codigo,  grado_id, sede_id, estado_id, cogradosareas } = body;
+    const { nombre, codigo, grado_id, sede_id, estado_id, cogradosareas } =
+      body;
 
     try {
       await this.#db.coareas.create({
@@ -76,7 +83,7 @@ export class AreaRepositoryClass implements AreasRepository {
           estado_id: estado_id,
           sede_id: sede_id,
           created_by: 1,
-          cogradosareas:{create: cogradosareas}
+          cogradosareas: { create: cogradosareas },
         },
       });
 
@@ -222,30 +229,27 @@ export class AreaRepositoryClass implements AreasRepository {
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      const { nombre, codigo,  grado_id, sede_id, estado_id } = body;
+      const { nombre, codigo, grado_id, sede_id, estado_id } = body;
 
-    await db.$transaction([
-      
-      db.cocursos.update({
-        where: { id: id },
-        data: {
-          nombre: nombre,
-          codigo: codigo,
-          estado_id: estado_id,
-          grado_id: grado_id,
-          sede_id: sede_id,
-          created_by: 1,
-        }
-      }),
-    ]);
+      await db.$transaction([
+        db.cocursos.update({
+          where: { id: id },
+          data: {
+            nombre: nombre,
+            codigo: codigo,
+            estado_id: estado_id,
+            grado_id: grado_id,
+            sede_id: sede_id,
+            created_by: 1,
+          },
+        }),
+      ]);
 
-    return {
-      data: "OK",
-      ok: true,
-      status: 200,
-    };
-
-      
+      return {
+        data: "OK",
+        ok: true,
+        status: 200,
+      };
     } catch (error) {
       return { data: error, ok: true, status: 200 };
     }
