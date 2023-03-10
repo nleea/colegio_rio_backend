@@ -10,12 +10,14 @@ export class CursoValue implements CursoEntity {
   grado_id: number;
   sede_id: number;
   director_id: number;
+  estado_id: number;
 
-  constructor({ nombre, codigo, grado_id, sede_id, director_id }: CursoEntity) {
+  constructor({ nombre, codigo, grado_id, sede_id, director_id, estado_id }: CursoEntity) {
     this.nombre = nombre;
     this.grado_id = grado_id;
     this.codigo = codigo;
     this.sede_id = sede_id;
+    this.estado_id = estado_id;
     this.director_id = director_id;
   }
 }
@@ -25,6 +27,7 @@ export class CursoCreateValue implements CursoCreateEntity {
   codigo: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
   director_id: number;
 
   constructor({
@@ -33,11 +36,13 @@ export class CursoCreateValue implements CursoCreateEntity {
     grado_id,
     sede_id,
     director_id,
+    estado_id,
   }: CursoCreateEntity) {
     this.nombre = nombre;
     this.grado_id = grado_id;
     this.codigo = codigo;
     this.sede_id = sede_id;
+    this.estado_id = estado_id;
     this.director_id = director_id;
   }
 }
@@ -48,6 +53,7 @@ export class CursoUpdatedValue implements CursoUpdateEntity {
   grado_id: number;
   sede_id: number;
   director_id: number;
+  estado_id: number;
 
   constructor({
     nombre,
@@ -55,11 +61,13 @@ export class CursoUpdatedValue implements CursoUpdateEntity {
     grado_id,
     sede_id,
     director_id,
+    estado_id,
   }: CursoUpdateEntity) {
     this.nombre = nombre;
     this.grado_id = grado_id;
     this.codigo = codigo;
     this.sede_id = sede_id;
     this.director_id = director_id;
+    this.estado_id = estado_id;
   }
 }

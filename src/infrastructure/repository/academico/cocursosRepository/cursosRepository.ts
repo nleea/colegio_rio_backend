@@ -91,7 +91,7 @@ export class CursoRepositoryClass implements CursosRepository {
   async storeCursos(
     body: CursoEntity
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    const { nombre, codigo, director_id, grado_id, sede_id } = body;
+    const { nombre, codigo, director_id, grado_id, sede_id, estado_id } = body;
 
     try {
       await this.#db.cocursos.create({
@@ -100,6 +100,7 @@ export class CursoRepositoryClass implements CursosRepository {
           codigo: codigo,
           director_id: director_id,
           grado_id: grado_id,
+          estado_id: estado_id,
           sede_id: sede_id,
           created_by: 1,
         },
@@ -247,7 +248,7 @@ export class CursoRepositoryClass implements CursosRepository {
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      const { nombre, codigo, director_id, grado_id, sede_id } = body;
+      const { nombre, codigo, director_id, grado_id, sede_id, estado_id } = body;
 
     await db.$transaction([
       
@@ -257,6 +258,7 @@ export class CursoRepositoryClass implements CursosRepository {
           nombre: nombre,
           codigo: codigo,
           director_id: director_id,
+          estado_id: estado_id,
           grado_id: grado_id,
           sede_id: sede_id,
           created_by: 1,

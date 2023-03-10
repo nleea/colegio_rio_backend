@@ -3,6 +3,7 @@ export interface CursoEntity {
   nombre: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
   director_id: number;
 }
 
@@ -11,6 +12,7 @@ export interface CursoCreateEntity {
   nombre: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
   director_id: number;
 }
 
@@ -19,5 +21,6 @@ export interface CursoUpdateEntity {
   nombre: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
   director_id: number;
 }
