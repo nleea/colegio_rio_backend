@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CursosUsesCases } from "../../../../aplication/Academico/cocursos/roles.usesCases";
+import { CursosUsesCases } from "../../../../aplication/Academico/cocursos/cursos.usesCases";
 import {
   CursoCreateEntity,
   CursoUpdateEntity,

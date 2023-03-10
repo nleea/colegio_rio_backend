@@ -4,7 +4,7 @@ const route = Router();
 
 import { CursosController } from "../../../controller/academico/cocurso/curso.controller";
 import {CursoRepositoryClass } from "../../../repository/academico/cocursosRepository/cursosRepository";
-import { CursosUsesCases } from "../../../../aplication/Academico/cocursos/roles.usesCases";
+import { CursosUsesCases } from "../../../../aplication/Academico/cocursos/cursos.usesCases";
 
 // import * as miCursos from "../../../../middleware/Cursos";
 /** Injeciones de dependencia*/
