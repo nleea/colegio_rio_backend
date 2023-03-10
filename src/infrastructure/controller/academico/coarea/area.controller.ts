@@ -9,7 +9,7 @@ import {
   AreaUpdatedValue,
 } from "../../../../domain/Academico/coareas/areas.value";
 
-export class AreasController {
+export class AreaController {
   constructor(
     private AreasUsesCases: AreasUsesCases,
   ) {}
