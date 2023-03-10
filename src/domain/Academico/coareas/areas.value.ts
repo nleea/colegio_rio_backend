@@ -10,6 +10,7 @@ export class AreaValue implements AreaEntity {
   grado_id: number;
   sede_id: number;
   estado_id: number;
+
   
 
   constructor({ nombre, codigo, grado_id, sede_id, estado_id }: AreaEntity) {
@@ -18,6 +19,7 @@ export class AreaValue implements AreaEntity {
     this.codigo = codigo;
     this.sede_id = sede_id;
     this.estado_id = estado_id;
+    
     
   }
 }
@@ -28,14 +30,15 @@ export class AreaCreateValue implements AreaCreateEntity {
   grado_id: number;
   sede_id: number;
   estado_id: number;
-  
+  cogradosareas?: any[];
 
   constructor({
     nombre,
     codigo,
     grado_id,
     sede_id,
-    estado_id
+    estado_id,
+    cogradosareas
     
   }: AreaCreateEntity) {
     this.nombre = nombre;
@@ -43,6 +46,7 @@ export class AreaCreateValue implements AreaCreateEntity {
     this.codigo = codigo;
     this.sede_id = sede_id;
     this.estado_id = estado_id;
+    this.cogradosareas= cogradosareas;
     
   }
 }
@@ -53,6 +57,8 @@ export class AreaUpdatedValue implements AreaUpdateEntity {
   grado_id: number;
   sede_id: number;
   estado_id: number;
+  cogradosareas_create?: any[];
+  cogradosareas_delete?: any[];
   
 
   constructor({
@@ -60,7 +66,9 @@ export class AreaUpdatedValue implements AreaUpdateEntity {
     codigo,
     grado_id,
     sede_id,
-    estado_id
+    estado_id,
+    cogradosareas_create,
+    cogradosareas_delete
     
   }: AreaUpdateEntity) {
     this.nombre = nombre;
@@ -68,6 +76,8 @@ export class AreaUpdatedValue implements AreaUpdateEntity {
     this.codigo = codigo;
     this.sede_id = sede_id;
     this.estado_id = estado_id;
+    this.cogradosareas_create = cogradosareas_create;
+    this.cogradosareas_delete = cogradosareas_delete;
     
   }
 }

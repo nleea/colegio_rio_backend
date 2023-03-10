@@ -4,6 +4,7 @@ export interface AreaEntity {
   grado_id: number;
   sede_id: number;
   estado_id: number;
+  
 }
 
 export interface AreaCreateEntity {
@@ -12,6 +13,7 @@ export interface AreaCreateEntity {
   grado_id: number;
   sede_id: number;
   estado_id: number;
+  cogradosareas?: any[];
 }
 
 export interface AreaUpdateEntity {
@@ -20,4 +22,6 @@ export interface AreaUpdateEntity {
   grado_id: number;
   sede_id: number;
   estado_id: number;
+  cogradosareas_create?: any[];
+  cogradosareas_delete?: any[];
 }

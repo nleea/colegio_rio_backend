@@ -35,7 +35,7 @@ export class AreaRepositoryClass implements AreasRepository {
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
     try {
-      const grados = await db.$transaction([
+      const areas = await db.$transaction([
         db.cogrados.findMany({
           select: { id: true, nombre: true },
         }),
@@ -46,25 +46,13 @@ export class AreaRepositoryClass implements AreasRepository {
           where: { padre: 595 },
           select: { id: true, nombre: true },
         }),
-        db.cofuncionarios.findMany({
-          select: {
-            id: true,
-            maestras_cofuncionarios_cargo_idTomaestras: {
-              select: { nombre: true },
-            },
-            personas: { select: { nombre: true, apellido: true } },
-          },
-        }),
       ]);
-
-      // console.log(grados)
 
       return {
         data: {
-          grados: grados[0],
-          sedes: grados[1],
-          estados: grados[2],
-          funcionarios: grados[3],
+          grados: areas[0],
+          sedes: areas[1],
+          estados: areas[2],
         },
         ok: true,
         status: 200,
@@ -73,13 +61,14 @@ export class AreaRepositoryClass implements AreasRepository {
       return { data: error, ok: true, status: 200 };
     }
   }
+
   async storeAreas(
-    body: AreaEntity
+    body: AreaCreateEntity
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    const { nombre, codigo,  grado_id, sede_id, estado_id } = body;
+    const { nombre, codigo,  grado_id, sede_id, estado_id, cogradosareas } = body;
 
     try {
-      await this.#db.cocursos.create({
+      await this.#db.coareas.create({
         data: {
           nombre: nombre,
           codigo: codigo,
@@ -87,6 +76,7 @@ export class AreaRepositoryClass implements AreasRepository {
           estado_id: estado_id,
           sede_id: sede_id,
           created_by: 1,
+          cogradosareas:{create: cogradosareas}
         },
       });
 
