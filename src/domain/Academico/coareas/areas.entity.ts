@@ -3,6 +3,7 @@ export interface AreaEntity {
   nombre: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
 }
 
 export interface AreaCreateEntity {
@@ -10,6 +11,7 @@ export interface AreaCreateEntity {
   nombre: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
 }
 
 export interface AreaUpdateEntity {
@@ -17,4 +19,5 @@ export interface AreaUpdateEntity {
   nombre: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
 }

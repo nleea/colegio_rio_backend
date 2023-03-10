@@ -9,13 +9,15 @@ export class AreaValue implements AreaEntity {
   codigo: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
   
 
-  constructor({ nombre, codigo, grado_id, sede_id }: AreaEntity) {
+  constructor({ nombre, codigo, grado_id, sede_id, estado_id }: AreaEntity) {
     this.nombre = nombre;
     this.grado_id = grado_id;
     this.codigo = codigo;
     this.sede_id = sede_id;
+    this.estado_id = estado_id;
     
   }
 }
@@ -25,6 +27,7 @@ export class AreaCreateValue implements AreaCreateEntity {
   codigo: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
   
 
   constructor({
@@ -32,12 +35,14 @@ export class AreaCreateValue implements AreaCreateEntity {
     codigo,
     grado_id,
     sede_id,
+    estado_id
     
   }: AreaCreateEntity) {
     this.nombre = nombre;
     this.grado_id = grado_id;
     this.codigo = codigo;
     this.sede_id = sede_id;
+    this.estado_id = estado_id;
     
   }
 }
@@ -47,6 +52,7 @@ export class AreaUpdatedValue implements AreaUpdateEntity {
   codigo: string;
   grado_id: number;
   sede_id: number;
+  estado_id: number;
   
 
   constructor({
@@ -54,12 +60,14 @@ export class AreaUpdatedValue implements AreaUpdateEntity {
     codigo,
     grado_id,
     sede_id,
+    estado_id
     
   }: AreaUpdateEntity) {
     this.nombre = nombre;
     this.grado_id = grado_id;
     this.codigo = codigo;
     this.sede_id = sede_id;
+    this.estado_id = estado_id;
     
   }
 }
