@@ -27,6 +27,7 @@ export class RolesRepositoryClass implements RolesRepository {
         select: {
           _count: { select: { users: true } },
           name: true,
+          id: true,
           users: {
             select: {
               personas: {
@@ -64,7 +65,6 @@ export class RolesRepositoryClass implements RolesRepository {
         "created_at",
         "updated_at",
       ] as any);
-  
 
       return {
         data: resp,

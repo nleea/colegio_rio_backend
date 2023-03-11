@@ -51,6 +51,29 @@ export class ModulesRepositoryClass implements ModulesRepository {
     }
   }
 
+  async moduleWithoutRol(
+    rolId: number
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
+    try {
+      const modules = await this.db.modulos.findMany({
+        where: {
+          modulos_has_role: { none: { role_id: Number(rolId) } },
+        },
+      });
+      return {
+        data: modules,
+        ok: true,
+        status: 200,
+      };
+    } catch (error) {
+      return {
+        data: error,
+        ok: false,
+        status: 400,
+      };
+    }
+  }
+
   async findAllModules(): Promise<
     ErrorsInterfaces<any> | ResponseInterfaces<any>
   > {
@@ -169,12 +192,13 @@ export class ModulesRepositoryClass implements ModulesRepository {
         modulos.map((e) =>
           this.db.modulos_has_role.create({
             data: {
-              roles: { connect: { id: rolId } },
-              modulos: { connect: { id: e } },
+              roles: { connect: { id: Number(rolId) } },
+              modulos: { connect: { id: Number(e) } },
             },
           })
         )
       );
+
       return {
         data: "ok",
         ok: true,

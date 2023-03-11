@@ -187,7 +187,7 @@ export class UserRepositoryClass implements UserRepository {
     } catch (error) {
       return {
         ok: false,
-        data: "sss",
+        data: error,
         status: 400,
       };
     }

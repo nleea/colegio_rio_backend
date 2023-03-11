@@ -23,4 +23,8 @@ export interface ModulesRepository {
     rolId: Number,
     modulos: any[]
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
+
+  moduleWithoutRol(
+    rolId: Number,
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
 }

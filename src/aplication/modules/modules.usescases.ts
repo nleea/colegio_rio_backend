@@ -31,4 +31,9 @@ export class ModulesUsesCases {
     );
     return resp;
   }
+
+  public async listModulesWithoutRoles(rolId: number) {
+    const resp = await this.moduleRepository.moduleWithoutRol(rolId);
+    return resp;
+  }
 }

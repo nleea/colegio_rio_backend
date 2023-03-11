@@ -19,4 +19,5 @@ route.post("/crear", modulesController.insertModules);
 route.delete("/delete", modulesController.deleteModulos);
 route.post("/roles", modulesController.createModuleshasRole);
 route.post("/roles/hash/", modulesController.GetModulosHasRole);
+route.post("/without/roles/", modulesController.GetAllModulesWithoutRoles);
 export { route };

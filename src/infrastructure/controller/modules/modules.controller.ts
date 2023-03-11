@@ -47,4 +47,11 @@ export class ModulesController {
       await this.modulesUsesCases.listModulesHasRoles(rolName, inModule);
     return res.status(status).json({ ok, data });
   };
+
+  GetAllModulesWithoutRoles = async (req: Request, res: Response) => {
+    const { rolId } = req.body;
+    const { data, ok, status } =
+      await this.modulesUsesCases.listModulesWithoutRoles(rolId);
+    return res.status(status).json({ data, ok });
+  };
 }
