@@ -245,7 +245,6 @@ model comaterias {
   nombre     String    @db.VarChar(255)
   sede_id    Int
   area_id    Int
-  director_id Int
   codigo     String    @db.VarChar(255)
   created_at DateTime  @default(now()) @db.Timestamp(0)
   created_by Int

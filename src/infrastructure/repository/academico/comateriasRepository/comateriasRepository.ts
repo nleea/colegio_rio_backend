@@ -23,13 +23,23 @@ export class MateriaRepositoryClass implements MateriasRepository {
   > {
     try {
       const resp = await db.comaterias.findMany({
-        where: {estado_id: 596},
+        where: { estado_id: 596 },
         select: {
           id: true,
           codigo: true,
           nombre: true,
-          estado_id:true,
+          estado_id: true,
           cosedes: { select: { id: true, nombre: true } },
+          cofuncionariomaterias: {
+            select: {
+              cofuncionarios: {
+                select: {
+                  id: true,
+                  personas: { select: { nombre: true, apellido: true } },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -38,12 +48,13 @@ export class MateriaRepositoryClass implements MateriasRepository {
       return { data: error, ok: true, status: 200 };
     }
   }
+
   async createMateriasP(): Promise<
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
     try {
       const materias = await db.$transaction([
-        db.cogrados.findMany({
+        db.coareas.findMany({
           select: { id: true, nombre: true },
         }),
         db.cosedes.findMany({
@@ -53,13 +64,23 @@ export class MateriaRepositoryClass implements MateriasRepository {
           where: { padre: 595 },
           select: { id: true, nombre: true },
         }),
+        db.cofuncionarios.findMany({
+          select: {
+            id: true,
+            maestras_cofuncionarios_cargo_idTomaestras: {
+              select: { nombre: true },
+            },
+            personas: { select: { nombre: true, apellido: true } },
+          },
+        }),
       ]);
 
       return {
         data: {
-          grados: materias[0],
+          areas: materias[0],
           sedes: materias[1],
           estados: materias[2],
+          funcionarios: materias[3],
         },
         ok: true,
         status: 200,
@@ -72,8 +93,15 @@ export class MateriaRepositoryClass implements MateriasRepository {
   async storeMaterias(
     body: MateriaCreateEntity
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    const { nombre, codigo, sede_id, estado_id, area_id, director_id } =
-      body;
+    const {
+      nombre,
+      codigo,
+      sede_id,
+      estado_id,
+      area_id,
+      director_id,
+      cofuncionariomaterias,
+    } = body;
 
     try {
       await this.#db.comaterias.create({
@@ -81,10 +109,10 @@ export class MateriaRepositoryClass implements MateriasRepository {
           nombre: nombre,
           codigo: codigo,
           estado_id: estado_id,
-          director_id: director_id,
           area_id: area_id,
           sede_id: sede_id,
           created_by: 1,
+          cofuncionariomaterias: { create: cofuncionariomaterias },
         },
       });
 
@@ -121,7 +149,18 @@ export class MateriaRepositoryClass implements MateriasRepository {
           id: true,
           codigo: true,
           nombre: true,
+          estado_id: true,
           cosedes: { select: { id: true, nombre: true } },
+          cofuncionariomaterias: {
+            select: {
+              cofuncionarios: {
+                select: {
+                  id: true,
+                  personas: { select: { nombre: true, apellido: true } },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -142,10 +181,21 @@ export class MateriaRepositoryClass implements MateriasRepository {
             id: true,
             codigo: true,
             nombre: true,
+            estado_id: true,
             cosedes: { select: { id: true, nombre: true } },
+            cofuncionariomaterias: {
+              select: {
+                cofuncionarios: {
+                  select: {
+                    id: true,
+                    personas: { select: { nombre: true, apellido: true } },
+                  },
+                },
+              },
+            },
           },
         }),
-        db.cogrados.findMany({
+        db.coareas.findMany({
           select: { id: true, nombre: true },
         }),
         db.cosedes.findMany({
@@ -155,12 +205,21 @@ export class MateriaRepositoryClass implements MateriasRepository {
           where: { padre: 595 },
           select: { id: true, nombre: true },
         }),
+        db.cofuncionarios.findMany({
+          select: {
+            id: true,
+            maestras_cofuncionarios_cargo_idTomaestras: {
+              select: { nombre: true },
+            },
+            personas: { select: { nombre: true, apellido: true } },
+          },
+        }),
       ]);
 
       return {
         data: {
           materia: materias[0],
-          grados: materias[1],
+          areas: materias[1],
           sedes: materias[2],
           estados: materias[3],
         },
@@ -178,8 +237,7 @@ export class MateriaRepositoryClass implements MateriasRepository {
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      const { nombre, codigo, grado_id, sede_id, estado_id } = body;
-
+      const { nombre, codigo, sede_id, estado_id,cofuncionariomaterias_create,cofuncionariomaterias_delete,area_id } = body;
 
       await db.$transaction([
         db.comaterias.update({
@@ -187,19 +245,20 @@ export class MateriaRepositoryClass implements MateriasRepository {
           data: {
             nombre,
             codigo,
-            // grado_id,
             sede_id,
             estado_id,
+            area_id,
+            cofuncionariomaterias:{create:cofuncionariomaterias_create}
           },
         }),
 
-        // db.cogradosmaterias.deleteMany({
-        //   where: {
-        //     grado_id: {
-        //       in: cogradosmaterias_delete,
-        //     },
-        //   },
-        // }),
+        db.cofuncionariomaterias.deleteMany({
+          where: {
+            funcionario_id: {
+              in: cofuncionariomaterias_delete,
+            },
+          },
+        }),
       ]);
 
       return {
