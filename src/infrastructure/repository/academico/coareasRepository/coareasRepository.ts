@@ -23,12 +23,13 @@ export class AreaRepositoryClass implements AreasRepository {
   > {
     try {
       const resp = await db.coareas.findMany({
+        where: {estado_id: 596},
         select: {
           id: true,
           codigo: true,
           nombre: true,
-          cosedes: { select: { id: true, nombre: true } }
-          
+          estado_id:true,
+          cosedes: { select: { id: true, nombre: true } },
         },
       });
 
@@ -114,20 +115,15 @@ export class AreaRepositoryClass implements AreasRepository {
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      const resp = await db.cocursos.findMany({
+      const resp = await db.coareas.findMany({
         where: { id: id },
-        include: {
-          cogrados: { select: { id: true, nombre: true, sede_id: true } },
-          cofuncionarios: {
+        select: {
+          id: true,
+          codigo: true,
+          nombre: true,
+          cogradosareas: {
             select: {
-              personas: {
-                select: {
-                  nombre: true,
-                  segundonombre: true,
-                  apellido: true,
-                  segundoapellido: true,
-                },
-              },
+              cogrados: { select: { id: true, nombre: true, sede_id: true } },
             },
           },
           cosedes: { select: { id: true, nombre: true } },
@@ -144,27 +140,21 @@ export class AreaRepositoryClass implements AreasRepository {
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      // const resp = await db.cocursos.findMany({
-      //   where: { id: id },
-      //   include: {
-      //     cogrados: { select: { id: true, nombre: true, sede_id: true } },
-      //     cofuncionarios: {
-      //       select: {
-      //         personas: {
-      //           select: {
-      //             nombre: true,
-      //             segundonombre: true,
-      //             apellido: true,
-      //             segundoapellido: true,
-      //           },
-      //         },
-      //       },
-      //     },
-      //     cosedes: { select: { id: true, nombre: true } },
-      //   },
-      // });
-
-      const grados = await db.$transaction([
+      const areas = await db.$transaction([
+        db.coareas.findMany({
+          where: { id: id },
+          select: {
+            id: true,
+            codigo: true,
+            nombre: true,
+            cogradosareas: {
+              select: {
+                cogrados: { select: { id: true, nombre: true, sede_id: true } },
+              },
+            },
+            cosedes: { select: { id: true, nombre: true } },
+          },
+        }),
         db.cogrados.findMany({
           select: { id: true, nombre: true },
         }),
@@ -175,45 +165,14 @@ export class AreaRepositoryClass implements AreasRepository {
           where: { padre: 595 },
           select: { id: true, nombre: true },
         }),
-        db.cofuncionarios.findMany({
-          select: {
-            id: true,
-            maestras_cofuncionarios_cargo_idTomaestras: {
-              select: { nombre: true },
-            },
-            personas: { select: { nombre: true, apellido: true } },
-          },
-        }),
-        db.cocursos.findMany({
-          where: { id: id },
-          include: {
-            cogrados: { select: { id: true, nombre: true, sede_id: true } },
-            cofuncionarios: {
-              select: {
-                personas: {
-                  select: {
-                    nombre: true,
-                    segundonombre: true,
-                    apellido: true,
-                    segundoapellido: true,
-                  },
-                },
-              },
-            },
-            cosedes: { select: { id: true, nombre: true } },
-          },
-        }),
       ]);
-
-      // console.log(grados)
 
       return {
         data: {
-          curso: grados[4],
-          grados: grados[0],
-          sedes: grados[1],
-          estados: grados[2],
-          funcionarios: grados[3],
+          area: areas[0],
+          grados: areas[1],
+          sedes: areas[2],
+          estados: areas[3],
         },
         ok: true,
         status: 200,
@@ -225,22 +184,31 @@ export class AreaRepositoryClass implements AreasRepository {
     }
   }
   async updatedArea(
-    body: AreaEntity,
+    body: AreaUpdateEntity,
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      const { nombre, codigo, grado_id, sede_id, estado_id } = body;
+      const { nombre, codigo, grado_id, sede_id, estado_id, cogradosareas_create, cogradosareas_delete } = body;
+
 
       await db.$transaction([
-        db.cocursos.update({
+        db.coareas.update({
           where: { id: id },
           data: {
-            nombre: nombre,
-            codigo: codigo,
-            estado_id: estado_id,
-            grado_id: grado_id,
-            sede_id: sede_id,
-            created_by: 1,
+            nombre,
+            codigo,
+            grado_id,
+            sede_id,
+            estado_id,
+            cogradosareas: {create: cogradosareas_create}
+          },
+        }),
+
+        db.cogradosareas.deleteMany({
+          where: {
+            grado_id: {
+              in: cogradosareas_delete,
+            },
           },
         }),
       ]);
@@ -254,15 +222,15 @@ export class AreaRepositoryClass implements AreasRepository {
       return { data: error, ok: true, status: 200 };
     }
   }
+
   async deleteArea(
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      await db.cocursos.delete({
-        where: {
-          id: id,
-        },
-      });
+      // console.log(id)
+      // await db.cogradosareas.update({
+      //   where:{id: id},
+      // });
       return {
         data: "ok",
         ok: true,
