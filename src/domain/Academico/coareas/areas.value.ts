@@ -1,73 +1,83 @@
 import {
-  CursoEntity,
-  CursoCreateEntity,
-  CursoUpdateEntity,
-} from "./cursos.entity";
+  AreaEntity,
+  AreaCreateEntity,
+  AreaUpdateEntity,
+} from "./areas.entity";
 
-export class CursoValue implements CursoEntity {
+export class AreaValue implements AreaEntity {
   nombre: string;
   codigo: string;
   grado_id: number;
   sede_id: number;
-  director_id: number;
   estado_id: number;
 
-  constructor({ nombre, codigo, grado_id, sede_id, director_id, estado_id }: CursoEntity) {
+  
+
+  constructor({ nombre, codigo, grado_id, sede_id, estado_id }: AreaEntity) {
     this.nombre = nombre;
     this.grado_id = grado_id;
     this.codigo = codigo;
     this.sede_id = sede_id;
     this.estado_id = estado_id;
-    this.director_id = director_id;
+    
+    
   }
 }
 
-export class CursoCreateValue implements CursoCreateEntity {
+export class AreaCreateValue implements AreaCreateEntity {
   nombre: string;
   codigo: string;
   grado_id: number;
   sede_id: number;
   estado_id: number;
-  director_id: number;
+  cogradosareas?: any[];
 
   constructor({
     nombre,
     codigo,
     grado_id,
     sede_id,
-    director_id,
     estado_id,
-  }: CursoCreateEntity) {
+    cogradosareas
+    
+  }: AreaCreateEntity) {
     this.nombre = nombre;
     this.grado_id = grado_id;
     this.codigo = codigo;
     this.sede_id = sede_id;
     this.estado_id = estado_id;
-    this.director_id = director_id;
+    this.cogradosareas= cogradosareas;
+    
   }
 }
 
-export class CursoUpdatedValue implements CursoUpdateEntity {
+export class AreaUpdatedValue implements AreaUpdateEntity {
   nombre: string;
   codigo: string;
   grado_id: number;
   sede_id: number;
-  director_id: number;
   estado_id: number;
+  cogradosareas_create?: any[];
+  cogradosareas_delete?: any[];
+  
 
   constructor({
     nombre,
     codigo,
     grado_id,
     sede_id,
-    director_id,
     estado_id,
-  }: CursoUpdateEntity) {
+    cogradosareas_create,
+    cogradosareas_delete
+    
+  }: AreaUpdateEntity) {
     this.nombre = nombre;
     this.grado_id = grado_id;
     this.codigo = codigo;
     this.sede_id = sede_id;
-    this.director_id = director_id;
     this.estado_id = estado_id;
+    this.cogradosareas_create = cogradosareas_create;
+    this.cogradosareas_delete = cogradosareas_delete;
+    
   }
 }
