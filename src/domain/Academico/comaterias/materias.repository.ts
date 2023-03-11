@@ -14,7 +14,7 @@ export interface MateriasRepository {
     body: MateriaEntity,
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  showCurso(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  showCursoEdit(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  deleteCurso(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  showMateria(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  showMateriaEdit(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  deleteMateria(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
 }
