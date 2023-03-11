@@ -23,7 +23,10 @@ export class CursoRepositoryClass implements CursosRepository {
   > {
     try {
       const resp = await db.cocursos.findMany({
-        include: {
+        select: {
+          id:true,
+          codigo:true,
+          nombre:true,
           cogrados: { select: { id: true, nombre: true, sede_id: true } },
           cofuncionarios: {
             select: {
@@ -38,6 +41,7 @@ export class CursoRepositoryClass implements CursosRepository {
             },
           },
           cosedes: { select: { id: true, nombre: true } },
+          maestras:{select:{id:true, nombre:true}}
         },
       });
 

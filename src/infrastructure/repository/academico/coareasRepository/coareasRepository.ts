@@ -193,7 +193,7 @@ export class AreaRepositoryClass implements AreasRepository {
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      const { nombre, codigo, grado_id, sede_id, estado_id, cogradosareas_create, cogradosareas_delete } = body;
+      const { nombre, codigo, sede_id, estado_id, cogradosareas_create, cogradosareas_delete } = body;
 
 
       await db.$transaction([
@@ -202,7 +202,6 @@ export class AreaRepositoryClass implements AreasRepository {
           data: {
             nombre,
             codigo,
-            grado_id,
             sede_id,
             estado_id,
             cogradosareas: {create: cogradosareas_create}
