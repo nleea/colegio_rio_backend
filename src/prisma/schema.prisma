@@ -261,6 +261,42 @@ model comaterias {
   @@index([sede_id], map: "comaterias_sede_id_foreign")
 }
 
+model comunicaciones {
+  id                     Int       @id @default(autoincrement())
+  asunto                 String    @db.VarChar(255)
+  referencia             String    @db.VarChar(255)
+  texto                  String    @db.Text
+  texto_desprendible     String    @db.Text
+  fecha_envio            DateTime?             @db.Date
+  fecha_cierre           DateTime?             @db.Date
+  sede_id                Int?
+  persona_id             Int       @unique(map: "comunicaciones_persona_id_unique")
+  tipocomunicacion_id    Int?
+  estado_id              Int?
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+  created_by Int
+  updated_at DateTime? @db.Timestamp(0)
+  updated_by Int?
+  deleted_at DateTime? @db.Timestamp(0)
+  deleted_by Int?
+  
+  personas                  personas  @relation(fields: [persona_id], references: [id], onDelete: Cascade, map: "comunicaciones_persona_id_foreign_key")
+  cosedes      cosedes?   @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "comunicaciones_sede_id_foreign_key")
+  // maestras     maestras?   @relation(fields: [tipocomunicacion_id], references: [id], onDelete: Cascade, map: "comunicaciones_tipocomunicacion_id_foreign_key")
+  // maestrasEstado_id     maestras?   @relation(fields: [estado_id], references: [id], onDelete: Cascade, map: "comunicaciones_estado_id_foreign_key")
+  maestras_comunicaciones_estado_idTomaestras        maestras?  @relation("comunicaciones_estado_idTomaestras", fields: [estado_id], references: [id], onDelete: Cascade, map: "comunicaciones_estado_id_foreign_key")
+  maestras_comunicaciones_tipocomunicacion_idTomaestras  maestras?  @relation("comunicaciones_tipocomunicacion_idTomaestras", fields: [tipocomunicacion_id], references: [id], onDelete: Cascade, map: "comunicaciones_tipocomunicacion_id_foreign_key")
+
+
+  @@index([persona_id], map: "comunicaciones_persona_id_foreign")
+  @@index([sede_id], map: "comunicaciones_sede_id_foreign")
+  @@index([tipocomunicacion_id], map: "comunicaciones_tipocomunicacion_id_foreign")
+  @@index([estado_id], map: "comunicaciones_estado_id_foreign")
+
+
+}
+
+
 model corolesperfiles {
   id                                           Int       @id @default(autoincrement())
   perfil_id                                    Int
@@ -301,6 +337,7 @@ model cosedes {
   cogradosestudiantes cogradosestudiantes[]
   comaterias          comaterias[]
   estudiantes         estudiantes[]
+  comunicaciones      comunicaciones[]
 
   @@index([colegios_id], map: "cosedes_empresa_id_foreign")
 }
@@ -353,7 +390,9 @@ model maestras {
   maestras_maestras_padreTomaestras                       maestras?         @relation("maestras_padreTomaestras", fields: [padre], references: [id], onDelete: Cascade, map: "maestras_padre_foreign_key")
   other_maestras_maestras_padreTomaestras                 maestras[]        @relation("maestras_padreTomaestras")
   users                                                   users[]
-  cocursos                                                cocursos[]
+  cocursos                                                cocursos[]        
+  maestras_comunicaciones_estado_idTomaestras                 comunicaciones[]  @relation("comunicaciones_estado_idTomaestras")
+  comunicaciones_comunicaciones_tipocomunicacion_idTomaestras       comunicaciones[]  @relation("comunicaciones_tipocomunicacion_idTomaestras")
 
   @@index([jerarquia], map: "maestras_jerarquia_foreign")
   @@index([padre], map: "maestras_padre_foreign")
@@ -465,6 +504,7 @@ model personas {
   cofuncionarios        cofuncionarios?
   estudiantes           estudiantes?
   users                 users?
+  comunicaciones        comunicaciones?
 }
 
 model role_has_permissions {
