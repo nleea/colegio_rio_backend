@@ -72,7 +72,7 @@ export class MateriaRepositoryClass implements MateriasRepository {
   async storeMaterias(
     body: MateriaCreateEntity
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    const { nombre, codigo, grado_id, sede_id, estado_id, area_id } =
+    const { nombre, codigo, sede_id, estado_id, area_id, director_id } =
       body;
 
     try {
@@ -80,8 +80,8 @@ export class MateriaRepositoryClass implements MateriasRepository {
         data: {
           nombre: nombre,
           codigo: codigo,
-          // grado_id: grado_id,
           estado_id: estado_id,
+          director_id: director_id,
           area_id: area_id,
           sede_id: sede_id,
           created_by: 1,
