@@ -14,6 +14,11 @@ import {
 } from "../../../types/response.interfaces";
 import { verify } from "jsonwebtoken";
 
+interface Iusers {
+  COFUNCIONARIOS: any;
+  ESTUDIANTE: any;
+}
+
 export class UserRepositoryClass implements UserRepository {
   #db: typeof db;
   constructor() {
@@ -59,7 +64,8 @@ export class UserRepositoryClass implements UserRepository {
   }
 
   async registerUser(
-    body: UserCreateEntity
+    body: UserCreateEntity,
+    userid: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     const {
       apellido,
@@ -67,12 +73,35 @@ export class UserRepositoryClass implements UserRepository {
       fechanacimiento,
       identificacion,
       name,
-      nombre,
-      password,
-      role_id,
-      sexo_id,
       tipoidentificacion_id,
+      telefonomovil,
+      roles,
+      fechaingreso,
+      tarjetaprofesional,
+      fechasalida,
     } = body;
+
+    const restData = {
+      COFUNCIONARIOS: {
+        cofuncionarios: {
+          create: {
+            tarjetaprofesional,
+            fechaingreso,
+            estado_id: 1,
+            created_by: userid,
+          },
+        },
+      },
+      ESTUDIANTE: {
+        estudiantes: {
+          create: {
+            fechasalida: new Date(fechasalida!),
+            fechaingreso: new Date(fechaingreso!),
+            created_by: userid,
+          },
+        },
+      },
+    };
 
     try {
       await this.#db.personas.create({
@@ -81,17 +110,18 @@ export class UserRepositoryClass implements UserRepository {
           email,
           fechanacimiento: new Date(fechanacimiento),
           identificacion,
-          nombre,
-          sexo_id,
+          nombre: name,
+          sexo_id: 1,
           tipoidentificacion_id,
-          telefonomovil: "ss",
+          telefonomovil,
           users: {
             create: {
-              username: name,
-              password: hashPin(password).encrypted,
-              role_id: role_id,
+              username: `${name.concat(...identificacion.substring(1, 5))}`,
+              password: hashPin(identificacion).encrypted,
+              roles: { connect: { name: roles } },
             },
           },
+          ...(restData[roles as keyof Iusers] as any),
         },
       });
 
@@ -101,8 +131,8 @@ export class UserRepositoryClass implements UserRepository {
         ok: true,
       };
     } catch (e) {
+      console.log(e);
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        console.log(e);
         return {
           status: 400,
           data: e.message,
@@ -128,10 +158,16 @@ export class UserRepositoryClass implements UserRepository {
     try {
       const user = await this.#db.users.findUnique({
         where: { username: username },
-        include: {
+        select: {
+          password: true,
+          email: true,
+          id: true,
+          telefonomovil: true,
+          username: true,
           roles: {
             select: {
               modulos_has_role: {
+                orderBy: { id: "asc" },
                 select: {
                   modulos: {
                     select: {
@@ -177,7 +213,7 @@ export class UserRepositoryClass implements UserRepository {
       return {
         data: {
           token,
-          user: user.id,
+          user: { name: user.username, id: user.id },
           resources: user.roles?.modulos_has_role.map((p) => p.modulos),
           IsAuth: true,
         },

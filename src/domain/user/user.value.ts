@@ -84,8 +84,11 @@ export class UserCreateValue implements UserCreateEntity {
   apellido: string;
   tipoidentificacion_id: number;
   sexo_id: number;
-  role_id: number;
   roles: string;
+  telefonomovil: string;
+  fechaingreso?: string;
+  tarjetaprofesional?: string;
+  fechasalida?: string;
 
   constructor({
     apellido,
@@ -95,11 +98,14 @@ export class UserCreateValue implements UserCreateEntity {
     name,
     nombre,
     password,
-    role_id,
     password_confirmation,
     roles,
     sexo_id,
     tipoidentificacion_id,
+    telefonomovil,
+    tarjetaprofesional,
+    fechasalida,
+    fechaingreso,
   }: UserCreateEntity) {
     this.apellido = apellido;
     this.email = email;
@@ -108,10 +114,13 @@ export class UserCreateValue implements UserCreateEntity {
     this.name = name;
     this.nombre = nombre;
     this.password = password;
-    this.role_id = role_id;
     this.roles = roles;
     this.sexo_id = sexo_id;
     this.tipoidentificacion_id = tipoidentificacion_id;
     this.password_confirmation = password_confirmation;
+    this.telefonomovil = telefonomovil;
+    this.fechaingreso = fechaingreso;
+    this.fechasalida = fechasalida;
+    this.tarjetaprofesional = tarjetaprofesional;
   }
 }

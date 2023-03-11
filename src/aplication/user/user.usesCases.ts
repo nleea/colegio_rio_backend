@@ -13,9 +13,9 @@ export class UserUsesCases {
     return resp;
   }
 
-  public async createUser(body: UserCreateEntity) {
+  public async createUser(body: UserCreateEntity, userid: number) {
     const userValue = new UserCreateValue({ ...body });
-    const resp = this.userRepository.registerUser(userValue);
+    const resp = this.userRepository.registerUser(userValue, userid);
     return resp;
   }
 

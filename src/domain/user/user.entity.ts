@@ -35,8 +35,11 @@ export interface UserCreateEntity {
   apellido: string;
   tipoidentificacion_id: number;
   sexo_id: number;
-  role_id: number;
   roles: string;
+  telefonomovil: string;
+  fechaingreso?: string;
+  fechasalida?: string;
+  tarjetaprofesional?: string;
 }
 
 export interface UserUpdateEntity {

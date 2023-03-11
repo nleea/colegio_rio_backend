@@ -79,6 +79,7 @@ export class ModulesRepositoryClass implements ModulesRepository {
   > {
     try {
       const resp = await this.db.roles.findMany({
+        orderBy: { id: "desc" },
         select: {
           name: true,
           categoria: true,

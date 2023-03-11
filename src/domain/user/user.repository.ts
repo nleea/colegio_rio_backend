@@ -7,7 +7,8 @@ import {
 export interface UserRepository {
   findAllUser(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   registerUser(
-    body: UserCreateEntity
+    body: UserCreateEntity,
+    userid: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   login({
     username,

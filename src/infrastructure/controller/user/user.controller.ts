@@ -14,8 +14,11 @@ export class UserController {
 
   insertUser = async (req: Request, res: Response) => {
     const body = req.body as UserCreateEntity;
-    const resp = await this.userUsesCases.createUser(body);
-    return res.json(resp);
+    const { data, ok, status } = await this.userUsesCases.createUser(
+      body,
+      (req!.user as any).id
+    );
+    return res.status(status).json({ data, ok });
   };
 
   auth = async (req: Request, res: Response) => {
