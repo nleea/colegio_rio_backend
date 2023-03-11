@@ -1,9 +1,9 @@
-import { CursosRepository } from "../../../../domain/Academico/cocursos/cursos.repository";
+import { MateriasRepository } from "../../../../domain/Academico/comaterias/materias.repository";
 import {
-  CursoCreateEntity,
-  CursoEntity,
-  CursoUpdateEntity,
-} from "../../../../domain/Academico/cocursos/cursos.entity";
+  MateriaCreateEntity,
+  MateriaEntity,
+  MateriaUpdateEntity,
+} from "../../../../domain/Academico/comaterias/materias.entity";
 import { Prisma } from "@prisma/client";
 import { exclude } from "../../../../helpers/omit.fields";
 import { db } from "../../../models/db";
@@ -12,36 +12,34 @@ import {
   ErrorsInterfaces,
 } from "../../../../types/response.interfaces";
 
-export class CursoRepositoryClass implements CursosRepository {
+export class MateriaRepositoryClass implements MateriasRepository {
   #db: typeof db;
   constructor() {
     this.#db = db;
   }
 
-  async findAllCursos(): Promise<
+  async findAllMaterias(): Promise<
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
     try {
-      const resp = await db.cocursos.findMany({
+      const resp = await db.comaterias.findMany({
+        where: { estado_id: 596 },
         select: {
-          id:true,
-          codigo:true,
-          nombre:true,
-          cogrados: { select: { id: true, nombre: true, sede_id: true } },
-          cofuncionarios: {
+          id: true,
+          codigo: true,
+          nombre: true,
+          estado_id: true,
+          cosedes: { select: { id: true, nombre: true } },
+          cofuncionariomaterias: {
             select: {
-              personas: {
+              cofuncionarios: {
                 select: {
-                  nombre: true,
-                  segundonombre: true,
-                  apellido: true,
-                  segundoapellido: true,
+                  id: true,
+                  personas: { select: { nombre: true, apellido: true } },
                 },
               },
             },
           },
-          cosedes: { select: { id: true, nombre: true } },
-          maestras:{select:{id:true, nombre:true}}
         },
       });
 
@@ -50,12 +48,13 @@ export class CursoRepositoryClass implements CursosRepository {
       return { data: error, ok: true, status: 200 };
     }
   }
-  async createCursosP(): Promise<
+
+  async createMateriasP(): Promise<
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
     try {
-      const grados = await db.$transaction([
-        db.cogrados.findMany({
+      const materias = await db.$transaction([
+        db.coareas.findMany({
           select: { id: true, nombre: true },
         }),
         db.cosedes.findMany({
@@ -76,14 +75,12 @@ export class CursoRepositoryClass implements CursosRepository {
         }),
       ]);
 
-      // console.log(grados)
-
       return {
         data: {
-          grados: grados[0],
-          sedes: grados[1],
-          estados: grados[2],
-          funcionarios: grados[3],
+          areas: materias[0],
+          sedes: materias[1],
+          estados: materias[2],
+          funcionarios: materias[3],
         },
         ok: true,
         status: 200,
@@ -92,21 +89,30 @@ export class CursoRepositoryClass implements CursosRepository {
       return { data: error, ok: true, status: 200 };
     }
   }
-  async storeCursos(
-    body: CursoEntity
+
+  async storeMaterias(
+    body: MateriaCreateEntity
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
-    const { nombre, codigo, director_id, grado_id, sede_id, estado_id } = body;
+    const {
+      nombre,
+      codigo,
+      sede_id,
+      estado_id,
+      area_id,
+      director_id,
+      cofuncionariomaterias,
+    } = body;
 
     try {
-      await this.#db.cocursos.create({
+      await this.#db.comaterias.create({
         data: {
           nombre: nombre,
           codigo: codigo,
-          director_id: director_id,
-          grado_id: grado_id,
           estado_id: estado_id,
+          area_id: area_id,
           sede_id: sede_id,
           created_by: 1,
+          cofuncionariomaterias: { create: cofuncionariomaterias },
         },
       });
 
@@ -133,27 +139,28 @@ export class CursoRepositoryClass implements CursosRepository {
     }
   }
 
-  async showCurso(
+  async showMateria(
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      const resp = await db.cocursos.findMany({
+      const resp = await db.comaterias.findMany({
         where: { id: id },
-        include: {
-          cogrados: { select: { id: true, nombre: true, sede_id: true } },
-          cofuncionarios: {
+        select: {
+          id: true,
+          codigo: true,
+          nombre: true,
+          estado_id: true,
+          cosedes: { select: { id: true, nombre: true } },
+          cofuncionariomaterias: {
             select: {
-              personas: {
+              cofuncionarios: {
                 select: {
-                  nombre: true,
-                  segundonombre: true,
-                  apellido: true,
-                  segundoapellido: true,
+                  id: true,
+                  personas: { select: { nombre: true, apellido: true } },
                 },
               },
             },
           },
-          cosedes: { select: { id: true, nombre: true } },
         },
       });
 
@@ -163,32 +170,32 @@ export class CursoRepositoryClass implements CursosRepository {
     }
   }
 
-  async showCursoEdit(
+  async showMateriaEdit(
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      // const resp = await db.cocursos.findMany({
-      //   where: { id: id },
-      //   include: {
-      //     cogrados: { select: { id: true, nombre: true, sede_id: true } },
-      //     cofuncionarios: {
-      //       select: {
-      //         personas: {
-      //           select: {
-      //             nombre: true,
-      //             segundonombre: true,
-      //             apellido: true,
-      //             segundoapellido: true,
-      //           },
-      //         },
-      //       },
-      //     },
-      //     cosedes: { select: { id: true, nombre: true } },
-      //   },
-      // });
-
-      const grados = await db.$transaction([
-        db.cogrados.findMany({
+      const materias = await db.$transaction([
+        db.comaterias.findMany({
+          where: { id: id },
+          select: {
+            id: true,
+            codigo: true,
+            nombre: true,
+            estado_id: true,
+            cosedes: { select: { id: true, nombre: true } },
+            cofuncionariomaterias: {
+              select: {
+                cofuncionarios: {
+                  select: {
+                    id: true,
+                    personas: { select: { nombre: true, apellido: true } },
+                  },
+                },
+              },
+            },
+          },
+        }),
+        db.coareas.findMany({
           select: { id: true, nombre: true },
         }),
         db.cosedes.findMany({
@@ -207,36 +214,14 @@ export class CursoRepositoryClass implements CursosRepository {
             personas: { select: { nombre: true, apellido: true } },
           },
         }),
-        db.cocursos.findMany({
-          where: { id: id },
-          include: {
-            cogrados: { select: { id: true, nombre: true, sede_id: true } },
-            cofuncionarios: {
-              select: {
-                personas: {
-                  select: {
-                    nombre: true,
-                    segundonombre: true,
-                    apellido: true,
-                    segundoapellido: true,
-                  },
-                },
-              },
-            },
-            cosedes: { select: { id: true, nombre: true } },
-          },
-        }),
       ]);
-
-      // console.log(grados)
 
       return {
         data: {
-          curso: grados[4],
-          grados: grados[0],
-          sedes: grados[1],
-          estados: grados[2],
-          funcionarios: grados[3],
+          materia: materias[0],
+          areas: materias[1],
+          sedes: materias[2],
+          estados: materias[3],
         },
         ok: true,
         status: 200,
@@ -247,49 +232,53 @@ export class CursoRepositoryClass implements CursosRepository {
       return { data: error, ok: true, status: 200 };
     }
   }
-  async updatedCurso(
-    body: CursoEntity,
+  async updatedMateria(
+    body: MateriaUpdateEntity,
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      const { nombre, codigo, director_id, grado_id, sede_id, estado_id } = body;
+      const { nombre, codigo, sede_id, estado_id,cofuncionariomaterias_create,cofuncionariomaterias_delete,area_id } = body;
 
-    await db.$transaction([
-      
-      db.cocursos.update({
-        where: { id: id },
-        data: {
-          nombre: nombre,
-          codigo: codigo,
-          director_id: director_id,
-          estado_id: estado_id,
-          grado_id: grado_id,
-          sede_id: sede_id,
-          created_by: 1,
-        }
-      }),
-    ]);
+      await db.$transaction([
+        db.comaterias.update({
+          where: { id: id },
+          data: {
+            nombre,
+            codigo,
+            sede_id,
+            estado_id,
+            area_id,
+            cofuncionariomaterias:{create:cofuncionariomaterias_create}
+          },
+        }),
 
-    return {
-      data: "OK",
-      ok: true,
-      status: 200,
-    };
+        db.cofuncionariomaterias.deleteMany({
+          where: {
+            funcionario_id: {
+              in: cofuncionariomaterias_delete,
+            },
+          },
+        }),
+      ]);
 
-      
+      return {
+        data: "OK",
+        ok: true,
+        status: 200,
+      };
     } catch (error) {
       return { data: error, ok: true, status: 200 };
     }
   }
-  async deleteCurso(
+
+  async deleteMateria(
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      await db.cocursos.delete({
-        where: {
-          id: id,
-        },
-      });
+      // console.log(id)
+      // await db.cogradosmaterias.update({
+      //   where:{id: id},
+      // });
       return {
         data: "ok",
         ok: true,
