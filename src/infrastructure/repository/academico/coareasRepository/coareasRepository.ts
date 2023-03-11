@@ -29,6 +29,11 @@ export class AreaRepositoryClass implements AreasRepository {
           codigo: true,
           nombre: true,
           estado_id:true,
+          cogradosareas: {
+            select: {
+              cogrados: { select: { id: true, nombre: true, sede_id: true } },
+            },
+          },
           cosedes: { select: { id: true, nombre: true } },
         },
       });
