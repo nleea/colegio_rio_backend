@@ -34,18 +34,18 @@ const moduleValues = [
 
 const lista: Imenu[] = [];
 
-function crearMenu(data: Array<any>, last_id: number, id_padre: number = 0) {
+function crearMenu(data: Array<any>, last_id: number, id_padre: number) {
   let id_last_resources = last_id;
 
   for (let index = 0; index < data.length; index++) {
     if (data[index].id_padre !== 0) {
       lista.push({
         icon: data[index].icon,
-        id_padre: id_padre,
+        id_padre: data[index].id_padre ? data[index].id_padre : id_padre,
         name: data[index].name,
         order: data[index].order,
         path: data[index].path,
-        id: lista[lista.length - 1].id + 1,
+        id: lista.length ? lista[lista.length - 1].id + 1 : last_id,
       });
     } else {
       const lastId =
