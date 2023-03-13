@@ -99,7 +99,7 @@ export class RolesRepositoryClass implements RolesRepository {
 
       return {
         data: {
-          Permissions: permissions[0],
+          permissions: permissions[0],
         },
         ok: true,
         status: 200,
