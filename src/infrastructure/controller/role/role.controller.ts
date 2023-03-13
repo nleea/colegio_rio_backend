@@ -42,11 +42,11 @@ export class RolesController {
 
   showRole = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const resp = await this.rolesUsesCases.showRole(Number(id));
-    const permissions = await this.permissionsUsesCases.listPermissions();
-    return res.json({
-      data: { rol: { ...resp }, permissions: { ...permissions } },
-    });
+    // const resp = await this.rolesUsesCases.showRole(Number(id));
+    // const permissions = await this.permissionsUsesCases.listPermissions();
+    const { data, ok, status } = await this.rolesUsesCases.showRole(Number(id));
+    return res.status(status).json({ data, ok });
+    
   };
 
   updatedRole = async (req: Request, res: Response) => {
@@ -56,6 +56,7 @@ export class RolesController {
     const rolecrea = new RoleUpdatedValue(body);
     const resp = await this.rolesUsesCases.updatedRole(rolecrea, Number(id));
     return res.json(resp);
+    
   };
 
   delteRole = async (req: Request, res: Response) => {

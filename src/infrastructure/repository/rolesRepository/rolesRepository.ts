@@ -49,26 +49,32 @@ export class RolesRepositoryClass implements RolesRepository {
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      const resp = await db.roles.findMany({
-        where: { id: id },
-        include: {
-          role_has_permissions: {
-            select: {
-              permissions: {
-                select: { id: true, name: true, categoria: true },
+     
+      const areas = await db.$transaction([
+        db.roles.findMany({
+          where: { id: id },
+          include: {
+            role_has_permissions: {
+              select: {
+                permissions: {
+                  select: { id: true, name: true, categoria: true },
+                },
               },
             },
           },
-        },
-      });
-      exclude<typeof resp, keyof typeof resp>(resp, [
-        "created_at",
-        "updated_at",
-      ] as any);
+        }),
+        db.permissions.findMany({
+          select:{id:true, name:true, categoria:true}
+        })
+      ]);
+      
 
       return {
-        data: resp,
-        ok: false,
+        data: {
+          rol: areas[0],
+          Permissions: areas[1],
+        },
+        ok: true,
         status: 200,
       };
     } catch (error) {
