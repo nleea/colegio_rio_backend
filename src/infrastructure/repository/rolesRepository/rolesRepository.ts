@@ -36,7 +36,9 @@ export class RolesRepositoryClass implements RolesRepository {
             },
             take: 3,
           },
-        },
+        }, orderBy: {
+          id: 'asc'
+        }
       });
 
       return { data: resp, ok: true, status: 200 };
