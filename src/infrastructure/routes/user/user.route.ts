@@ -17,7 +17,7 @@ const userUsescases = new UserUsesCases(UserRepository);
 const userController = new UserController(userUsescases);
 
 /** Rutas para la aplicaion */
-route.get("/", userController.GetAll);
+route.post("/", userController.GetAll);
 route.get("/profile/", userController.userProfile);
 route.put("/edit/:id", userController.updateUser);
 route.use("/register/", userController.insertUser);

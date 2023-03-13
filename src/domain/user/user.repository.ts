@@ -5,7 +5,10 @@ import {
 } from "../../types/response.interfaces";
 
 export interface UserRepository {
-  findAllUser(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  findAllUser(
+    type: string,
+    is: boolean
+  ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   registerUser(
     body: UserCreateEntity,
     userid: number

@@ -8,8 +8,8 @@ import { UserCreateValue, UserValue } from "../../domain/user/user.value";
 export class UserUsesCases {
   constructor(private readonly userRepository: UserRepository) {}
 
-  public async listUser() {
-    const resp = await this.userRepository.findAllUser();
+  public async listUser(type: string, is: boolean) {
+    const resp = await this.userRepository.findAllUser(type, is);
     return resp;
   }
 

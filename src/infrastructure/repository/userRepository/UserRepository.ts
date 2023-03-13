@@ -24,11 +24,17 @@ export class UserRepositoryClass implements UserRepository {
   constructor() {
     this.#db = db;
   }
-  async findAllUser(): Promise<
-    ResponseInterfaces<UserEntity[]> | ErrorsInterfaces<unknown>
-  > {
+  async findAllUser(
+    type: string,
+    is: boolean
+  ): Promise<ResponseInterfaces<UserEntity[]> | ErrorsInterfaces<unknown>> {
     try {
+      const query = is
+        ? { is: { name: { contains: type } } }
+        : { isNot: { name: { contains: type } } };
+
       const resp = await this.#db.users.findMany({
+        where: { roles: { ...query } },
         select: {
           email: true,
           telefonomovil: true,

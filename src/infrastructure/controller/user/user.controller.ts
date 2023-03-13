@@ -8,7 +8,8 @@ export class UserController {
   }
 
   GetAll = async (req: Request, res: Response) => {
-    const { ok, status, data } = await this.userUsesCases.listUser();
+    const { type, is } = req.body;
+    const { ok, status, data } = await this.userUsesCases.listUser(type, is);
     return res.status(status).json({ ok, data });
   };
 
