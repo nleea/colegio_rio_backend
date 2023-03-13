@@ -14,43 +14,58 @@ export class PermissionsRepositoryClass implements PermissionsRepository {
 
   async findAllPermissions(): Promise<any> {
     try {
-      interface interfacePermissions {
-        id: number;
-        name: string;
-        categoria?: any;
-      }
+      // interface interfacePermissions {
+      //   id: number;
+      //   name: string;
+      //   categoria?: any;
+      // }
 
-      interface Permissions {
-        categoria: any;
-        permissions: interfacePermissions;
-      }
+      // interface Permissions {
+      //   categoria: any;
+      //   permissions: interfacePermissions;
+      // }
 
-      const results = await db.permissions.groupBy({
-        by: ["categoria"],
-      });
+      // const results = await db.permissions.groupBy({
+      //   by: ["categoria"],
+      // });
 
-      const permissions1: Permissions[] = [];
+      // const permissions1: Permissions[] = [];
 
-      const allPermissionHasCategory = await db.$transaction(
-        results.map((category) =>
-          db.permissions.findMany({
-            where: {
-              categoria: category.categoria,
-            },
-            select: { id: true, name: true, categoria: true },
-          })
-        )
-      );
+      // const allPermissionHasCategory = await db.$transaction(
+      //   results.map((category) =>
+      //     db.permissions.findMany({
+      //       where: {
+      //         categoria: category.categoria,
+      //       },
+      //       select: { id: true, name: true, categoria: true },
+      //     })
+      //   )
+      // );
 
-      for (let i = 0; i < results.length; i++) {
-        permissions1.push({
-          categoria: results[i].categoria,
-          permissions: allPermissionHasCategory[i] as any,
-        });
-      }
+      // for (let i = 0; i < results.length; i++) {
+      //   permissions1.push({
+      //     categoria: results[i].categoria,
+      //     permissions: allPermissionHasCategory[i] as any,
+      //   });
+      // }
+
+      // return {
+      //   data: permissions1,
+      //   ok: true,
+      //   status: 200,
+      // };
+
+      const permissions = await db.$transaction([
+        db.permissions.findMany({
+          select:{id:true, name:true, categoria:true}
+        })
+      ]);
+      
 
       return {
-        data: permissions1,
+        data: {
+          Permissions: permissions[0],
+        },
         ok: true,
         status: 200,
       };

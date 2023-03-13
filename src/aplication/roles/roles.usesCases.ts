@@ -14,9 +14,9 @@ export class RolesUsesCases {
     return resp;
   }
 
-  public async createRoles(){
+  public async createRolesP(){
     const resp = await this.rolesRepository.createRolesP()
-
+    return resp;
   }
   public async storeRoles(body: RoleCreateEntity){
     const roleValue = new RoleCreateValue({ ...body });
@@ -37,6 +37,7 @@ export class RolesUsesCases {
     const resp = this.rolesRepository.deleteRole(id)
     return resp;
   }
+
 
   public removePermission(id:number, role:number){
 

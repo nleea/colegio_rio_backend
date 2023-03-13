@@ -50,7 +50,7 @@ export class RolesRepositoryClass implements RolesRepository {
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
      
-      const areas = await db.$transaction([
+      const roles = await db.$transaction([
         db.roles.findMany({
           where: { id: id },
           include: {
@@ -71,8 +71,8 @@ export class RolesRepositoryClass implements RolesRepository {
 
       return {
         data: {
-          rol: areas[0],
-          Permissions: areas[1],
+          rol: roles[0],
+          Permissions: roles[1],
         },
         ok: true,
         status: 200,
@@ -90,11 +90,18 @@ export class RolesRepositoryClass implements RolesRepository {
     ResponseInterfaces<any> | ErrorsInterfaces<any>
   > {
     try {
-      const resp = await db.permissions.findMany();
-      console.log(resp);
+      const permissions = await db.$transaction([
+        db.permissions.findMany({
+          select:{id:true, name:true, categoria:true}
+        })
+      ]);
+      
+
       return {
-        data: resp,
-        ok: false,
+        data: {
+          Permissions: permissions[0],
+        },
+        ok: true,
         status: 200,
       };
     } catch (error) {
