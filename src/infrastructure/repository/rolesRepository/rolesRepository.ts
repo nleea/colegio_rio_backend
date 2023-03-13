@@ -72,7 +72,7 @@ export class RolesRepositoryClass implements RolesRepository {
       return {
         data: {
           rol: roles[0],
-          Permissions: roles[1],
+          permissions: roles[1],
         },
         ok: true,
         status: 200,
