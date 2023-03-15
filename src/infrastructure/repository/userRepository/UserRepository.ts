@@ -213,12 +213,19 @@ export class UserRepositoryClass implements UserRepository {
           username: user.username,
         },
         process.env.SECRET_OR_KEY!,
+        { expiresIn: "30m" }
+      );
+
+      const TokenRefresh = sign(
+        { email: user.email, username: user.username },
+        process.env.SECRET_OR_KEY!,
         { expiresIn: "1d" }
       );
 
       return {
         data: {
           token,
+          tokenRefresh: TokenRefresh,
           user: { name: user.username, id: user.id },
           resources: user.roles?.modulos_has_role.map((p) => p.modulos),
           IsAuth: true,
@@ -293,10 +300,11 @@ export class UserRepositoryClass implements UserRepository {
   }
 
   async validateToken(
-    token: string
+    token: string,
+    refreshToken: string
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     try {
-      verify(token, process.env.SECRET_OR_KEY!);
+      verify(token, process.env.SECRET_OR_KEY!, { complete: true });
 
       return {
         data: "Valid Token",
@@ -304,10 +312,30 @@ export class UserRepositoryClass implements UserRepository {
         status: 200,
       };
     } catch (error) {
+      const success = verify(refreshToken, process.env.SECRET_OR_KEY!, {
+        complete: true,
+      }) as any;
+
+      if (success) {
+        const token = sign(
+          {
+            email: success.payload.email,
+            username: success.payload.username,
+          },
+          process.env.SECRET_OR_KEY!,
+          { expiresIn: "30m" }
+        );
+        return {
+          data: { token, is: true },
+          ok: true,
+          status: 200,
+        };
+      }
+
       return {
         data: "Invalid Token",
         ok: false,
-        status: 200,
+        status: 400,
       };
     }
   }

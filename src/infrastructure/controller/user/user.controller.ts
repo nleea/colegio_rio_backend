@@ -48,8 +48,11 @@ export class UserController {
   };
 
   validateToken = async (req: Request, res: Response) => {
-    const { token } = req.body;
-    const { data, ok, status } = await this.userUsesCases.verifyToken(token);
+    const { token, refreshToken } = req.body;
+    const { data, ok, status } = await this.userUsesCases.verifyToken(
+      token,
+      refreshToken
+    );
     return res.status(status).json({ data, ok });
   };
 }

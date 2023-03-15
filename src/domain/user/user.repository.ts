@@ -29,6 +29,7 @@ export interface UserRepository {
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
 
   validateToken(
-    token: string
+    token: string,
+    refreshToken:string
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
 }

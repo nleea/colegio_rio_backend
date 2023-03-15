@@ -41,8 +41,8 @@ export class UserUsesCases {
     return resp;
   }
 
-  public async verifyToken(token: string) {
-    const resp = this.userRepository.validateToken(token);
+  public async verifyToken(token: string, refreshToken: string) {
+    const resp = this.userRepository.validateToken(token, refreshToken);
     return resp;
   }
 }
