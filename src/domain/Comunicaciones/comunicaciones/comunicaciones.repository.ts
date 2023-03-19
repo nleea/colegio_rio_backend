@@ -1,20 +1,20 @@
-import { CursoEntity } from "./comunicaciones.entity";
+import { ComunicacionEntity, ComunicacionCreateEntity, ComunicacionUpdateEntity } from "./comunicaciones.entity";
 import {
   ErrorsInterfaces,
   ResponseInterfaces,
 } from "../../../types/response.interfaces";
-export interface CursosRepository {
-  findAllCursos(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  createCursosP(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  storeCursos(
-    body: CursoEntity
+export interface ComunicacionesRepository {
+  findAllComunicaciones(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  createComunicacionesP(): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  storeComunicaciones(
+    body: ComunicacionCreateEntity
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  showCurso(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  updatedCurso(
-    body: CursoEntity,
+  showComunicacion(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  updatedComunicacion(
+    body: ComunicacionUpdateEntity,
     id: number
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  showCurso(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  showCursoEdit(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
-  deleteCurso(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  // showComunicacion(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  showComunicacionEdit(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
+  deleteComunicacion(id: number): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
 }
