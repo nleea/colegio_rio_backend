@@ -5,11 +5,8 @@ const routeAuth = Router();
 import { UserController } from "../../controller/user/user.controller";
 import { UserRepositoryClass } from "../../repository/userRepository/UserRepository";
 import { UserUsesCases } from "../../../aplication/user/user.usesCases";
-import { jwtAuthenticate } from "../../../config/jwt_authentication";
-
-const jwtAuthMiddleware = jwtAuthenticate.authenticate("jwt", {
-  session: false,
-});
+import { upload } from "../../../helpers/upload";
+import { UploadFileMiddleware } from "../../../middleware/uploadMiddleware";
 
 /** Injeciones de dependencia*/
 const UserRepository = new UserRepositoryClass();
@@ -20,7 +17,11 @@ const userController = new UserController(userUsescases);
 route.post("/", userController.GetAll);
 route.get("/profile/", userController.userProfile);
 route.put("/edit/:id", userController.updateUser);
-route.use("/register/", userController.insertUser);
+route.use(
+  "/register/",
+  [upload.single("avatar"), UploadFileMiddleware],
+  userController.insertUser
+);
 
 /** Auth Routes */
 routeAuth.post("/login/", userController.auth);

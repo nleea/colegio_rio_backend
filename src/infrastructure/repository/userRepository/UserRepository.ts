@@ -71,7 +71,8 @@ export class UserRepositoryClass implements UserRepository {
 
   async registerUser(
     body: UserCreateEntity,
-    userid: number
+    userid: number,
+    avatar?: string
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>> {
     const {
       apellido,
@@ -109,6 +110,7 @@ export class UserRepositoryClass implements UserRepository {
       },
     };
 
+
     try {
       await this.#db.personas.create({
         data: {
@@ -120,6 +122,7 @@ export class UserRepositoryClass implements UserRepository {
           sexo_id: 1,
           tipoidentificacion_id,
           telefonomovil,
+          avatar: avatar,
           users: {
             create: {
               username: `${name.concat(...identificacion.substring(1, 5))}`,
@@ -312,31 +315,38 @@ export class UserRepositoryClass implements UserRepository {
         status: 200,
       };
     } catch (error) {
-      const success = verify(refreshToken, process.env.SECRET_OR_KEY!, {
-        complete: true,
-      }) as any;
+      try {
+        const success = verify(refreshToken, process.env.SECRET_OR_KEY!, {
+          complete: true,
+        }) as any;
 
-      if (success) {
-        const token = sign(
-          {
-            email: success.payload.email,
-            username: success.payload.username,
-          },
-          process.env.SECRET_OR_KEY!,
-          { expiresIn: "30m" }
-        );
+        if (success) {
+          const token = sign(
+            {
+              email: success.payload.email,
+              username: success.payload.username,
+            },
+            process.env.SECRET_OR_KEY!,
+            { expiresIn: "30m" }
+          );
+          return {
+            data: { token, is: true },
+            ok: true,
+            status: 200,
+          };
+        }
+      } catch (error) {
         return {
-          data: { token, is: true },
-          ok: true,
-          status: 200,
+          data: "Invalid Token",
+          ok: false,
+          status: 400,
         };
       }
-
-      return {
-        data: "Invalid Token",
-        ok: false,
-        status: 400,
-      };
     }
+    return {
+      data: "Invalid Token",
+      ok: false,
+      status: 400,
+    };
   }
 }
