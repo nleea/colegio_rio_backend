@@ -84,6 +84,7 @@ export class ModulesRepositoryClass implements ModulesRepository {
           name: true,
           categoria: true,
           modulos_has_role: {
+            orderBy: { modulos: { id: "asc" } },
             select: {
               modulos: {
                 select: { name: true, id_padre: true, path: true, id: true },
@@ -94,14 +95,11 @@ export class ModulesRepositoryClass implements ModulesRepository {
       });
 
       const flatModule = resp.map((c) => {
-        const id_padre = c.modulos_has_role.find((h) => h.modulos)?.modulos
-          ?.name;
         return {
           ...c,
           modulos_has_role: c.modulos_has_role.flatMap((d) => {
             return {
               ...d.modulos,
-              dependencia: id_padre === d.modulos?.name ? "Root" : id_padre,
             };
           }),
         };

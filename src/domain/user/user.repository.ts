@@ -11,7 +11,8 @@ export interface UserRepository {
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   registerUser(
     body: UserCreateEntity,
-    userid: number
+    userid: number,
+    avatar?: string
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
   login({
     username,
@@ -30,6 +31,6 @@ export interface UserRepository {
 
   validateToken(
     token: string,
-    refreshToken:string
+    refreshToken: string
   ): Promise<ResponseInterfaces<any> | ErrorsInterfaces<any>>;
 }
