@@ -31,6 +31,7 @@ export class ComunicacionController {
   PostComunicacion = async (req: Request, res: Response) => {
     const body = req.body as ComunicacionCreateEntity;
     const Comunicacioncrea = new ComunicacionCreateValue(body);
+    // console.log('CREANDO')
     const { data, ok, status } = await this.ComunicacionesUsesCases.storeComunicaciones(Comunicacioncrea);
     return res.status(status).json({ data, ok });
   };

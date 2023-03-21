@@ -24,6 +24,8 @@ export class ComunicacionesUsesCases {
   }
   public async storeComunicaciones(body: ComunicacionCreateEntity){
     const ComunicacioneValue = new ComunicacionCreateValue({ ...body });
+    // console.log('datos2')
+    // console.log(ComunicacioneValue)
     const resp = this.comunicacionesRepository.storeComunicaciones(ComunicacioneValue);
     return resp;
   }

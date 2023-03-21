@@ -12,14 +12,14 @@ export class ComunicacionValue implements ComunicacionEntity {
   fecha_envio: Date;
   fecha_cierre: Date;
   sede_id: number;
-  persona_id: number;
+  funcionario_id: number;
   tipocomunicacion_id: number;
   estado_id: number;
   created_by: number;
   updated_by: number;
 
   constructor({ asunto, referencia, texto, sede_id, texto_desprendible, estado_id, 
-    fecha_envio, fecha_cierre, persona_id, tipocomunicacion_id, created_by, updated_by}: ComunicacionEntity) {
+    fecha_envio, fecha_cierre, funcionario_id, tipocomunicacion_id, created_by, updated_by}: ComunicacionEntity) {
     this.asunto = asunto;
     this.texto = texto;
     this.referencia = referencia;
@@ -28,7 +28,7 @@ export class ComunicacionValue implements ComunicacionEntity {
     this.texto_desprendible = texto_desprendible;
     this.fecha_envio = fecha_envio;
     this.fecha_cierre = fecha_cierre;
-    this.persona_id = persona_id;
+    this.funcionario_id = funcionario_id;
     this.tipocomunicacion_id = tipocomunicacion_id;
     this.created_by = created_by;
     this.updated_by = updated_by;
@@ -44,14 +44,14 @@ export class ComunicacionCreateValue implements ComunicacionCreateEntity {
   fecha_envio: Date;
   fecha_cierre: Date;
   sede_id: number;
-  persona_id: number;
+  funcionario_id: number;
   tipocomunicacion_id: number;
   estado_id: number;
   created_by: number;
   updated_by: number;
 
   constructor({ asunto, referencia, texto, sede_id, texto_desprendible, estado_id, 
-    fecha_envio, fecha_cierre, persona_id, tipocomunicacion_id, created_by, updated_by}: ComunicacionCreateEntity) {
+    fecha_envio, fecha_cierre, funcionario_id, tipocomunicacion_id, created_by, updated_by}: ComunicacionCreateEntity) {
     this.asunto = asunto;
     this.texto = texto;
     this.referencia = referencia;
@@ -60,7 +60,7 @@ export class ComunicacionCreateValue implements ComunicacionCreateEntity {
     this.texto_desprendible = texto_desprendible;
     this.fecha_envio = fecha_envio;
     this.fecha_cierre = fecha_cierre;
-    this.persona_id = persona_id;
+    this.funcionario_id = funcionario_id;
     this.tipocomunicacion_id = tipocomunicacion_id;
     this.created_by = created_by;
     this.updated_by = updated_by;
@@ -75,14 +75,14 @@ export class ComunicacionUpdatedValue implements ComunicacionUpdateEntity {
   fecha_envio: Date;
   fecha_cierre: Date;
   sede_id: number;
-  persona_id: number;
+  funcionario_id: number;
   tipocomunicacion_id: number;
   estado_id: number;
   created_by: number;
   updated_by: number;
 
   constructor({ asunto, referencia, texto, sede_id, texto_desprendible, estado_id, 
-    fecha_envio, fecha_cierre, persona_id, tipocomunicacion_id, created_by, updated_by}: ComunicacionUpdatedValue) {
+    fecha_envio, fecha_cierre, funcionario_id, tipocomunicacion_id, created_by, updated_by}: ComunicacionUpdatedValue) {
     this.asunto = asunto;
     this.texto = texto;
     this.referencia = referencia;
@@ -91,7 +91,7 @@ export class ComunicacionUpdatedValue implements ComunicacionUpdateEntity {
     this.texto_desprendible = texto_desprendible;
     this.fecha_envio = fecha_envio;
     this.fecha_cierre = fecha_cierre;
-    this.persona_id = persona_id;
+    this.funcionario_id = funcionario_id;
     this.tipocomunicacion_id = tipocomunicacion_id;
     this.created_by = created_by;
     this.updated_by = updated_by;
