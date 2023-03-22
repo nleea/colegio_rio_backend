@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { v2 as cloudinary } from "cloudinary";
-import sharp from "sharp";
-import path from "path";
+import { unlinkSync } from "fs";
 
 const UploadFileMiddleware = async (
   req: Request,
@@ -9,7 +8,6 @@ const UploadFileMiddleware = async (
   next: NextFunction
 ) => {
   try {
-    
     if (!req.file) return next();
 
     cloudinary.config({
@@ -18,9 +16,11 @@ const UploadFileMiddleware = async (
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     });
 
-    const res = await cloudinary.uploader.upload(req.file.path, {
+    const res = await cloudinary.uploader.upload(req.file?.path, {
       folder: "rio_dev",
     });
+
+    unlinkSync(req.file?.path);
 
     req.file.path = res.secure_url;
 

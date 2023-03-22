@@ -110,7 +110,6 @@ export class UserRepositoryClass implements UserRepository {
       },
     };
 
-
     try {
       await this.#db.personas.create({
         data: {
@@ -122,7 +121,7 @@ export class UserRepositoryClass implements UserRepository {
           sexo_id: 1,
           tipoidentificacion_id,
           telefonomovil,
-          avatar: avatar,
+          foto: avatar,
           users: {
             create: {
               username: `${name.concat(...identificacion.substring(1, 5))}`,
