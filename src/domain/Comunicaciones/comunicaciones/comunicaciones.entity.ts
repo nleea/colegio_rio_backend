@@ -6,7 +6,7 @@ export interface ComunicacionEntity {
   fecha_envio: Date;
   fecha_cierre: Date;
   sede_id: number;
-  persona_id: number;
+  funcionario_id: number;
   tipocomunicacion_id: number;
   estado_id: number;
   created_by: number;
@@ -21,7 +21,7 @@ export interface ComunicacionCreateEntity {
   fecha_envio: Date;
   fecha_cierre: Date;
   sede_id: number;
-  persona_id: number;
+  funcionario_id: number;
   tipocomunicacion_id: number;
   estado_id: number;
   created_by: number;
@@ -36,7 +36,7 @@ export interface ComunicacionUpdateEntity {
   fecha_envio: Date;
   fecha_cierre: Date;
   sede_id: number;
-  persona_id: number;
+  funcionario_id: number;
   tipocomunicacion_id: number;
   estado_id: number;
   created_by: number;

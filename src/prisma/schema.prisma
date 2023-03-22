@@ -148,8 +148,10 @@ model cofuncionarios {
   maestras_cofuncionarios_cargo_idTomaestras        maestras?               @relation("cofuncionarios_cargo_idTomaestras", fields: [cargo_id], references: [id], onDelete: Cascade, map: "cofuncionarios_cargo_id_foreign_key")
   maestras_cofuncionarios_dependencia_idTomaestras  maestras?               @relation("cofuncionarios_dependencia_idTomaestras", fields: [dependencia_id], references: [id], onDelete: Cascade, map: "cofuncionarios_dependencia_id_foreign_key")
   maestras_cofuncionarios_especialidad_idTomaestras maestras?               @relation("cofuncionarios_especialidad_idTomaestras", fields: [especialidad_id], references: [id], onDelete: Cascade, map: "cofuncionarios_especialidad_id_foreign_key")
+  maestras_cofuncionarios_estado_idTomaestras maestras?               @relation("cofuncionarios_estado_idTomaestras", fields: [estado_id], references: [id], onDelete: Cascade, map: "cofuncionarios_estado_id_foreign_key")
   personas                                          personas                @relation(fields: [persona_id], references: [id], onDelete: Cascade, map: "cofuncionarios_persona_id_foreign_key")
   cosedes                                           cosedes?                @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "cofuncionarios_sede_id_foreign_key")
+  comunicaciones                                    comunicaciones?
 
   @@index([cargo_id], map: "cofuncionarios_cargo_id_foreign")
   @@index([dependencia_id], map: "cofuncionarios_dependencia_id_foreign")
@@ -265,7 +267,7 @@ model comunicaciones {
   fecha_envio                                           DateTime? @db.Date
   fecha_cierre                                          DateTime? @db.Date
   sede_id                                               Int?
-  persona_id                                            Int       @unique(map: "comunicaciones_persona_id_unique")
+  funcionario_id                                        Int       @unique(map: "comunicaciones_persona_id_unique")
   tipocomunicacion_id                                   Int?
   estado_id                                             Int?
   created_at                                            DateTime  @default(now()) @db.Timestamp(0)
@@ -275,12 +277,12 @@ model comunicaciones {
   deleted_at                                            DateTime? @db.Timestamp(0)
   deleted_by                                            Int?
   maestras_comunicaciones_estado_idTomaestras           maestras? @relation("comunicaciones_estado_idTomaestras", fields: [estado_id], references: [id], onDelete: Cascade, map: "comunicaciones_estado_id_foreign_key")
-  personas                                              personas  @relation(fields: [persona_id], references: [id], onDelete: Cascade, map: "comunicaciones_persona_id_foreign_key")
+  cofuncionarios                                        cofuncionarios  @relation(fields: [funcionario_id], references: [id], onDelete: Cascade, map: "comunicaciones_funcionario_id_foreign_key")
   cosedes                                               cosedes?  @relation(fields: [sede_id], references: [id], onDelete: Cascade, map: "comunicaciones_sede_id_foreign_key")
   maestras_comunicaciones_tipocomunicacion_idTomaestras maestras? @relation("comunicaciones_tipocomunicacion_idTomaestras", fields: [tipocomunicacion_id], references: [id], onDelete: Cascade, map: "comunicaciones_tipocomunicacion_id_foreign_key")
 
   @@index([estado_id], map: "comunicaciones_estado_id_foreign")
-  @@index([persona_id], map: "comunicaciones_persona_id_foreign")
+  @@index([funcionario_id], map: "comunicaciones_funcionario_id_foreign")
   @@index([sede_id], map: "comunicaciones_sede_id_foreign")
   @@index([tipocomunicacion_id], map: "comunicaciones_tipocomunicacion_id_foreign")
 }
@@ -370,6 +372,7 @@ model maestras {
   cofuncionarios_cofuncionarios_cargo_idTomaestras            cofuncionarios[]  @relation("cofuncionarios_cargo_idTomaestras")
   cofuncionarios_cofuncionarios_dependencia_idTomaestras      cofuncionarios[]  @relation("cofuncionarios_dependencia_idTomaestras")
   cofuncionarios_cofuncionarios_especialidad_idTomaestras     cofuncionarios[]  @relation("cofuncionarios_especialidad_idTomaestras")
+  cofuncionarios_cofuncionarios_estado_idTomaestras     cofuncionarios[]  @relation("cofuncionarios_estado_idTomaestras")
   comunicaciones_comunicaciones_estado_idTomaestras           comunicaciones[]  @relation("comunicaciones_estado_idTomaestras")
   comunicaciones_comunicaciones_tipocomunicacion_idTomaestras comunicaciones[]  @relation("comunicaciones_tipocomunicacion_idTomaestras")
   corolesperfiles_corolesperfiles_perfil_idTomaestras         corolesperfiles[] @relation("corolesperfiles_perfil_idTomaestras")
@@ -488,7 +491,6 @@ model personas {
   deleted_at            DateTime?       @db.Timestamp(0)
   deleted_by            Int?
   cofuncionarios        cofuncionarios?
-  comunicaciones        comunicaciones?
   estudiantes           estudiantes?
   users                 users?
 }
