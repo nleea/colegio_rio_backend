@@ -3,7 +3,7 @@ import { Router } from "express";
 const route = Router();
 
 import { ControlController } from "../../controller/control/control.controller";
-import { ControlRepositoryClass } from "../../repository/control/control.repository";
+import { ControlRepositoryClass } from "../../repository/controlRepository/control.repository";
 import { ControlUsesCases } from "../../../aplication/control/control.usesCases";
 import { db } from "../../../infrastructure/models/db";
 

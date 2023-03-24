@@ -1,17 +1,20 @@
 import { PrismaClient } from "@prisma/client";
-import { ControlRepository } from "../../../domain/control/control.repository";
+import { ControlRepository } from "@/domain/control/control.repository";
 import {
   ErrorsInterfaces,
   ResponseInterfaces,
-} from "../../../types/response.interfaces";
+} from "@/types/response.interfaces";
+import { Ibody } from "@/types/control.interface";
 
 export class ControlRepositoryClass implements ControlRepository {
   constructor(private db: PrismaClient) {}
 
   async asistencia(
-    identificacion: string
+    body: Ibody
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
     try {
+      const { identificacion, ...restData } = body;
+
       const estudiante = await this.db.estudiantes.findMany({
         where: { personas: { identificacion: identificacion } },
       });
@@ -22,12 +25,12 @@ export class ControlRepositoryClass implements ControlRepository {
           entrada_id: 0,
           estado_id: 1,
           estudiante_id: estudiante[0].id,
+          ...restData,
         },
       });
 
-      return { data: "", ok: true, status: 200 };
+      return { data: "OK", ok: true, status: 200 };
     } catch (error) {
-      console.log(error)
       return { data: error, ok: true, status: 400 };
     }
   }

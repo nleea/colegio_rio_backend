@@ -1,10 +1,11 @@
 import {
   ErrorsInterfaces,
   ResponseInterfaces,
-} from "../../types/response.interfaces";
+} from "@/types/response.interfaces";
+import { Ibody } from "@/types/control.interface";
 
 export interface ControlRepository {
   asistencia(
-    identificacion: string
+    body: Partial<Ibody>
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
 }
