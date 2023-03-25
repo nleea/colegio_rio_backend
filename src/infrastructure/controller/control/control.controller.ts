@@ -6,7 +6,20 @@ export class ControlController {
 
   controlAsistencia = async (req: Request, res: Response) => {
     const body = req.body as Ibody;
-    const { data, ok, status } = await this.controlUsesCases.asistencia(body);
+    const param = req.params;
+    const { data, ok, status } = await this.controlUsesCases.asistencia(
+      body,
+      param
+    );
     return res.status(status).json({ ok, data });
+  };
+
+  asistenciaUsuario = async (req: Request, res: Response) => {
+    const {id} = req.body;
+    const { data, ok, status } = await this.controlUsesCases.asistenciaUsuario(
+      id
+    );
+
+    return res.status(status).json({ data, ok });
   };
 }

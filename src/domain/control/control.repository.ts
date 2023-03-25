@@ -6,6 +6,11 @@ import { Ibody } from "@/types/control.interface";
 
 export interface ControlRepository {
   asistencia(
-    body: Partial<Ibody>
+    body: Partial<Ibody>,
+    param?: any
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
+
+  userAsistencia(
+    id: number
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
 }
