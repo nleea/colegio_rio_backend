@@ -6,6 +6,17 @@ import {
 } from "@/types/response.interfaces";
 import { Ibody } from "@/types/control.interface";
 import QRcode from "qrcode";
+import puppeteer from "puppeteer";
+import hbs from "handlebars";
+import fs from "fs";
+import path from "path";
+
+export const compile = (template: string, data: any) => {
+  const filePath = path.join(process.cwd(), "src/templates", `${template}.hbs`);
+
+  const base = fs.readFileSync(filePath, "utf-8");
+  return hbs.compile(base)(data);
+};
 
 export class ControlRepositoryClass implements ControlRepository {
   constructor(private db: PrismaClient) {}
@@ -13,15 +24,41 @@ export class ControlRepositoryClass implements ControlRepository {
   async userAsistencia(
     id: number
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
-    const user = await this.db.estudiantes.findUnique({ where: { id: id } });
+    const users = await this.db.estudiantes.findMany({
+      where: { personas: { users: { roles: { name: "Estudiante" } } } },
+    });
 
-    if (!user) return { data: "", ok: false, status: 400 };
+    if (!users) return { data: "", ok: false, status: 400 };
 
-    const url = `http://localhost:4000/api/asistencia/${user?.id}`;
+    //const url = `http://localhost:4000/api/control/asistencia/${user?.id}`;
+    const urls: any[] = [];
+    const qrCodes: any[] = [];
+    users.forEach((user) => {
+      urls.push(
+        `https://83fe177878eadd.lhr.life/api/control/asistencia/${user.id}`
+      );
+    });
 
-    const qr = await QRcode.toDataURL(url);
+    for (let index = 0; index < urls.length; index++) {
+      const qr = await QRcode.toDataURL(urls[index]);
+      qrCodes.push({ link: qr });
+    }
 
-    return { data: qr, ok: true, status: 200 };
+    const html = compile("index", { qr: qrCodes });
+
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.setContent(html);
+    const pdf = await page.pdf({ format: "A4" });
+
+    await browser.close();
+
+    return {
+      data: pdf,
+      ok: true,
+      status: 200,
+      header: "application/pdf",
+    };
   }
 
   async asistencia(
