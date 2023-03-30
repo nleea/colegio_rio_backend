@@ -24,41 +24,57 @@ export class ControlRepositoryClass implements ControlRepository {
   async userAsistencia(
     id: number
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
-    const users = await this.db.estudiantes.findMany({
-      where: { personas: { users: { roles: { name: "Estudiante" } } } },
-    });
+    try {
+      const users = await this.db.estudiantes.findMany({
+        where: {
+          personas: { users: { roles: { name: "Estudiante" } } },
+        },
+        select: {
+          personas: {
+            select: { nombre: true, estudiantes: { select: { id: true } } },
+          },
+        },
+      });
 
-    if (!users) return { data: "", ok: false, status: 400 };
+      if (!users) return { data: "", ok: false, status: 400 };
+      //const url = `http://localhost:4000/api/control/asistencia/${user?.id}`;
+      const urls: any[] = [];
+      const qrCodes: any[] = [];
+      users.forEach((user) => {
+        urls.push({
+          name: user.personas.nombre,
+          qr: `https://b131d3805f8dbc.lhr.life/api/control/asistencia/${user.personas.estudiantes?.id}`,
+        });
+      });
 
-    //const url = `http://localhost:4000/api/control/asistencia/${user?.id}`;
-    const urls: any[] = [];
-    const qrCodes: any[] = [];
-    users.forEach((user) => {
-      urls.push(
-        `https://83fe177878eadd.lhr.life/api/control/asistencia/${user.id}`
-      );
-    });
+      for (let index = 0; index < urls.length; index++) {
+        const qr = await QRcode.toDataURL(urls[index].qr);
+        qrCodes.push({ link: qr, name: urls[index].name });
+      }
 
-    for (let index = 0; index < urls.length; index++) {
-      const qr = await QRcode.toDataURL(urls[index]);
-      qrCodes.push({ link: qr });
+      const html = compile("index", { qr: qrCodes });
+
+      const browser = await puppeteer.launch({ headless: true });
+      const page = await browser.newPage();
+      await page.setContent(html);
+      const pdf = await page.pdf({ format: "A4" });
+
+      await browser.close();
+
+      return {
+        data: pdf,
+        ok: true,
+        status: 200,
+        header: "application/pdf",
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        data: error,
+        ok: false,
+        status: 404,
+      };
     }
-
-    const html = compile("index", { qr: qrCodes });
-
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.setContent(html);
-    const pdf = await page.pdf({ format: "A4" });
-
-    await browser.close();
-
-    return {
-      data: pdf,
-      ok: true,
-      status: 200,
-      header: "application/pdf",
-    };
   }
 
   async asistencia(

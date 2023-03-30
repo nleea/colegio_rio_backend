@@ -15,8 +15,8 @@ import {
 import { verify } from "jsonwebtoken";
 
 interface Iusers {
-  COFUNCIONARIOS: any;
-  ESTUDIANTE: any;
+  Cofuncionarios: any;
+  Estudiante: any;
 }
 
 export class UserRepositoryClass implements UserRepository {
@@ -89,7 +89,7 @@ export class UserRepositoryClass implements UserRepository {
     } = body;
 
     const restData = {
-      COFUNCIONARIOS: {
+      Cofuncionarios: {
         cofuncionarios: {
           create: {
             tarjetaprofesional,
@@ -99,7 +99,7 @@ export class UserRepositoryClass implements UserRepository {
           },
         },
       },
-      ESTUDIANTE: {
+      Estudiante: {
         estudiantes: {
           create: {
             fechasalida: new Date(fechasalida!),
@@ -111,7 +111,7 @@ export class UserRepositoryClass implements UserRepository {
     };
 
     try {
-      await this.#db.personas.create({
+      await db.personas.create({
         data: {
           apellido,
           email,
