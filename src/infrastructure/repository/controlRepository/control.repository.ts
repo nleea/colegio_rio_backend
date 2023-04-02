@@ -37,7 +37,7 @@ export class ControlRepositoryClass implements ControlRepository {
       });
 
       if (!users) return { data: "", ok: false, status: 400 };
-      //const url = `http://localhost:4000/api/control/asistencia/${user?.id}`;
+
       const urls: any[] = [];
       const qrCodes: any[] = [];
       users.forEach((user) => {
@@ -68,7 +68,6 @@ export class ControlRepositoryClass implements ControlRepository {
         header: "application/pdf",
       };
     } catch (error) {
-      console.log(error);
       return {
         data: error,
         ok: false,
@@ -122,7 +121,6 @@ export class ControlRepositoryClass implements ControlRepository {
 
       return { data: "OK", ok: true, status: 200 };
     } catch (error) {
-      console.log(error);
       return { data: error, ok: true, status: 400 };
     }
   }
