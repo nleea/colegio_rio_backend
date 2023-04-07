@@ -40,6 +40,7 @@ export class MateriaRepositoryClass implements MateriasRepository {
               },
             },
           },
+          coareas:{select:{id:true, nombre:true, grado_id:true, sede_id:true}}
         },
       });
 
