@@ -5,20 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QR code </title>
     <style>
-      .container { display: flex; flex-direction: row; flex-wrap: wrap; }
-      .internal-container { display: flex; flex-direction: column; border: 1px
-      solid lightgrey; margin: 5px; padding: 5px; } .internal-container h1 {
-      border-bottom: 1px solid lightgray; }
+      .container { width: 100%; height: 100%; }
+      .internal-container img { width: 50%; height: 50%;  margin: auto;}
     </style>
   </head>
   <body>
     <div class="container">
-      {{#each qr}}
-        <div class="internal-container">
-          <h1>{{name}}</h1>
           <img src="{{link}}" />
-        </div>
-      {{/each}}
     </div>
   </body>
 </html>

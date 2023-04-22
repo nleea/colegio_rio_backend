@@ -215,7 +215,7 @@ export class UserRepositoryClass implements UserRepository {
           username: user.username,
         },
         process.env.SECRET_OR_KEY!,
-        { expiresIn: "30m" }
+        { expiresIn: "1d" }
       );
 
       const TokenRefresh = sign(

@@ -20,8 +20,8 @@ export class ControlController {
       id
     );
 
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=quote.pdf");
+    res.setHeader("Content-Type", "application/octet-stream");
+    res.setHeader("Content-Disposition", "attachment; filename=qrs.zip");
 
     return res.status(status).send(data);
   };
