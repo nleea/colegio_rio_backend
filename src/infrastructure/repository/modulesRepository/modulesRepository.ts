@@ -147,7 +147,7 @@ export class ModulesRepositoryClass implements ModulesRepository {
       console.log(error);
       return {
         ok: false,
-        data: "sss",
+        data: error,
         status: 400,
       };
     }

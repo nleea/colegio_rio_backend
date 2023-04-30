@@ -25,4 +25,16 @@ export class ControlController {
 
     return res.status(status).send(data);
   };
+
+  asistenciaUsuarioQuery = async (req: Request, res: Response) => {
+    const { users } = req.body;
+    const { data, ok, status } = await this.controlUsesCases.asistenciaUsuarioQuery(
+      users
+    );
+
+    res.setHeader("Content-Type", "application/octet-stream");
+    res.setHeader("Content-Disposition", "attachment; filename=qrs.zip");
+
+    return res.status(status).send(data);
+  };
 }

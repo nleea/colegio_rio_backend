@@ -74,7 +74,65 @@ export class ControlRepositoryClass implements ControlRepository {
         status: 200
       };
     } catch (error) {
-      console.log(error)
+      return {
+        data: error,
+        ok: false,
+        status: 404,
+      };
+    }
+  }
+
+  async userAsistenciaQuery(
+    ids: number[]
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>> {
+
+    try {
+
+      const users = await this.db.estudiantes.findMany({
+        where: {
+          personas: { users: { AND: [{ roles: { name: "Estudiante" } }, { id: { in: ids } }] } }
+        },
+        select: {
+          personas: {
+            select: { nombre: true, estudiantes: { select: { id: true } } },
+          },
+        },
+      });
+
+      if (!users) return { data: "", ok: false, status: 400 };
+
+      const admZip = new Admzip();
+
+      const urls: any[] = [];
+      users.forEach((user) => {
+        urls.push({
+          name: user.personas.nombre,
+          qr: `https://b131d3805f8dbc.lhr.life/api/control/asistencia/${user.personas.estudiantes?.id}`,
+        });
+      });
+
+      const browser = await puppeteer.launch({ headless: true });
+      const page = await browser.newPage();
+
+      for (let index = 0; index < urls.length; index++) {
+        const pathImage = path.join(process.cwd(), `src/uploads/${urls[index].name}.jpg`);
+        const qr = await QRcode.toDataURL(urls[index].qr);
+        const html = compile("index", { link: qr, name: urls[index].name });
+        await page.setContent(html);
+        await page.screenshot({ path: pathImage, quality: 100, clip: { height: 200, width: 200, x: 0, y: 0 } });
+        const image = fs.readFileSync(pathImage);
+        admZip.addFile(`${urls[index].name}.jpg`, image);
+        fs.unlinkSync(pathImage)
+      }
+
+      await browser.close();
+
+      return {
+        data: admZip.toBuffer(),
+        ok: true,
+        status: 200
+      };
+    } catch (error) {
       return {
         data: error,
         ok: false,

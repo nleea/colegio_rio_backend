@@ -13,4 +13,8 @@ export interface ControlRepository {
   userAsistencia(
     id: number
   ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
+
+  userAsistenciaQuery(
+    ids: number[]
+  ): Promise<ErrorsInterfaces<any> | ResponseInterfaces<any>>;
 }

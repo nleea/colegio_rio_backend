@@ -16,4 +16,5 @@ const controlController = new ControlController(controlUsescases);
 
 route.get("/asistencia/:estudianteId?", controlController.controlAsistencia);
 route.get("/user/asistencia/", controlController.asistenciaUsuario);
+route.post("/user/asistencia/query/", controlController.asistenciaUsuarioQuery);
 export { route };

@@ -12,4 +12,9 @@ export class ControlUsesCases {
     const resp = await this.controlRepository.userAsistencia(id);
     return resp;
   }
+
+  public async asistenciaUsuarioQuery(ids: number[]) {
+    const resp = await this.controlRepository.userAsistenciaQuery(ids);
+    return resp;
+  }
 }
