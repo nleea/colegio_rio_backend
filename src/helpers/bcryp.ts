@@ -13,3 +13,4 @@ export function hashPin(pin: string) {
 export function comparePin(pin: string, hashPin: string) {
   return compareSync(pin, hashPin);
 }
+

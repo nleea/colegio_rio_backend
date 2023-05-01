@@ -127,7 +127,7 @@ export class UserRepositoryClass implements UserRepository {
               username: `${name.concat(...identificacion.substring(1, 5))}`,
               password: hashPin(identificacion).encrypted,
               roles: { connect: { name: roles } },
-            },
+            }
           },
           ...(restData[roles as keyof Iusers] as any),
         },

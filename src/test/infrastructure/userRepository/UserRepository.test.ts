@@ -15,7 +15,7 @@ export function CreateUserEstudiante(): Partial<UserCreateEntity> &
     apellido: faker.random.words(1),
     email: faker.internet.email(),
     fechanacimiento: faker.date.birthdate().toString(),
-    identificacion: faker.datatype.uuid(),
+    identificacion:faker.datatype.uuid(),
     name: faker.internet.userName(),
     tipoidentificacion_id: 1,
     telefonomovil: faker.random.numeric(10),
@@ -29,7 +29,7 @@ export function CreateUserEstudiante(): Partial<UserCreateEntity> &
 const a = new UserRepositoryClass();
 
 describe("findUnique() tests", () => {
-  Array.from({ length: 10 }).forEach(() => {
+  Array.from({ length: 100 }).forEach(() => {
     it("should return true if register is create", async () => {
       const actual = await a.registerUser(CreateUserEstudiante() as any, 1);
       expect(actual.ok).toBe(true);

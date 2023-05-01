@@ -18,7 +18,7 @@ export class UserController {
 
     const { data, ok, status } = await this.userUsesCases.createUser(
       body,
-      (req!.user as any).id,
+      2,
       req.file?.path
     );
     return res.status(status).json({ data, ok });

@@ -14,7 +14,7 @@ const jwtAuthMiddleware = jwtAuthenticate.authenticate("jwt", {
   session: false,
 });
 
-indexRoute.use("/user/", jwtAuthMiddleware, routeUsers);
+indexRoute.use("/user/", routeUsers);
 indexRoute.use("/roles/", jwtAuthMiddleware, routeRoles);
 indexRoute.use("/modulos/", jwtAuthMiddleware, routeModules);
 indexRoute.use("/cursos/", jwtAuthMiddleware, cocursoModules);

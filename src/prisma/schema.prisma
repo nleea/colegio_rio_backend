@@ -200,9 +200,9 @@ model cogradosestudiantes {
   estudiante_id Int
   curso_id      Int
   sede_id       Int
-  a_o           String      @map("año") @db.VarChar(50)
-  created_at    DateTime    @default(now()) @db.Timestamp(0)
-  created_by    Int
+  a_o           String      @db.VarChar(50)
+  created_at    DateTime?   @default(now()) @db.Timestamp(0)
+  created_by    Int?
   updated_at    DateTime?   @db.Timestamp(0)
   updated_by    Int?
   deleted_at    DateTime?   @db.Timestamp(0)
@@ -314,9 +314,9 @@ model cosedes {
   email               String?               @db.VarChar(80)
   telefono            String?               @db.VarChar(80)
   prestador           String?               @db.VarChar(80)
-  colegios_id         Int
-  created_at          DateTime              @default(now()) @db.Timestamp(0)
-  created_by          Int
+  colegios_id         Int?
+  created_at          DateTime?             @default(now()) @db.Timestamp(0)
+  created_by          Int?
   updated_at          DateTime?             @db.Timestamp(0)
   updated_by          Int?
   deleted_at          DateTime?             @db.Timestamp(0)
@@ -430,7 +430,7 @@ model penotas {
   grado_id      Int
   curso_id      Int
   nota          Float
-  a_o           String    @map("año") @db.VarChar(50)
+  a_o           String    @db.VarChar(50)
   corte_id      Int
   created_at    DateTime  @default(now()) @db.Timestamp(0)
   created_by    Int       @default(1)
@@ -524,14 +524,6 @@ model roles {
   modulos_has_role     modulos_has_role[]
   role_has_permissions role_has_permissions[]
   users                users[]
-}
-
-model spatial_ref_sys {
-  srid      Int     @id
-  auth_name String? @db.VarChar(256)
-  auth_srid Int?
-  srtext    String? @db.VarChar(2048)
-  proj4text String? @db.VarChar(2048)
 }
 
 model users {
