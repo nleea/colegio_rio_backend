@@ -23,4 +23,5 @@ indexRoute.use("/comunicaciones/", jwtAuthMiddleware, comunicacionModules);
 indexRoute.use("/materias/", jwtAuthMiddleware, comateriaModules);
 indexRoute.use("/control/", routeControl);
 indexRoute.use("/auth/", routeAuth);
+
 export { indexRoute };

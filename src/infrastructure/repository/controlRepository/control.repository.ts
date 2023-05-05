@@ -11,7 +11,8 @@ import hbs from "handlebars";
 import fs from "fs";
 import path from "path";
 import Admzip from "adm-zip";
-
+import { UploadFile } from "../../../config/s3";
+import { v4 as uid } from "uuid";
 
 export const compile = (template: string, data: any) => {
   const filePath = path.join(process.cwd(), "src/templates", `${template}.hbs`);
@@ -66,10 +67,17 @@ export class ControlRepositoryClass implements ControlRepository {
         fs.unlinkSync(pathImage)
       }
 
+      admZip.writeZip(path.join(process.cwd(), `src/uploads/a.zip`))
       await browser.close();
 
+      const name = uid();
+
+      await UploadFile(fs.createReadStream(path.join(process.cwd(), `src/uploads/a.zip`)), name)
+
+      fs.unlinkSync(path.join(process.cwd(), `src/uploads/a.zip`))
+
       return {
-        data: admZip.toBuffer(),
+        data: "Ok",
         ok: true,
         status: 200
       };
